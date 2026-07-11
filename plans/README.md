@@ -23,12 +23,27 @@ the "Current state" excerpts against the live files by eye.
 | 001  | Initialize git repository (+ gitignore `.playwright-mcp/`) | P1 | S | — | DONE |
 | 002  | Add unit tests for `text-similarity.ts`, fix broken `npm test` gate | P1 | S | none (001 recommended first) | DONE |
 | 003  | Prevent audio playback and recording from running concurrently | P1 | S | none | DONE |
-| 004  | Guarantee recording UI never gets stuck after a speech-recognition error | P2 | S | none (touches same file as 003 — see sequencing note in 004) | TODO |
+| 004  | Guarantee recording UI never gets stuck after a speech-recognition error | P2 | S | none (touches same file as 003 — see sequencing note in 004) | DONE* |
 | 005  | Pin `@tanstack/*` deps to concrete versions instead of `"latest"` | P2 | S | none | TODO |
 | 006  | Reconcile `CLAUDE.md`'s atomic-design convention with actual structure | P3 | S | none | TODO |
 | 007  | Remove literal `"..."` from practice text in 3 phrases | P3 | S | none | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
+
+## Notes on plan 004's verification
+
+\* Plan 004's code change (call `finishRecording()` from `recognition.onerror`)
+landed and passes all static gates (typecheck/lint/build). Its Step 3 manual
+verification could **not** be completed: the sandboxed browser used for
+testing has no functioning `SpeechRecognition` backend at all — after
+clicking "Gravar / Repetir", none of `onstart`/`onresult`/`onerror`/`onend`
+ever fired, even after 6+ seconds, and calling `.stop()` did not resolve it
+either. This is an environment limitation (no real/virtual microphone
+backend), not evidence about the fix itself — the change mirrors the
+existing `catch` block's `finishRecording()` call already in the same
+function. A human should manually verify the actual fix (deny mic
+permission in a real browser and confirm the button recovers) before fully
+trusting this plan's Step 3 done-criterion.
 
 ## Dependency notes
 

@@ -106,6 +106,7 @@ export function PhraseCard({
         recognitionErrorMessages[event.error] ??
           "Não foi possível reconhecer a fala."
       )
+      finishRecording()
     }
 
     recognition.onend = finishRecording
