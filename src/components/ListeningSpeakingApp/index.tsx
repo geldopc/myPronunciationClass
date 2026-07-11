@@ -42,6 +42,8 @@ export function ListeningSpeakingApp() {
   }
 
   async function playPhrase(phrase: Phrase) {
+    if (recordingPhraseId !== null) return;
+
     audioRef.current?.pause();
 
     const audio = new Audio(phrase.audioSrc);
@@ -64,6 +66,9 @@ export function ListeningSpeakingApp() {
       [phraseId]: evaluation,
     }));
   }
+
+  const isAnyPhrasePlaying = playingPhraseId !== null;
+  const isAnyPhraseRecording = recordingPhraseId !== null;
 
   return (
     <main id="listening-speaking-app" className="container mx-auto max-w-4xl px-4 py-10">
@@ -104,6 +109,8 @@ export function ListeningSpeakingApp() {
             isAnotherPhraseRecording={
               recordingPhraseId !== null && recordingPhraseId !== phrase.id
             }
+            isAnyPhrasePlaying={isAnyPhrasePlaying}
+            isAnyPhraseRecording={isAnyPhraseRecording}
             supportsSpeechRecognition={supportsSpeechRecognition}
             evaluation={evaluations[phrase.id]}
             onPlay={playPhrase}

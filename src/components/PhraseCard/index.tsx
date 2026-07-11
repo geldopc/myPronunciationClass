@@ -22,6 +22,8 @@ type PhraseCardProps = {
   phrase: Phrase
   isPlaying: boolean
   isAnotherPhraseRecording: boolean
+  isAnyPhrasePlaying: boolean
+  isAnyPhraseRecording: boolean
   supportsSpeechRecognition: boolean
   evaluation?: SpeechEvaluation
   onPlay: (phrase: Phrase) => void
@@ -41,6 +43,8 @@ export function PhraseCard({
   phrase,
   isPlaying,
   isAnotherPhraseRecording,
+  isAnyPhrasePlaying,
+  isAnyPhraseRecording,
   supportsSpeechRecognition,
   evaluation,
   onPlay,
@@ -65,6 +69,7 @@ export function PhraseCard({
 
   function startRecording() {
     if (!supportsSpeechRecognition || !phraseReady) return
+    if (isAnyPhrasePlaying) return
 
     const SpeechRecognitionApi =
       window.SpeechRecognition ?? window.webkitSpeechRecognition
@@ -177,7 +182,10 @@ export function PhraseCard({
       </CardContent>
 
       <CardFooter className="flex flex-wrap gap-2">
-        <Button onClick={() => onPlay(phrase)} disabled={!phraseReady}>
+        <Button
+          onClick={() => onPlay(phrase)}
+          disabled={!phraseReady || isAnyPhraseRecording}
+        >
           {isPlaying ? "Tocando..." : "Play"}
         </Button>
         <Button
@@ -186,7 +194,8 @@ export function PhraseCard({
           disabled={
             !phraseReady ||
             !supportsSpeechRecognition ||
-            isAnotherPhraseRecording
+            isAnotherPhraseRecording ||
+            isAnyPhrasePlaying
           }
         >
           {isRecording ? "Parar gravação" : "Gravar / Repetir"}
