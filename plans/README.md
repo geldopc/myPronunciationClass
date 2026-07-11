@@ -25,7 +25,7 @@ the "Current state" excerpts against the live files by eye.
 | 003  | Prevent audio playback and recording from running concurrently | P1 | S | none | DONE |
 | 004  | Guarantee recording UI never gets stuck after a speech-recognition error | P2 | S | none (touches same file as 003 — see sequencing note in 004) | DONE* |
 | 005  | Pin `@tanstack/*` deps to concrete versions instead of `"latest"` | P2 | S | none | DONE |
-| 006  | Reconcile `CLAUDE.md`'s atomic-design convention with actual structure | P3 | S | none | TODO |
+| 006  | Reconcile `CLAUDE.md`'s atomic-design convention with actual structure | P3 | S | none | DONE |
 | 007  | Remove literal `"..."` from practice text in 3 phrases | P3 | S | none | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
@@ -44,6 +44,21 @@ existing `catch` block's `finishRecording()` call already in the same
 function. A human should manually verify the actual fix (deny mic
 permission in a real browser and confirm the button recovers) before fully
 trusting this plan's Step 3 done-criterion.
+
+## New finding surfaced during plan 006's execution
+
+While sanity-checking `CLAUDE.md` against the codebase (plan 006, Step 2),
+found that `src/components/ui/select.tsx` (a shadcn-generated primitive)
+imports icons from `lucide-react` (`ChevronDownIcon`, `CheckIcon`,
+`ChevronUpIcon`), contradicting `CLAUDE.md`'s `### Phosphor Icons` section
+(`@phosphor-icons/react`). This was out of plan 006's scope (only item 11
+was planned) and was not touched. Not yet turned into a plan — options are
+either updating the doc to say "shadcn-generated `ui/` primitives may use
+their own icon set; only hand-written feature components must use
+Phosphor" (matching current practice), or replacing the lucide icons in
+`select.tsx` to match the doc (higher risk/effort, touches a
+shadcn-managed file that would drift from upstream on the next
+`shadcn add`). Recommend the documentation fix, not the code change.
 
 ## Dependency notes
 

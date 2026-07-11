@@ -21,14 +21,14 @@
   9. Always implement components responsively
   10. Using a component composition patters
     - Reference: https://vercel.com/academy/nextjs-foundations/component-composition-patterns
-  11. Using a atomic design pattern
-    - Reference: https://bradfrost.com/blog/post/atomic-web-design/ 
-    * Create the directories:
-      - elements - atoms
-      - widgets - molecules
-      - modules - organisms
-      - templates - layouts
-      - pages  
+  11. Atomic design (elements/widgets/modules/templates/pages) is NOT
+      currently used in this project — it has 2 feature components, and
+      splitting them into 5 taxonomy tiers would add navigation overhead
+      with no benefit at this scale. Reference for if/when the project
+      grows enough to warrant it: https://bradfrost.com/blog/post/atomic-web-design/
+      Current convention: one folder per component directly under
+      `src/components/` (e.g. `src/components/PhraseCard/index.tsx`),
+      matching rule 1 above.
   12. Shadcn components after downloaded should follow these rules
   13. Don't create several components in the same file, separate them in sub-components
   14. Do not create folders with redundant names; if the directory already has a name, it does not need to be repeated.
