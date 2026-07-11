@@ -4,6 +4,8 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 
 import appCss from "../styles.css?url"
 
+import { ThemeProvider } from "@/providers/Theme"
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -15,7 +17,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Listening & Speaking — Friends",
+        title: "myPronunciationClass",
       },
     ],
     links: [
@@ -38,10 +40,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('mpc-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
         <HeadContent />
       </head>
       <body>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
         <TanStackDevtools
           config={{
             position: "bottom-right",
