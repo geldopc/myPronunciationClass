@@ -1,24 +1,20 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
-import { PhraseCard } from "@/components/PhraseCard"
-import type { SpeechEvaluation } from "@/components/PhraseCard"
+import { ProgressBar } from "@/components/ProgressBar"
+import { PhraseList } from "@/components/PhraseList"
+import { TopBar } from "@/components/TopBar"
+import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
+import { useAudioPlayer } from "@/hooks/useAudioPlayer"
+import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
+import type { Difficulty } from "@/lib/difficulty"
 import { phrases } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
-const playbackRates = [0.5, 0.75, 1, 1.25, 1.5] as const
 
 export function ListeningSpeakingApp() {
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const [playbackRate, setPlaybackRate] =
-    useState<(typeof playbackRates)[number]>(1)
-  const [playingPhraseId, setPlayingPhraseId] = useState<number | null>(null)
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy")
+  const [focusMode, setFocusMode] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
+  const [currentPhraseId, setCurrentPhraseId] = useState<number>(phrases[0].id)
   const [recordingPhraseId, setRecordingPhraseId] = useState<number | null>(
     null
   )
@@ -28,118 +24,107 @@ export function ListeningSpeakingApp() {
   const [supportsSpeechRecognition, setSupportsSpeechRecognition] =
     useState(false)
 
+  const { playingId, play } = useAudioPlayer(playbackRate)
+  const toggleRegistry = useRef(new Map<number, () => void>())
+
   useEffect(() => {
     setSupportsSpeechRecognition(
       Boolean(window.SpeechRecognition ?? window.webkitSpeechRecognition)
     )
-
-    return () => {
-      audioRef.current?.pause()
-    }
   }, [])
 
-  function handlePlaybackRateChange(value: string) {
-    const nextRate = Number(value) as (typeof playbackRates)[number]
-    setPlaybackRate(nextRate)
+  const registerToggle = useCallback(
+    (phraseId: number, toggle: (() => void) | null) => {
+      if (toggle) {
+        toggleRegistry.current.set(phraseId, toggle)
+      } else {
+        toggleRegistry.current.delete(phraseId)
+      }
+    },
+    []
+  )
 
-    if (audioRef.current) {
-      audioRef.current.playbackRate = nextRate
-    }
+  function handlePlay(phrase: Phrase) {
+    if (recordingPhraseId !== null) return
+    setCurrentPhraseId(phrase.id)
+    play(phrase.id, phrase.audioSrc)
   }
 
-  async function playPhrase(phrase: Phrase) {
-    if (recordingPhraseId !== null) return
-
-    audioRef.current?.pause()
-
-    const audio = new Audio(phrase.audioSrc)
-    audioRef.current = audio
-    audio.playbackRate = playbackRate
-    audio.onended = () => setPlayingPhraseId(null)
-    audio.onerror = () => setPlayingPhraseId(null)
-
-    try {
-      setPlayingPhraseId(phrase.id)
-      await audio.play()
-    } catch {
-      setPlayingPhraseId(null)
-    }
+  function handleRecordingChange(phraseId: number | null) {
+    setRecordingPhraseId(phraseId)
+    if (phraseId !== null) setCurrentPhraseId(phraseId)
   }
 
   function saveEvaluation(phraseId: number, evaluation: SpeechEvaluation) {
-    setEvaluations((currentEvaluations) => ({
-      ...currentEvaluations,
-      [phraseId]: evaluation,
-    }))
+    setEvaluations((current) => ({ ...current, [phraseId]: evaluation }))
   }
 
-  const isAnyPhrasePlaying = playingPhraseId !== null
-  const isAnyPhraseRecording = recordingPhraseId !== null
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+      ) {
+        return
+      }
+
+      const index = phrases.findIndex((phrase) => phrase.id === currentPhraseId)
+      const currentPhrase = phrases[index]
+
+      if (event.code === "Space") {
+        event.preventDefault()
+        handlePlay(currentPhrase)
+      } else if (event.key.toLowerCase() === "r") {
+        event.preventDefault()
+        toggleRegistry.current.get(currentPhraseId)?.()
+      } else if (event.key === "ArrowLeft" && index > 0) {
+        setCurrentPhraseId(phrases[index - 1].id)
+      } else if (event.key === "ArrowRight" && index < phrases.length - 1) {
+        setCurrentPhraseId(phrases[index + 1].id)
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [currentPhraseId, recordingPhraseId])
+
+  const completedCount = Object.keys(evaluations).length
 
   return (
-    <main
-      id="listening-speaking-app"
-      className="container mx-auto max-w-4xl px-4 py-10"
-    >
-      <header className="mb-8 space-y-4">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-primary">
-            Listening & Speaking
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Pratique cada fala
-          </h1>
-          <p className="max-w-2xl text-muted-foreground">
-            Ouça a frase, repita em voz alta e confira a transcrição e seu
-            percentual de acerto.
-          </p>
-        </div>
+    <div id="listening-speaking-app" className="min-h-screen bg-background">
+      <TopBar
+        difficulty={difficulty}
+        onDifficultyChange={setDifficulty}
+        playbackRate={playbackRate}
+        onPlaybackRateChange={setPlaybackRate}
+        focusMode={focusMode}
+        onToggleFocusMode={() => setFocusMode((value) => !value)}
+      />
 
-        <div className="w-full max-w-48 space-y-2">
-          <label htmlFor="playback-rate" className="text-sm font-medium">
-            Velocidade do áudio
-          </label>
-          <Select
-            value={String(playbackRate)}
-            onValueChange={handlePlaybackRateChange}
-          >
-            <SelectTrigger id="playback-rate" aria-label="Velocidade do áudio">
-              <SelectValue placeholder="Velocidade" />
-            </SelectTrigger>
-            <SelectContent>
-              {playbackRates.map((rate) => (
-                <SelectItem key={rate} value={String(rate)}>
-                  {rate.toFixed(rate % 1 === 0 ? 1 : 2)}x
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="sticky top-14 z-10 border-b border-border bg-background/80 backdrop-blur">
+        <div className="container mx-auto max-w-3xl px-4 py-2">
+          <ProgressBar completed={completedCount} total={phrases.length} />
         </div>
-      </header>
+      </div>
 
-      <section
-        id="phrase-list"
-        aria-label="Frases para praticar"
-        className="grid gap-4 md:grid-cols-2"
-      >
-        {phrases.map((phrase) => (
-          <PhraseCard
-            key={phrase.id}
-            phrase={phrase}
-            isPlaying={playingPhraseId === phrase.id}
-            isAnotherPhraseRecording={
-              recordingPhraseId !== null && recordingPhraseId !== phrase.id
-            }
-            isAnyPhrasePlaying={isAnyPhrasePlaying}
-            isAnyPhraseRecording={isAnyPhraseRecording}
-            supportsSpeechRecognition={supportsSpeechRecognition}
-            evaluation={evaluations[phrase.id]}
-            onPlay={playPhrase}
-            onRecordingChange={setRecordingPhraseId}
-            onEvaluation={saveEvaluation}
-          />
-        ))}
-      </section>
-    </main>
+      <main className="container mx-auto max-w-3xl px-4 py-8">
+        <PhraseList
+          phrases={phrases}
+          difficulty={difficulty}
+          focusMode={focusMode}
+          currentPhraseId={currentPhraseId}
+          onCurrentPhraseChange={setCurrentPhraseId}
+          playingId={playingId}
+          recordingPhraseId={recordingPhraseId}
+          supportsSpeechRecognition={supportsSpeechRecognition}
+          evaluations={evaluations}
+          onPlay={handlePlay}
+          onRecordingChange={handleRecordingChange}
+          onEvaluation={saveEvaluation}
+          registerToggle={registerToggle}
+        />
+      </main>
+    </div>
   )
 }

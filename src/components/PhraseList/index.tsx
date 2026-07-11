@@ -29,7 +29,7 @@ function getNodeState(
   currentPhraseId: number,
   evaluations: Record<number, SpeechEvaluation>
 ): SpineNodeState {
-  if (evaluations[phrase.id]) return "done"
+  if (phrase.id in evaluations) return "done"
   if (phrase.id === currentPhraseId) return "current"
   return "untouched"
 }
