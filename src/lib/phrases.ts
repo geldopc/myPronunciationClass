@@ -1,9 +1,9 @@
 export type Phrase = {
-  id: number;
-  text: string;
-  audioSrc: string;
-  pronunciationHint: string;
-};
+  id: number
+  text: string
+  audioSrc: string
+  pronunciationHint: string
+}
 
 /**
  * Roteiro do trecho "Friends – Joey Finds Out" (S5), alinhado aos 36 áudios
@@ -13,44 +13,257 @@ export type Phrase = {
  * ouvida naquele clipe específico. Ver AUDIO_CUTS.md para os intervalos.
  */
 export const phrases: Phrase[] = [
-  { id: 1, text: "Damn, Rolos. Hey, you're back! Hey, how was your conference?", audioSrc: "/audios/frase1.mp3", pronunciationHint: "\"you're\" reduz para /jɚ/ (\"yer\"). \"how was\" conecta como \"how-wuz\"." },
-  { id: 2, text: "It was terrible. I fought with", audioSrc: "/audios/frase2.mp3", pronunciationHint: "\"It was\" contrai para \"it-wuz\". \"fought with\" liga o /t/ final ao /w/." },
-  { id: 3, text: "My colleagues, you know, the entire time. Are you kidding?", audioSrc: "/audios/frase3.mp3", pronunciationHint: "\"Are you\" reduz para /ɚjə/ (\"ar-ya\"). \"kidding\" tem flap-t no meio." },
-  { id: 4, text: "With this? So your weekend was a total bust?", audioSrc: "/audios/frase4.mp3", pronunciationHint: "\"total\" tem flap-t: soa \"toh-dl\". \"your\" reduz para /jɚ/." },
-  { id: 5, text: "Uh, no. I got to see Donald Trump waiting for an elevator.", audioSrc: "/audios/frase5.mp3", pronunciationHint: "\"got to\" vira \"gotta\" /ˈɡɑːtə/. \"waiting for an\" conecta tudo sem pausas." },
-  { id: 6, text: "Hi. Hey, you're back, too. Yeah.", audioSrc: "/audios/frase6.mp3", pronunciationHint: "\"you're\" reduzido /jɚ/. \"too\" com vogal longa /uː/ no fim." },
-  { id: 7, text: "Yeah, Chandler, can I talk to you outside for just a second?", audioSrc: "/audios/frase7.mp3", pronunciationHint: "\"can I\" conecta como \"kuh-nai\". \"talk to you\" reduz \"to\" para /tə/." },
-  { id: 8, text: "Hey, how was your chef thing?", audioSrc: "/audios/frase8.mp3", pronunciationHint: "\"was your\" liga em \"wuh-zher\"." },
-  { id: 9, text: "It was awful. I guess some people just don't appreciate really good food. Well, maybe it was the kind of food that tasted good at first, but then made everybody vomit and have diarrhea.", audioSrc: "/audios/frase9.mp3", pronunciationHint: "\"don't\" com /t/ quase mudo antes de consoante. \"kind of\" reduz para \"kinda\". Flap-t em \"tasted\"." },
-  { id: 10, text: "Chandler? Monica?", audioSrc: "/audios/frase10.mp3", pronunciationHint: "Nomes próprios em tom de pergunta chamando alguém: entonação subindo no final." },
-  { id: 11, text: "Mr. Bing?", audioSrc: "/audios/frase11.mp3", pronunciationHint: "\"Mister\" reduz para /ˈmɪstɚ/, quase sem o \"i\" central." },
-  { id: 12, text: "That hotel you stayed at called. Said someone left an eyelash curler in your room.", audioSrc: "/audios/frase12.mp3", pronunciationHint: "\"stayed at\" linka o /d/ ao /æ/. \"eyelash curler\" com \"r\" americano forte." },
-  { id: 13, text: "Yes, that was mine. 'Cause I figured you hooked up with some girl and she left it there.", audioSrc: "/audios/frase13.mp3", pronunciationHint: "\"'Cause\" é redução de \"because\", soa /kəz/. \"hooked up with\" encadeia sem pausas." },
-  { id: 14, text: "Yes, that would have made more sense.", audioSrc: "/audios/frase14.mp3", pronunciationHint: "\"would have\" reduz para \"would've\" /ˈwʊdəv/, nunca pronuncie o \"have\" cheio." },
-  { id: 15, text: "You know, I don't even feel like I know you anymore, man. All right?", audioSrc: "/audios/frase15.mp3", pronunciationHint: "\"don't even\" perde o /t/ de \"don't\". \"anymore\" vira uma palavra só na fala corrida." },
-  { id: 16, text: "Look, I'm just gonna ask you this one time, all right? And whatever you say, I'll believe you.", audioSrc: "/audios/frase16.mp3", pronunciationHint: "\"gonna\" = \"going to\" reduzido. \"ask you\" funde o /k/ ao /j/, quase \"askyuh\"." },
-  { id: 17, text: "Were you, or were you not, on a gay cruise?", audioSrc: "/audios/frase17.mp3", pronunciationHint: "\"Were you\" reduz para \"wer-yuh\". Pausa curta antes de \"on a gay cruise\" para dar ênfase." },
-  { id: 18, text: "Hey. Hey. Hey. Oh, hey, Monica.", audioSrc: "/audios/frase18.mp3", pronunciationHint: "Cada \"Hey\" com entonação diferente: cumprimento, resposta, depois reconhecimento (\"Oh, hey\")." },
-  { id: 19, text: "I heard you saw Donald Trump at your convention. Yeah, saw him waiting for an elevator.", audioSrc: "/audios/frase19.mp3", pronunciationHint: "\"heard you\" funde /d/ + /j/ perto de \"herjuh\". \"saw him\" quase perde o \"h\": \"saw-im\"." },
-  { id: 20, text: "Hey, Rachel, can I borrow your eyelash curler? I think I lost mine.", audioSrc: "/audios/frase20.mp3", pronunciationHint: "\"can I borrow\" encadeia rápido. \"think I\" liga o /k/ ao /aɪ/ sem pausa." },
-  { id: 21, text: "Joey, can I talk to you for a second?", audioSrc: "/audios/frase21.mp3", pronunciationHint: "\"can I\" soa \"kuh-nai\". \"talk to you\" reduz \"to\" para /tə/, igual à frase 7." },
-  { id: 22, text: "Yes. Yes. You? And you?", audioSrc: "/audios/frase22.mp3", pronunciationHint: "\"And you\" conecta \"d\" + \"y\" quase como \"an-juh\". Cada palavra isolada, sem juntar." },
-  { id: 23, text: "Yes, but you cannot tell anyone, no one knows. How, when?", audioSrc: "/audios/frase23.mp3", pronunciationHint: "\"cannot\" aqui é enfático, não reduz (diferente de \"can't\"). \"tell anyone\" liga o /l/ ao /ɛ/." },
-  { id: 24, text: "It happened in London.", audioSrc: "/audios/frase24.mp3", pronunciationHint: "\"happened in\" liga o /d/ ao /ɪ/ sem pausa. \"London\" com \"o\" curto /ʌ/." },
-  { id: 25, text: "In London?! The reason we didn't tell anyone was because we didn't want to make a big deal out of it.", audioSrc: "/audios/frase25.mp3", pronunciationHint: "\"didn't\" tem o /t/ quase engolido antes de consoante. \"want to\" reduz para \"wanna\"." },
-  { id: 26, text: "But it is a big deal!", audioSrc: "/audios/frase26.mp3", pronunciationHint: "\"But it is\" conecta \"t\" + vogal: \"buh-tit-iz\"." },
-  { id: 27, text: "I have to tell someone. You can't.", audioSrc: "/audios/frase27.mp3", pronunciationHint: "\"have to\" reduz para \"hafta\". \"can't\" com vogal mais longa e /t/ final marcado." },
-  { id: 28, text: "Please, please, we just don't want to deal with telling everyone, okay?", audioSrc: "/audios/frase28.mp3", pronunciationHint: "\"want to\" reduz para \"wanna\". \"deal with\" conecta o /l/ ao /w/ sem pausa." },
-  { id: 29, text: "Just promise you won't tell.", audioSrc: "/audios/frase29.mp3", pronunciationHint: "\"won't\" tem vogal /oʊ/ bem aberta — não confundir com \"want\". \"promise you\" funde /s/ + /j/." },
-  { id: 30, text: "All right!", audioSrc: "/audios/frase30.mp3", pronunciationHint: "\"All right\" vira quase uma palavra só, \"awright\", com entonação de aceitação resignada." },
-  { id: 31, text: "Man, this is unbelievable! I mean, it's great, but", audioSrc: "/audios/frase31.mp3", pronunciationHint: "\"this is\" conecta o /s/ final ao /ɪ/. \"it's great\" junta o /s/ ao /ɡ/ sem pausa." },
-  { id: 32, text: "I know it's great.", audioSrc: "/audios/frase32.mp3", pronunciationHint: "\"I know\" com ditongo /oʊ/ completo. \"it's great\" sem pausa entre as palavras." },
-  { id: 33, text: "Oh, I don't want to see that.", audioSrc: "/audios/frase33.mp3", pronunciationHint: "\"want to\" reduz para \"wanna\". Na fala rápida soa quase \"dohn-wanna see that\"." },
-  { id: 34, text: "We're so stupid.", audioSrc: "/audios/frase34.mp3", pronunciationHint: "\"We're\" reduz para /wɪr/. \"stupid\" com flap-t no meio, som suave de \"d\"." },
-  { id: 35, text: "Do you know what's going on in there?", audioSrc: "/audios/frase35.mp3", pronunciationHint: "\"Do you\" funde em \"d'ya\". \"going on\" e \"on in\" ligam vogal a vogal sem pausa." },
-  { id: 36, text: "They're trying to take Joey.", audioSrc: "/audios/frase36.mp3", pronunciationHint: "\"trying to\" reduz para \"tryna\" na fala informal. \"take Joey\" com o \"J\" bem marcado /dʒ/." },
-];
+  {
+    id: 1,
+    text: "Damn, Rolos. Hey, you're back! Hey, how was your conference?",
+    audioSrc: "/audios/frase1.mp3",
+    pronunciationHint:
+      '"you\'re" reduz para /jɚ/ ("yer"). "how was" conecta como "how-wuz".',
+  },
+  {
+    id: 2,
+    text: "It was terrible. I fought with",
+    audioSrc: "/audios/frase2.mp3",
+    pronunciationHint:
+      '"It was" contrai para "it-wuz". "fought with" liga o /t/ final ao /w/.',
+  },
+  {
+    id: 3,
+    text: "My colleagues, you know, the entire time. Are you kidding?",
+    audioSrc: "/audios/frase3.mp3",
+    pronunciationHint:
+      '"Are you" reduz para /ɚjə/ ("ar-ya"). "kidding" tem flap-t no meio.',
+  },
+  {
+    id: 4,
+    text: "With this? So your weekend was a total bust?",
+    audioSrc: "/audios/frase4.mp3",
+    pronunciationHint:
+      '"total" tem flap-t: soa "toh-dl". "your" reduz para /jɚ/.',
+  },
+  {
+    id: 5,
+    text: "Uh, no. I got to see Donald Trump waiting for an elevator.",
+    audioSrc: "/audios/frase5.mp3",
+    pronunciationHint:
+      '"got to" vira "gotta" /ˈɡɑːtə/. "waiting for an" conecta tudo sem pausas.',
+  },
+  {
+    id: 6,
+    text: "Hi. Hey, you're back, too. Yeah.",
+    audioSrc: "/audios/frase6.mp3",
+    pronunciationHint:
+      '"you\'re" reduzido /jɚ/. "too" com vogal longa /uː/ no fim.',
+  },
+  {
+    id: 7,
+    text: "Yeah, Chandler, can I talk to you outside for just a second?",
+    audioSrc: "/audios/frase7.mp3",
+    pronunciationHint:
+      '"can I" conecta como "kuh-nai". "talk to you" reduz "to" para /tə/.',
+  },
+  {
+    id: 8,
+    text: "Hey, how was your chef thing?",
+    audioSrc: "/audios/frase8.mp3",
+    pronunciationHint: '"was your" liga em "wuh-zher".',
+  },
+  {
+    id: 9,
+    text: "It was awful. I guess some people just don't appreciate really good food. Well, maybe it was the kind of food that tasted good at first, but then made everybody vomit and have diarrhea.",
+    audioSrc: "/audios/frase9.mp3",
+    pronunciationHint:
+      '"don\'t" com /t/ quase mudo antes de consoante. "kind of" reduz para "kinda". Flap-t em "tasted".',
+  },
+  {
+    id: 10,
+    text: "Chandler? Monica?",
+    audioSrc: "/audios/frase10.mp3",
+    pronunciationHint:
+      "Nomes próprios em tom de pergunta chamando alguém: entonação subindo no final.",
+  },
+  {
+    id: 11,
+    text: "Mr. Bing?",
+    audioSrc: "/audios/frase11.mp3",
+    pronunciationHint: '"Mister" reduz para /ˈmɪstɚ/, quase sem o "i" central.',
+  },
+  {
+    id: 12,
+    text: "That hotel you stayed at called. Said someone left an eyelash curler in your room.",
+    audioSrc: "/audios/frase12.mp3",
+    pronunciationHint:
+      '"stayed at" linka o /d/ ao /æ/. "eyelash curler" com "r" americano forte.',
+  },
+  {
+    id: 13,
+    text: "Yes, that was mine. 'Cause I figured you hooked up with some girl and she left it there.",
+    audioSrc: "/audios/frase13.mp3",
+    pronunciationHint:
+      '"\'Cause" é redução de "because", soa /kəz/. "hooked up with" encadeia sem pausas.',
+  },
+  {
+    id: 14,
+    text: "Yes, that would have made more sense.",
+    audioSrc: "/audios/frase14.mp3",
+    pronunciationHint:
+      '"would have" reduz para "would\'ve" /ˈwʊdəv/, nunca pronuncie o "have" cheio.',
+  },
+  {
+    id: 15,
+    text: "You know, I don't even feel like I know you anymore, man. All right?",
+    audioSrc: "/audios/frase15.mp3",
+    pronunciationHint:
+      '"don\'t even" perde o /t/ de "don\'t". "anymore" vira uma palavra só na fala corrida.',
+  },
+  {
+    id: 16,
+    text: "Look, I'm just gonna ask you this one time, all right? And whatever you say, I'll believe you.",
+    audioSrc: "/audios/frase16.mp3",
+    pronunciationHint:
+      '"gonna" = "going to" reduzido. "ask you" funde o /k/ ao /j/, quase "askyuh".',
+  },
+  {
+    id: 17,
+    text: "Were you, or were you not, on a gay cruise?",
+    audioSrc: "/audios/frase17.mp3",
+    pronunciationHint:
+      '"Were you" reduz para "wer-yuh". Pausa curta antes de "on a gay cruise" para dar ênfase.',
+  },
+  {
+    id: 18,
+    text: "Hey. Hey. Hey. Oh, hey, Monica.",
+    audioSrc: "/audios/frase18.mp3",
+    pronunciationHint:
+      'Cada "Hey" com entonação diferente: cumprimento, resposta, depois reconhecimento ("Oh, hey").',
+  },
+  {
+    id: 19,
+    text: "I heard you saw Donald Trump at your convention. Yeah, saw him waiting for an elevator.",
+    audioSrc: "/audios/frase19.mp3",
+    pronunciationHint:
+      '"heard you" funde /d/ + /j/ perto de "herjuh". "saw him" quase perde o "h": "saw-im".',
+  },
+  {
+    id: 20,
+    text: "Hey, Rachel, can I borrow your eyelash curler? I think I lost mine.",
+    audioSrc: "/audios/frase20.mp3",
+    pronunciationHint:
+      '"can I borrow" encadeia rápido. "think I" liga o /k/ ao /aɪ/ sem pausa.',
+  },
+  {
+    id: 21,
+    text: "Joey, can I talk to you for a second?",
+    audioSrc: "/audios/frase21.mp3",
+    pronunciationHint:
+      '"can I" soa "kuh-nai". "talk to you" reduz "to" para /tə/, igual à frase 7.',
+  },
+  {
+    id: 22,
+    text: "Yes. Yes. You? And you?",
+    audioSrc: "/audios/frase22.mp3",
+    pronunciationHint:
+      '"And you" conecta "d" + "y" quase como "an-juh". Cada palavra isolada, sem juntar.',
+  },
+  {
+    id: 23,
+    text: "Yes, but you cannot tell anyone, no one knows. How, when?",
+    audioSrc: "/audios/frase23.mp3",
+    pronunciationHint:
+      '"cannot" aqui é enfático, não reduz (diferente de "can\'t"). "tell anyone" liga o /l/ ao /ɛ/.',
+  },
+  {
+    id: 24,
+    text: "It happened in London.",
+    audioSrc: "/audios/frase24.mp3",
+    pronunciationHint:
+      '"happened in" liga o /d/ ao /ɪ/ sem pausa. "London" com "o" curto /ʌ/.',
+  },
+  {
+    id: 25,
+    text: "In London?! The reason we didn't tell anyone was because we didn't want to make a big deal out of it.",
+    audioSrc: "/audios/frase25.mp3",
+    pronunciationHint:
+      '"didn\'t" tem o /t/ quase engolido antes de consoante. "want to" reduz para "wanna".',
+  },
+  {
+    id: 26,
+    text: "But it is a big deal!",
+    audioSrc: "/audios/frase26.mp3",
+    pronunciationHint: '"But it is" conecta "t" + vogal: "buh-tit-iz".',
+  },
+  {
+    id: 27,
+    text: "I have to tell someone. You can't.",
+    audioSrc: "/audios/frase27.mp3",
+    pronunciationHint:
+      '"have to" reduz para "hafta". "can\'t" com vogal mais longa e /t/ final marcado.',
+  },
+  {
+    id: 28,
+    text: "Please, please, we just don't want to deal with telling everyone, okay?",
+    audioSrc: "/audios/frase28.mp3",
+    pronunciationHint:
+      '"want to" reduz para "wanna". "deal with" conecta o /l/ ao /w/ sem pausa.',
+  },
+  {
+    id: 29,
+    text: "Just promise you won't tell.",
+    audioSrc: "/audios/frase29.mp3",
+    pronunciationHint:
+      '"won\'t" tem vogal /oʊ/ bem aberta — não confundir com "want". "promise you" funde /s/ + /j/.',
+  },
+  {
+    id: 30,
+    text: "All right!",
+    audioSrc: "/audios/frase30.mp3",
+    pronunciationHint:
+      '"All right" vira quase uma palavra só, "awright", com entonação de aceitação resignada.',
+  },
+  {
+    id: 31,
+    text: "Man, this is unbelievable! I mean, it's great, but",
+    audioSrc: "/audios/frase31.mp3",
+    pronunciationHint:
+      '"this is" conecta o /s/ final ao /ɪ/. "it\'s great" junta o /s/ ao /ɡ/ sem pausa.',
+  },
+  {
+    id: 32,
+    text: "I know it's great.",
+    audioSrc: "/audios/frase32.mp3",
+    pronunciationHint:
+      '"I know" com ditongo /oʊ/ completo. "it\'s great" sem pausa entre as palavras.',
+  },
+  {
+    id: 33,
+    text: "Oh, I don't want to see that.",
+    audioSrc: "/audios/frase33.mp3",
+    pronunciationHint:
+      '"want to" reduz para "wanna". Na fala rápida soa quase "dohn-wanna see that".',
+  },
+  {
+    id: 34,
+    text: "We're so stupid.",
+    audioSrc: "/audios/frase34.mp3",
+    pronunciationHint:
+      '"We\'re" reduz para /wɪr/. "stupid" com flap-t no meio, som suave de "d".',
+  },
+  {
+    id: 35,
+    text: "Do you know what's going on in there?",
+    audioSrc: "/audios/frase35.mp3",
+    pronunciationHint:
+      '"Do you" funde em "d\'ya". "going on" e "on in" ligam vogal a vogal sem pausa.',
+  },
+  {
+    id: 36,
+    text: "They're trying to take Joey.",
+    audioSrc: "/audios/frase36.mp3",
+    pronunciationHint:
+      '"trying to" reduz para "tryna" na fala informal. "take Joey" com o "J" bem marcado /dʒ/.',
+  },
+]
 
 export function isPhraseReady(phrase: Phrase): boolean {
-  return !phrase.text.startsWith("SUBSTITUA_PELA_FRASE_");
+  return !phrase.text.startsWith("SUBSTITUA_PELA_FRASE_")
 }
