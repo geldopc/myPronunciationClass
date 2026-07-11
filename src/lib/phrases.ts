@@ -14,8 +14,8 @@ export type Phrase = {
  */
 export const phrases: Phrase[] = [
   { id: 1, text: "Damn, Rolos. Hey, you're back! Hey, how was your conference?", audioSrc: "/audios/frase1.mp3", pronunciationHint: "\"you're\" reduz para /jɚ/ (\"yer\"). \"how was\" conecta como \"how-wuz\"." },
-  { id: 2, text: "It was terrible. I fought with...", audioSrc: "/audios/frase2.mp3", pronunciationHint: "\"It was\" contrai para \"it-wuz\". \"fought with\" liga o /t/ final ao /w/." },
-  { id: 3, text: "...my colleagues, you know, the entire time. Are you kidding?", audioSrc: "/audios/frase3.mp3", pronunciationHint: "\"Are you\" reduz para /ɚjə/ (\"ar-ya\"). \"kidding\" tem flap-t no meio." },
+  { id: 2, text: "It was terrible. I fought with", audioSrc: "/audios/frase2.mp3", pronunciationHint: "\"It was\" contrai para \"it-wuz\". \"fought with\" liga o /t/ final ao /w/." },
+  { id: 3, text: "My colleagues, you know, the entire time. Are you kidding?", audioSrc: "/audios/frase3.mp3", pronunciationHint: "\"Are you\" reduz para /ɚjə/ (\"ar-ya\"). \"kidding\" tem flap-t no meio." },
   { id: 4, text: "With this? So your weekend was a total bust?", audioSrc: "/audios/frase4.mp3", pronunciationHint: "\"total\" tem flap-t: soa \"toh-dl\". \"your\" reduz para /jɚ/." },
   { id: 5, text: "Uh, no. I got to see Donald Trump waiting for an elevator.", audioSrc: "/audios/frase5.mp3", pronunciationHint: "\"got to\" vira \"gotta\" /ˈɡɑːtə/. \"waiting for an\" conecta tudo sem pausas." },
   { id: 6, text: "Hi. Hey, you're back, too. Yeah.", audioSrc: "/audios/frase6.mp3", pronunciationHint: "\"you're\" reduzido /jɚ/. \"too\" com vogal longa /uː/ no fim." },
@@ -43,7 +43,7 @@ export const phrases: Phrase[] = [
   { id: 28, text: "Please, please, we just don't want to deal with telling everyone, okay?", audioSrc: "/audios/frase28.mp3", pronunciationHint: "\"want to\" reduz para \"wanna\". \"deal with\" conecta o /l/ ao /w/ sem pausa." },
   { id: 29, text: "Just promise you won't tell.", audioSrc: "/audios/frase29.mp3", pronunciationHint: "\"won't\" tem vogal /oʊ/ bem aberta — não confundir com \"want\". \"promise you\" funde /s/ + /j/." },
   { id: 30, text: "All right!", audioSrc: "/audios/frase30.mp3", pronunciationHint: "\"All right\" vira quase uma palavra só, \"awright\", com entonação de aceitação resignada." },
-  { id: 31, text: "Man, this is unbelievable! I mean, it's great, but...", audioSrc: "/audios/frase31.mp3", pronunciationHint: "\"this is\" conecta o /s/ final ao /ɪ/. \"it's great\" junta o /s/ ao /ɡ/ sem pausa." },
+  { id: 31, text: "Man, this is unbelievable! I mean, it's great, but", audioSrc: "/audios/frase31.mp3", pronunciationHint: "\"this is\" conecta o /s/ final ao /ɪ/. \"it's great\" junta o /s/ ao /ɡ/ sem pausa." },
   { id: 32, text: "I know it's great.", audioSrc: "/audios/frase32.mp3", pronunciationHint: "\"I know\" com ditongo /oʊ/ completo. \"it's great\" sem pausa entre as palavras." },
   { id: 33, text: "Oh, I don't want to see that.", audioSrc: "/audios/frase33.mp3", pronunciationHint: "\"want to\" reduz para \"wanna\". Na fala rápida soa quase \"dohn-wanna see that\"." },
   { id: 34, text: "We're so stupid.", audioSrc: "/audios/frase34.mp3", pronunciationHint: "\"We're\" reduz para /wɪr/. \"stupid\" com flap-t no meio, som suave de \"d\"." },
