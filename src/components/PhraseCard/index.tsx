@@ -8,12 +8,7 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScoreReveal } from "@/components/PhraseCard/ScoreReveal"
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
