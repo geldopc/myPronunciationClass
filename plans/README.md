@@ -21,7 +21,7 @@ the "Current state" excerpts against the live files by eye.
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001  | Initialize git repository (+ gitignore `.playwright-mcp/`) | P1 | S | — | DONE |
-| 002  | Add unit tests for `text-similarity.ts`, fix broken `npm test` gate | P1 | S | none (001 recommended first) | TODO |
+| 002  | Add unit tests for `text-similarity.ts`, fix broken `npm test` gate | P1 | S | none (001 recommended first) | DONE |
 | 003  | Prevent audio playback and recording from running concurrently | P1 | S | none | TODO |
 | 004  | Guarantee recording UI never gets stuck after a speech-recognition error | P2 | S | none (touches same file as 003 — see sequencing note in 004) | TODO |
 | 005  | Pin `@tanstack/*` deps to concrete versions instead of `"latest"` | P2 | S | none | TODO |
