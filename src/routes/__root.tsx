@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 
 import appCss from "../styles.css?url"
 
+import { AuthProvider } from "@/providers/Auth"
 import { ThemeProvider } from "@/providers/Theme"
 
 export const Route = createRootRoute({
@@ -48,7 +49,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
         <TanStackDevtools
           config={{
             position: "bottom-right",
