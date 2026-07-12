@@ -1,5 +1,5 @@
 import { ProgressStats } from "@/components/ProgressStats"
-import { ShareControl } from "@/hooks/useShareLink/ShareControl"
+import { ShareControl } from "@/components/ShareControl"
 import { useProgress } from "@/hooks/useProgress"
 import { useAuth } from "@/providers/Auth"
 
