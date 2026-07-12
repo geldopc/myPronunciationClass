@@ -1,6 +1,7 @@
 import { ListIcon, Maximize2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { AuthControl } from "@/components/TopBar/AuthControl"
 import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle"
 import { SpeedControl } from "@/components/TopBar/SpeedControl"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
@@ -47,6 +48,7 @@ export function TopBar({
             {focusMode ? <ListIcon /> : <Maximize2Icon />}
           </Button>
           <ThemeToggle />
+          <AuthControl />
         </div>
       </div>
     </header>
