@@ -19,7 +19,7 @@ export function useAudioPlayer(playbackRate: number) {
   async function play(id: number, src: string) {
     audioRef.current?.pause()
 
-    const audio = new Audio(src)
+    const audio = new Audio(import.meta.env.BASE_URL + src.replace(/^\//, ""))
     audioRef.current = audio
     audio.playbackRate = playbackRate
     audio.onended = () => setPlayingId(null)
