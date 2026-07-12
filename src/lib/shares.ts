@@ -12,7 +12,9 @@ import type { Share, ShareProfile, ShareSnapshot } from "@/lib/progress-model"
 
 export function generateSlug(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(12))
-  return Array.from(bytes, (byte) => byte.toString(36).padStart(2, "0")).join("")
+  return Array.from(bytes, (byte) => byte.toString(36).padStart(2, "0")).join(
+    ""
+  )
 }
 
 export async function createShare(
@@ -28,7 +30,10 @@ export async function createShare(
     snapshot,
     createdAt: serverTimestamp(),
   })
-  await updateDoc(doc(db, "users", uid), { shareSlug: slug, shareEnabled: true })
+  await updateDoc(doc(db, "users", uid), {
+    shareSlug: slug,
+    shareEnabled: true,
+  })
   return slug
 }
 
@@ -51,5 +56,8 @@ export async function readShare(slug: string): Promise<Share | null> {
 
 export async function revokeShare(uid: string, slug: string): Promise<void> {
   await deleteDoc(doc(db, "shares", slug))
-  await updateDoc(doc(db, "users", uid), { shareSlug: null, shareEnabled: false })
+  await updateDoc(doc(db, "users", uid), {
+    shareSlug: null,
+    shareEnabled: false,
+  })
 }

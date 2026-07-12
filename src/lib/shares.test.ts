@@ -1,3 +1,6 @@
+/* eslint-disable import/first -- vi.mock factories below reference the
+   outer `const`s that vitest hoists; importing after them keeps that
+   hoisting intact. */
 import { describe, expect, it, vi, beforeEach } from "vitest"
 
 vi.mock("firebase/app", () => ({
@@ -37,14 +40,21 @@ describe("shares", () => {
   })
 
   it("creates a public share doc and links it on the user", async () => {
-    const slug = await createShare(
-      "u1",
-      { displayName: "Ada", avatarUrl: "http://x/a.png" },
-      { completion: 50, average: 80, streak: 1, bestScoreByPhrase: { 1: 90 } }
-    )
+    const profile = { displayName: "Ada", avatarUrl: "http://x/a.png" }
+    const snapshot = { completion: 50, average: 80, streak: 1, bestScoreByPhrase: { 1: 90 } }
+
+    const slug = await createShare("u1", profile, snapshot)
+
     expect(typeof slug).toBe("string")
     expect(setDoc).toHaveBeenCalledTimes(1)
     expect(updateDoc).toHaveBeenCalledTimes(1)
+
+    const written = vi.mocked(setDoc).mock.calls[0][1] as Record<string, unknown>
+    expect(written.uid).toBe("u1")
+    expect(written.displayName).toBe(profile.displayName)
+    expect(written.avatarUrl).toBe(profile.avatarUrl)
+    expect(written.snapshot).toEqual(snapshot)
+    expect(written).not.toHaveProperty("transcript")
   })
 
   it("returns null for a missing share", async () => {

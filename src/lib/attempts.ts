@@ -10,7 +10,10 @@ import {
 import { db } from "@/lib/firebase"
 import type { Attempt, PhraseStat } from "@/lib/progress-model"
 
-export async function recordAttempt(uid: string, attempt: Attempt): Promise<void> {
+export async function recordAttempt(
+  uid: string,
+  attempt: Attempt
+): Promise<void> {
   await addDoc(collection(db, "users", uid, "attempts"), {
     ...attempt,
     createdAt: serverTimestamp(),
