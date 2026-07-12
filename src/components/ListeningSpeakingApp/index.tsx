@@ -5,10 +5,12 @@ import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
 import { useAudioPlayer } from "@/hooks/useAudioPlayer"
+import { useProgress } from "@/hooks/useProgress"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
 import { phrases } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
+import { useAuth } from "@/providers/Auth"
 
 export function ListeningSpeakingApp() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy")
@@ -23,6 +25,10 @@ export function ListeningSpeakingApp() {
   >({})
   const [supportsSpeechRecognition, setSupportsSpeechRecognition] =
     useState(false)
+
+  const { user } = useAuth()
+  const { recordEvaluation } = useProgress()
+  const adoptedRef = useRef(false)
 
   const { playingId, play } = useAudioPlayer(playbackRate)
   const toggleRegistry = useRef(new Map<number, () => void>())
@@ -57,6 +63,7 @@ export function ListeningSpeakingApp() {
 
   function saveEvaluation(phraseId: number, evaluation: SpeechEvaluation) {
     setEvaluations((current) => ({ ...current, [phraseId]: evaluation }))
+    void recordEvaluation(phraseId, difficulty, evaluation)
   }
 
   useEffect(() => {
@@ -88,6 +95,14 @@ export function ListeningSpeakingApp() {
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [currentPhraseId, recordingPhraseId])
+
+  useEffect(() => {
+    if (!user || adoptedRef.current) return
+    adoptedRef.current = true
+    for (const [phraseId, evaluation] of Object.entries(evaluations)) {
+      void recordEvaluation(Number(phraseId), difficulty, evaluation)
+    }
+  }, [user, evaluations, difficulty, recordEvaluation])
 
   const completedCount = Object.keys(evaluations).length
 
