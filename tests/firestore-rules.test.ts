@@ -10,18 +10,20 @@ import { afterAll, beforeAll, describe, it } from "vitest"
 
 let env: RulesTestEnvironment
 
-beforeAll(async () => {
-  env = await initializeTestEnvironment({
-    projectId: "demo-mpc",
-    firestore: { rules: readFileSync("firestore.rules", "utf8"), host: "127.0.0.1", port: 8080 },
+const describeRules = process.env.FIRESTORE_EMULATOR_HOST ? describe : describe.skip
+
+describeRules("firestore rules", () => {
+  beforeAll(async () => {
+    env = await initializeTestEnvironment({
+      projectId: "demo-mpc",
+      firestore: { rules: readFileSync("firestore.rules", "utf8"), host: "127.0.0.1", port: 8080 },
+    })
   })
-})
 
-afterAll(async () => {
-  await env.cleanup()
-})
+  afterAll(async () => {
+    await env.cleanup()
+  })
 
-describe("firestore rules", () => {
   it("lets a user read/write their own doc but not another's", async () => {
     const ada = env.authenticatedContext("ada").firestore()
     await assertSucceeds(setDoc(doc(ada, "users/ada"), { displayName: "Ada" }))
