@@ -64,4 +64,25 @@ describe("useShareLink", () => {
     await screen.findByText(/s\/existing123$/)
     expect(createShare).not.toHaveBeenCalled()
   })
+
+  it("does not let a stale rehydrate overwrite a slug set by a racing create()", async () => {
+    let resolveRead: (value: string | null) => void = () => undefined
+    readShareSlug.mockReturnValue(
+      new Promise<string | null>((resolve) => {
+        resolveRead = resolve
+      })
+    )
+    createShare.mockImplementationOnce(async () => "fresh456")
+
+    render(<Probe />)
+    screen.getByRole("button").click()
+    await screen.findByText(/s\/fresh456$/)
+
+    resolveRead("stale789")
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(screen.getByRole("button").textContent).toMatch(/s\/fresh456$/)
+    expect(screen.queryByText(/stale789/)).toBeNull()
+  })
 })
