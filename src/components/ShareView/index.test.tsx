@@ -40,4 +40,12 @@ describe("ShareView", () => {
       expect(screen.getByText(/não encontrado/i)).toBeTruthy()
     )
   })
+
+  it("shows a not-found state when readShare rejects", async () => {
+    readShare.mockRejectedValue(new Error("denied"))
+    render(<ShareView slug="denied" />)
+    await waitFor(() =>
+      expect(screen.getByText(/não encontrado/i)).toBeTruthy()
+    )
+  })
 })

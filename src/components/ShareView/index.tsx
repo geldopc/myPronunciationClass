@@ -14,10 +14,14 @@ export function ShareView({ slug }: { slug: string }) {
 
   useEffect(() => {
     let active = true
-    void readShare(slug).then((share) => {
-      if (!active) return
-      setState(share ? { status: "found", share } : { status: "missing" })
-    })
+    void readShare(slug)
+      .then((share) => {
+        if (!active) return
+        setState(share ? { status: "found", share } : { status: "missing" })
+      })
+      .catch(() => {
+        if (active) setState({ status: "missing" })
+      })
     return () => {
       active = false
     }
