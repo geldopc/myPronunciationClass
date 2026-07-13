@@ -18,6 +18,8 @@ describe("firebase init", () => {
     const mod = await import("@/lib/firebase")
     expect(mod.auth).toEqual({ __brand: "auth" })
     expect(mod.db).toEqual({ __brand: "db" })
-    expect(mod.googleProvider).toBeInstanceOf((await import("firebase/auth")).GoogleAuthProvider)
+    expect(mod.googleProvider).toBeInstanceOf(
+      (await import("firebase/auth")).GoogleAuthProvider
+    )
   })
 })

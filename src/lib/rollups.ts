@@ -19,7 +19,12 @@ export function computeRollups(
   const bestScoreByPhrase = Object.fromEntries(
     stats.map((item) => [item.phraseId, item.bestScore])
   )
-  return { completion, average, streak: computeStreak(practiceDays, today), bestScoreByPhrase }
+  return {
+    completion,
+    average,
+    streak: computeStreak(practiceDays, today),
+    bestScoreByPhrase,
+  }
 }
 
 export function computeStreak(days: string[], today: string): number {

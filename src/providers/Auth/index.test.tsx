@@ -44,7 +44,11 @@ describe("AuthProvider", () => {
       expect(screen.getByText("anon")).toBeTruthy()
     })
 
-    authCallback?.({ uid: "u1", displayName: "Ada", photoURL: "http://x/a.png" })
+    authCallback?.({
+      uid: "u1",
+      displayName: "Ada",
+      photoURL: "http://x/a.png",
+    })
     await waitFor(() => {
       expect(screen.getByText("Ada")).toBeTruthy()
     })

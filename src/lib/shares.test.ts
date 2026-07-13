@@ -46,7 +46,12 @@ describe("shares", () => {
 
   it("creates a public share doc and links it on the user", async () => {
     const profile = { displayName: "Ada", avatarUrl: "http://x/a.png" }
-    const snapshot = { completion: 50, average: 80, streak: 1, bestScoreByPhrase: { 1: 90 } }
+    const snapshot = {
+      completion: 50,
+      average: 80,
+      streak: 1,
+      bestScoreByPhrase: { 1: 90 },
+    }
 
     const slug = await createShare("u1", profile, snapshot)
 
@@ -98,7 +103,12 @@ describe("shares", () => {
   it("revokes a share by deleting it and clearing the user's slug", async () => {
     await revokeShare("u1", "s1")
 
-    expect(deleteDoc).toHaveBeenCalledWith(["doc", expect.anything(), "shares", "s1"])
+    expect(deleteDoc).toHaveBeenCalledWith([
+      "doc",
+      expect.anything(),
+      "shares",
+      "s1",
+    ])
     expect(setDoc).toHaveBeenCalledWith(
       ["doc", expect.anything(), "users", "u1"],
       { shareSlug: null, shareEnabled: false },
