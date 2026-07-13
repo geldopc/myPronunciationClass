@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
-import { createShare, revokeShare } from "@/lib/shares"
+import { createShare, readShareSlug, revokeShare } from "@/lib/shares"
 import { useAuth } from "@/providers/Auth"
 import type { Rollups } from "@/lib/progress-model"
 
@@ -13,9 +13,24 @@ export function useShareLink(rollups: Rollups) {
   const [slug, setSlug] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
 
+  useEffect(() => {
+    if (!user) {
+      setSlug(null)
+      return
+    }
+    let active = true
+    void readShareSlug(user.uid).then((existing) => {
+      if (active) setSlug(existing)
+    })
+    return () => {
+      active = false
+    }
+  }, [user])
+
   const create = useCallback(async () => {
     if (!user) return
     setCreating(true)
+    if (slug) await revokeShare(user.uid, slug)
     const created = await createShare(
       user.uid,
       { displayName: user.displayName, avatarUrl: user.avatarUrl },
@@ -23,7 +38,7 @@ export function useShareLink(rollups: Rollups) {
     )
     setSlug(created)
     setCreating(false)
-  }, [user, rollups])
+  }, [user, slug, rollups])
 
   const revoke = useCallback(async () => {
     if (!user || !slug) return

@@ -7,9 +7,17 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 const createShare = vi.hoisted(() => vi.fn(async () => "slug123"))
 const revokeShare = vi.hoisted(() => vi.fn(async () => undefined))
-vi.mock("@/lib/shares", () => ({ createShare, revokeShare }))
+const readShareSlug = vi.hoisted(() =>
+  vi.fn(async (): Promise<string | null> => null)
+)
+const authUser = vi.hoisted(() => ({
+  uid: "u1",
+  displayName: "Ada",
+  avatarUrl: "",
+}))
+vi.mock("@/lib/shares", () => ({ createShare, revokeShare, readShareSlug }))
 vi.mock("@/providers/Auth", () => ({
-  useAuth: () => ({ user: { uid: "u1", displayName: "Ada", avatarUrl: "" } }),
+  useAuth: () => ({ user: authUser }),
 }))
 
 import { useShareLink } from "@/hooks/useShareLink"
@@ -34,6 +42,8 @@ afterEach(() => {
   cleanup()
   createShare.mockClear()
   revokeShare.mockClear()
+  readShareSlug.mockClear()
+  readShareSlug.mockImplementation(async () => null)
 })
 
 describe("useShareLink", () => {
@@ -46,5 +56,12 @@ describe("useShareLink", () => {
       { displayName: "Ada", avatarUrl: "" },
       rollups
     )
+  })
+
+  it("rehydrates an existing share slug on mount without creating one", async () => {
+    readShareSlug.mockImplementation(async () => "existing123")
+    render(<Probe />)
+    await screen.findByText(/s\/existing123$/)
+    expect(createShare).not.toHaveBeenCalled()
   })
 })

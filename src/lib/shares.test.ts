@@ -16,7 +16,6 @@ vi.mock("firebase/auth", () => ({
 
 vi.mock("firebase/firestore", () => ({
   setDoc: vi.fn(async () => undefined),
-  updateDoc: vi.fn(async () => undefined),
   deleteDoc: vi.fn(async () => undefined),
   getDoc: vi.fn(async () => ({ exists: () => false, data: () => undefined })),
   doc: vi.fn((...args) => ["doc", ...args]),
@@ -24,8 +23,14 @@ vi.mock("firebase/firestore", () => ({
   serverTimestamp: vi.fn(() => "ts"),
 }))
 
-import { createShare, generateSlug, readShare } from "@/lib/shares"
-import { setDoc, updateDoc } from "firebase/firestore"
+import {
+  createShare,
+  generateSlug,
+  readShare,
+  readShareSlug,
+  revokeShare,
+} from "@/lib/shares"
+import { deleteDoc, getDoc, setDoc } from "firebase/firestore"
 
 describe("shares", () => {
   beforeEach(() => {
@@ -46,18 +51,58 @@ describe("shares", () => {
     const slug = await createShare("u1", profile, snapshot)
 
     expect(typeof slug).toBe("string")
-    expect(setDoc).toHaveBeenCalledTimes(1)
-    expect(updateDoc).toHaveBeenCalledTimes(1)
+    expect(setDoc).toHaveBeenCalledTimes(2)
 
-    const written = vi.mocked(setDoc).mock.calls[0][1] as Record<string, unknown>
+    const shareCall = vi.mocked(setDoc).mock.calls[0]
+    const written = shareCall[1] as Record<string, unknown>
     expect(written.uid).toBe("u1")
     expect(written.displayName).toBe(profile.displayName)
     expect(written.avatarUrl).toBe(profile.avatarUrl)
     expect(written.snapshot).toEqual(snapshot)
     expect(written).not.toHaveProperty("transcript")
+
+    const userCall = vi.mocked(setDoc).mock.calls[1]
+    expect(userCall[0]).toEqual(["doc", expect.anything(), "users", "u1"])
+    expect(userCall[1]).toEqual({ shareSlug: slug, shareEnabled: true })
+    expect(userCall[2]).toEqual({ merge: true })
   })
 
   it("returns null for a missing share", async () => {
     expect(await readShare("nope")).toBeNull()
+  })
+
+  it("reads the active share slug for a user", async () => {
+    vi.mocked(getDoc).mockResolvedValueOnce({
+      exists: () => true,
+      data: () => ({ shareSlug: "s1", shareEnabled: true }),
+    } as never)
+    expect(await readShareSlug("u1")).toBe("s1")
+  })
+
+  it("returns null when sharing is disabled", async () => {
+    vi.mocked(getDoc).mockResolvedValueOnce({
+      exists: () => true,
+      data: () => ({ shareSlug: "s1", shareEnabled: false }),
+    } as never)
+    expect(await readShareSlug("u1")).toBeNull()
+  })
+
+  it("returns null when the user doc does not exist", async () => {
+    vi.mocked(getDoc).mockResolvedValueOnce({
+      exists: () => false,
+      data: () => undefined,
+    } as never)
+    expect(await readShareSlug("u1")).toBeNull()
+  })
+
+  it("revokes a share by deleting it and clearing the user's slug", async () => {
+    await revokeShare("u1", "s1")
+
+    expect(deleteDoc).toHaveBeenCalledWith(["doc", expect.anything(), "shares", "s1"])
+    expect(setDoc).toHaveBeenCalledWith(
+      ["doc", expect.anything(), "users", "u1"],
+      { shareSlug: null, shareEnabled: false },
+      { merge: true }
+    )
   })
 })
