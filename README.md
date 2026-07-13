@@ -19,6 +19,34 @@ npm run dev
 
 Abra http://localhost:3000.
 
+## Firebase setup
+
+Login com Google, persistência de progresso e compartilhamento de link
+dependem de um projeto Firebase próprio. Antes de rodar login/persistência
+localmente ou fazer deploy, faça uma vez:
+
+1. Crie um projeto no [Firebase Console](https://console.firebase.google.com)
+   (plano Spark/gratuito é suficiente).
+2. **Authentication** → habilite o provedor de login **Google**.
+3. **Authentication** → **Settings** → **Authorized domains** → adicione
+   `geldopc.github.io` e `localhost`.
+4. **Firestore Database** → crie um banco em modo produção.
+5. Publique as regras de segurança:
+   ```bash
+   npx firebase deploy --only firestore:rules --project <seu-project-id>
+   ```
+   (ou cole o conteúdo de [`firestore.rules`](./firestore.rules) direto no
+   console). Opcionalmente, rode os testes das regras localmente com
+   `npm run test:rules` (requer Firebase CLI + emulador Java).
+6. Copie `.env.example` para `.env` e preencha os valores `VITE_FIREBASE_*`
+   com a config do app web (Project settings → Your apps → SDK setup and
+   configuration).
+7. Para deploys no GitHub Pages, configure as mesmas seis chaves
+   `VITE_FIREBASE_*` como **Variables** do GitHub Actions (Settings → Secrets
+   and variables → Actions → Variables) — o workflow de deploy injeta esses
+   valores no build. O build do gh-pages falha até essas Variables serem
+   configuradas, já que o app inicializa o Firebase no carregamento.
+
 ## Como funciona
 
 - **Listening**: cada card toca o áudio local correspondente
