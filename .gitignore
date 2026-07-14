@@ -23,3 +23,10 @@ todos.json
 
 firestore-debug.log
 firebase-debug.log
+
+# AI reference docs
+plans/
+advisor-plans/
+.claude/
+CLAUDE.md
+docs/superpowers/
