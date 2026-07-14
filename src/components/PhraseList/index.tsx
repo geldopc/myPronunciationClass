@@ -22,6 +22,8 @@ type PhraseListProps = {
   onRecordingChange: (phraseId: number | null) => void
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
   registerToggle: (phraseId: number, toggle: (() => void) | null) => void
+  playerMode: "audio" | "video"
+  onVideoError: () => void
 }
 
 function getNodeState(
@@ -49,6 +51,8 @@ export function PhraseList(props: PhraseListProps) {
     onRecordingChange,
     onEvaluation,
     registerToggle,
+    playerMode: _playerMode,
+    onVideoError: _onVideoError,
   } = props
 
   function cardPropsFor(phrase: Phrase) {
