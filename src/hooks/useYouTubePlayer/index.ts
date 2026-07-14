@@ -22,13 +22,20 @@ export function useYouTubePlayer(
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    let active = true
+
     function initPlayer() {
-      playerRef.current = new window.YT.Player(containerId, {
+      if (!active) return
+      const container = document.getElementById(containerId)
+      if (!container) return
+      const inner = document.createElement("div")
+      container.appendChild(inner)
+      playerRef.current = new window.YT.Player(inner, {
         videoId: SOURCE_VIDEO_ID,
         playerVars: { rel: 0, modestbranding: 1, controls: 1 },
         events: {
-          onReady: () => setReady(true),
-          onError: () => onError?.(),
+          onReady: () => { if (active) setReady(true) },
+          onError: () => { if (active) onError?.() },
         },
       })
     }
@@ -45,6 +52,7 @@ export function useYouTubePlayer(
     }
 
     return () => {
+      active = false
       cancelAnimationFrame(rafRef.current)
       playerRef.current?.destroy()
       playerRef.current = null

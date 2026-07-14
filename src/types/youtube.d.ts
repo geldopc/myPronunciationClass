@@ -2,7 +2,7 @@ declare global {
   interface Window {
     YT: {
       Player: new (
-        elementId: string,
+        elementOrId: string | HTMLElement,
         options: {
           videoId?: string
           playerVars?: Record<string, string | number>
