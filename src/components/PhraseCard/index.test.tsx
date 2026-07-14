@@ -13,6 +13,8 @@ const phrase: Phrase = {
   audioSrc: "/audios/frase1.mp3",
   pronunciationHint: "Say it clearly",
   speaker: "Joey",
+  startTime: 0,
+  endTime: 8.395,
 }
 
 const baseProps = {
