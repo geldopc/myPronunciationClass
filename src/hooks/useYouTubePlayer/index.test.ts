@@ -17,6 +17,10 @@ beforeEach(() => {
   mockGetCurrentTime = vi.fn().mockReturnValue(0)
   mockDestroy = vi.fn()
 
+  const container = document.createElement("div")
+  container.id = "yt-container"
+  document.body.appendChild(container)
+
   vi.stubGlobal("requestAnimationFrame", (_cb: FrameRequestCallback) => 0)
   vi.stubGlobal("cancelAnimationFrame", vi.fn())
 
@@ -30,7 +34,7 @@ beforeEach(() => {
 
   vi.stubGlobal("YT", {
     Player: vi.fn().mockImplementation(
-      function (_id: string, opts: { events?: { onReady?: (e: object) => void } }) {
+      function (_el: HTMLElement | string, opts: { events?: { onReady?: (e: object) => void } }) {
         opts.events?.onReady?.({})
         return player
       }
@@ -39,6 +43,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  document.getElementById("yt-container")?.remove()
   vi.unstubAllGlobals()
 })
 
