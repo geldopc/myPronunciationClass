@@ -1,6 +1,7 @@
 import { ListIcon, Maximize2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/Logo"
 import { AuthControl } from "@/components/TopBar/AuthControl"
 import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle"
 import { SpeedControl } from "@/components/TopBar/SpeedControl"
@@ -31,9 +32,7 @@ export function TopBar({
       className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur"
     >
       <div className="container mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <span className="text-base font-semibold tracking-tight">
-          myPronunciationClass
-        </span>
+        <Logo className="h-9 w-auto" />
         <div className="flex flex-wrap items-center gap-2">
           <DifficultyToggle value={difficulty} onChange={onDifficultyChange} />
           <SpeedControl value={playbackRate} onChange={onPlaybackRateChange} />

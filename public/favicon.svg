@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>
+    circle,
+    path {
+      stroke: #000;
+    }
+    @media (prefers-color-scheme: dark) {
+      circle,
+      path {
+        stroke: #fff;
+      }
+    }
+  </style>
+  <circle cx="32" cy="32" r="27" stroke-width="4" fill="none" />
+  <path
+    d="M6 32 C13 20 22 20 32 32 C42 44 51 44 58 32"
+    stroke-width="4"
+    fill="none"
+    stroke-linecap="round"
+  />
+</svg>
