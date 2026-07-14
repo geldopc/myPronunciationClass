@@ -1,14 +1,19 @@
 # myPronunciationClass
 
+[English](README.en.md) · **Português**
+
 App de prática de listening e speaking a partir de uma cena de *Friends*
 (temporada 5, "Joey descobre o segredo"). O diálogo é apresentado como um
 roteiro contínuo: escute cada fala, repita em voz alta e receba um percentual
-de acerto na sua pronúncia. Você escolhe o nível (Fácil / Médio / Difícil), que
-controla o quanto o card revela antes da sua tentativa, e pode alternar entre
-tema claro e escuro.
+de acerto na sua pronúncia. Escolha o nível de dificuldade (Fácil / Médio /
+Difícil) e alterne entre tema claro e escuro.
+
+Login com Google é opcional: sem login o progresso fica em memória; ao entrar,
+cada tentativa é persistida no Firebase e você pode acessar seu histórico em
+`/progress` ou gerar um link público para compartilhar seus resultados.
 
 Stack: [TanStack Start](https://tanstack.com/start) + React + TypeScript +
-[shadcn/ui](https://ui.shadcn.com) (gerado com `npx shadcn@latest init`).
+[shadcn/ui](https://ui.shadcn.com) + Firebase (Auth + Firestore).
 
 ## Rodando localmente
 
@@ -17,7 +22,7 @@ npm install
 npm run dev
 ```
 
-Abra http://localhost:3000.
+O servidor sobe em uma porta livre (por padrão 3000 se disponível).
 
 ## Firebase setup
 
@@ -44,8 +49,7 @@ localmente ou fazer deploy, faça uma vez:
 7. Para deploys no GitHub Pages, configure as mesmas seis chaves
    `VITE_FIREBASE_*` como **Variables** do GitHub Actions (Settings → Secrets
    and variables → Actions → Variables) — o workflow de deploy injeta esses
-   valores no build. O build do gh-pages falha até essas Variables serem
-   configuradas, já que o app inicializa o Firebase no carregamento.
+   valores no build.
 
 ## Como funciona
 
@@ -60,10 +64,14 @@ localmente ou fazer deploy, faça uma vez:
   Levenshtein, mostrando um percentual de acerto (0–100%); acertos ≥80% ganham
   destaque em verde.
 - **Dificuldade**: Fácil mostra texto + dica; Médio esconde a dica (com "Ver
-  dica"); Difícil esconde texto e dica até você gravar. A tentativa sempre
-  revela tudo.
-- **Tema**: alternância claro/escuro no topo, com a preferência salva em
-  `localStorage` (a única coisa persistida — o progresso da prática é efêmero).
+  dica"); Difícil esconde texto e dica até você gravar.
+- **Tema**: alternância claro/escuro no topo, salvo em `localStorage`.
+- **Login (opcional)**: Google via popup. Sem login o app funciona normalmente
+  (progresso efêmero). Com login, cada tentativa é salva no Firestore.
+- **Progresso**: `/progress` mostra histórico completo, melhor score por frase,
+  streak e percentual de conclusão.
+- **Compartilhamento**: gere um link público `/s/:slug` que exibe um snapshot
+  dos seus resultados — sem expor transcrições, apenas agregados.
 
 Ver [AUDIO_CUTS.md](./AUDIO_CUTS.md) para os intervalos de origem de cada
 áudio e como os cortes foram feitos e validados.
@@ -74,25 +82,45 @@ Ver [AUDIO_CUTS.md](./AUDIO_CUTS.md) para os intervalos de origem de cada
 src/
   components/
     ListeningSpeakingApp/   # shell: estado da sessão + orquestração
-    TopBar/                 # wordmark + dificuldade + velocidade + foco + tema
+    TopBar/                 # logo + dificuldade + velocidade + foco + tema + auth
+      AuthControl/          # botão login / menu avatar
+      DifficultyToggle/
+      SpeedControl/
+      ThemeToggle/
     ProgressBar/            # barra fina + contador "n / 36"
     PhraseList/             # lista contínua (spine) + modo foco; SpineNode
     PhraseCard/             # card: revela por dificuldade, ações, ScoreReveal
+    ProgressStats/          # stats apresentacionais (compartilhado por /progress e /s/:slug)
+    ProgressView/           # dashboard do usuário logado
+    ShareView/              # view pública read-only de um snapshot
+    ShareControl/           # controles de criação / revogação de link
   providers/
-    Theme/                  # ThemeProvider + useTheme (claro/escuro)
+    Auth/                   # AuthProvider + useAuth (Firebase Auth)
+    Theme/                  # ThemeProvider + useTheme
   hooks/
     useAudioPlayer/         # reprodução de áudio + playbackRate
     useSpeechRecognition/   # ciclo de vida do reconhecimento de fala
+    useProgress/            # persistência + rollups para o usuário logado
+    useShareLink/           # criação / revogação de link público
   lib/
     phrases.ts              # roteiro das 36 frases (texto, áudio, dica, speaker)
     difficulty.ts           # regras de revelação por nível
     text-similarity.ts      # normalização de texto + distância de Levenshtein
+    firebase.ts             # inicializa o app Firebase; exporta auth, db
+    firebaseConfig.ts       # config lida de import.meta.env.VITE_FIREBASE_*
+    progress-model.ts       # tipos de domínio (Attempt, PhraseStat, Rollups, Share…)
+    rollups.ts              # cálculo puro de rollups e streak
+    attempts.ts             # acesso Firestore para tentativas e phraseStats
+    shares.ts               # criação / leitura / revogação de shares + slug
   routes/
     index.tsx               # rota "/" (TanStack Router, file-based)
+    progress.tsx            # rota "/progress" (autenticado)
+    s.$slug.tsx             # rota "/s/:slug" (pública)
   types/
     speech-recognition.d.ts # tipagem mínima da Web Speech API
 public/
-  audios/                  # os 36 arquivos .mp3 cortados
+  audios/                   # os 36 arquivos .mp3 cortados
+  favicon.svg               # ícone do app (círculo + onda sonora)
 ```
 
 ## Scripts
@@ -101,3 +129,4 @@ public/
 - `npm run build` — build de produção
 - `npm run typecheck` — checagem de tipos
 - `npm run lint` — eslint
+- `npm run test:rules` — testa as regras Firestore (requer Firebase emulador)
