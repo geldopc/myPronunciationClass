@@ -14,7 +14,15 @@ import { useAuth } from "@/providers/Auth"
 
 export function ListeningSpeakingApp() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy")
-  const [focusMode, setFocusMode] = useState(false)
+  const [focusMode, setFocusMode] = useState(true)
+  const [playerMode, setPlayerMode] = useState<"audio" | "video">(() => {
+    try {
+      const stored = localStorage.getItem("playerMode")
+      return stored === "video" ? "video" : "audio"
+    } catch {
+      return "audio"
+    }
+  })
   const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
   const [currentPhraseId, setCurrentPhraseId] = useState<number>(phrases[0].id)
   const [recordingPhraseId, setRecordingPhraseId] = useState<number | null>(
@@ -38,6 +46,14 @@ export function ListeningSpeakingApp() {
       Boolean(window.SpeechRecognition ?? window.webkitSpeechRecognition)
     )
   }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("playerMode", playerMode)
+    } catch {
+      // localStorage unavailable (private browsing)
+    }
+  }, [playerMode])
 
   const registerToggle = useCallback(
     (phraseId: number, toggle: (() => void) | null) => {
@@ -115,6 +131,8 @@ export function ListeningSpeakingApp() {
         onPlaybackRateChange={setPlaybackRate}
         focusMode={focusMode}
         onToggleFocusMode={() => setFocusMode((value) => !value)}
+        playerMode={playerMode}
+        onPlayerModeChange={setPlayerMode}
       />
 
       <div className="sticky top-14 z-10 border-b border-border bg-background/80 backdrop-blur">
@@ -138,6 +156,8 @@ export function ListeningSpeakingApp() {
           onRecordingChange={handleRecordingChange}
           onEvaluation={saveEvaluation}
           registerToggle={registerToggle}
+          playerMode={playerMode}
+          onVideoError={() => setPlayerMode("audio")}
         />
       </main>
     </div>

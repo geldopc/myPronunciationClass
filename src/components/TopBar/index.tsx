@@ -1,4 +1,4 @@
-import { ListIcon, Maximize2Icon } from "lucide-react"
+import { ListIcon, Maximize2Icon, VideoIcon, Volume2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/Logo"
@@ -16,6 +16,8 @@ type TopBarProps = {
   onPlaybackRateChange: (value: PlaybackRate) => void
   focusMode: boolean
   onToggleFocusMode: () => void
+  playerMode: "audio" | "video"
+  onPlayerModeChange: (mode: "audio" | "video") => void
 }
 
 export function TopBar({
@@ -25,6 +27,8 @@ export function TopBar({
   onPlaybackRateChange,
   focusMode,
   onToggleFocusMode,
+  playerMode,
+  onPlayerModeChange,
 }: TopBarProps) {
   return (
     <header
@@ -45,6 +49,16 @@ export function TopBar({
             onClick={onToggleFocusMode}
           >
             {focusMode ? <ListIcon /> : <Maximize2Icon />}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={playerMode === "video" ? "Mudar para áudio" : "Mudar para vídeo"}
+            aria-pressed={playerMode === "video"}
+            onClick={() => onPlayerModeChange(playerMode === "video" ? "audio" : "video")}
+          >
+            {playerMode === "video" ? <Volume2Icon /> : <VideoIcon />}
           </Button>
           <ThemeToggle />
           <AuthControl />
