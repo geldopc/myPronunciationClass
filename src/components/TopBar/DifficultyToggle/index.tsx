@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button"
 import type { Difficulty } from "@/lib/difficulty"
 
-const options: { value: Difficulty; label: string }[] = [
-  { value: "easy", label: "Fácil" },
-  { value: "moderate", label: "Médio" },
-  { value: "hard", label: "Difícil" },
+const options: { value: Difficulty; label: string; short: string }[] = [
+  { value: "easy", label: "Fácil", short: "F" },
+  { value: "moderate", label: "Médio", short: "M" },
+  { value: "hard", label: "Difícil", short: "D" },
 ]
 
 type DifficultyToggleProps = {
@@ -30,7 +30,8 @@ export function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
           variant={value === option.value ? "default" : "ghost"}
           onClick={() => onChange(option.value)}
         >
-          {option.label}
+          <span className="hidden sm:inline">{option.label}</span>
+          <span className="sm:hidden">{option.short}</span>
         </Button>
       ))}
     </div>

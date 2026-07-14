@@ -129,6 +129,7 @@ export function PhraseCard({
 
       <CardFooter className="flex flex-wrap gap-2">
         <Button
+          className="flex-1"
           onClick={() => onPlay(phrase)}
           disabled={!phraseReady || isAnyPhraseRecording}
         >
@@ -143,6 +144,7 @@ export function PhraseCard({
           )}
         </Button>
         <Button
+          className="flex-1"
           variant={isRecording ? "destructive" : "secondary"}
           onClick={toggleRecording}
           disabled={
