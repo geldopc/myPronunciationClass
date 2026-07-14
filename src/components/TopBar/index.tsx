@@ -33,7 +33,7 @@ export function TopBar({
     >
       <div className="container mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3">
         <Logo className="h-9 w-auto" />
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2">
           <DifficultyToggle value={difficulty} onChange={onDifficultyChange} />
           <SpeedControl value={playbackRate} onChange={onPlaybackRateChange} />
           <Button

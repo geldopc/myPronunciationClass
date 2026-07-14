@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router"
-import { LogOutIcon, TrendingUpIcon } from "lucide-react"
+import { LogInIcon, LogOutIcon, TrendingUpIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -22,8 +22,10 @@ export function AuthControl() {
         variant="outline"
         size="sm"
         onClick={() => void signInWithGoogle()}
+        aria-label="Entrar"
       >
-        Entrar
+        <LogInIcon className="sm:hidden" />
+        <span className="hidden sm:inline">Entrar</span>
       </Button>
     )
   }
