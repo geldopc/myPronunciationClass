@@ -49,7 +49,7 @@ export function useYouTubePlayer(
       playerRef.current?.destroy()
       playerRef.current = null
     }
-  }, [containerId])
+  }, [containerId, onError])
 
   function playSegment(startTime: number, endTime: number) {
     if (!playerRef.current) return
@@ -65,7 +65,7 @@ export function useYouTubePlayer(
       }
       rafRef.current = requestAnimationFrame(poll)
     }
-    poll()
+    rafRef.current = requestAnimationFrame(poll)
   }
 
   function pause() {

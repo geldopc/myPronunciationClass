@@ -56,6 +56,7 @@ describe("useYouTubePlayer", () => {
   })
 
   it("playSegment pauses when getCurrentTime reaches endTime", () => {
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => { cb(0); return 0 })
     mockGetCurrentTime.mockReturnValue(20.1)
     const { result } = renderHook(() => useYouTubePlayer("yt-container"))
     act(() => result.current.playSegment(10, 20))
