@@ -3,6 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PhraseCard } from "@/components/PhraseCard"
 import { SpineNode } from "@/components/PhraseList/SpineNode"
+import { VideoPlayer } from "@/components/VideoPlayer"
 import type { SpineNodeState } from "@/components/PhraseList/SpineNode"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
@@ -51,8 +52,8 @@ export function PhraseList(props: PhraseListProps) {
     onRecordingChange,
     onEvaluation,
     registerToggle,
-    playerMode: _playerMode,
-    onVideoError: _onVideoError,
+    playerMode,
+    onVideoError,
   } = props
 
   function cardPropsFor(phrase: Phrase) {
@@ -86,6 +87,11 @@ export function PhraseList(props: PhraseListProps) {
         aria-label="Frase atual"
         className="mx-auto max-w-xl space-y-4"
       >
+        <VideoPlayer
+          phrase={phrase}
+          isActive={playerMode === "video"}
+          onError={onVideoError}
+        />
         <PhraseCard {...cardPropsFor(phrase)} />
         <div className="flex items-center justify-between">
           <Button
