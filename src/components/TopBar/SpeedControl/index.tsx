@@ -12,15 +12,24 @@ export type PlaybackRate = (typeof playbackRates)[number]
 type SpeedControlProps = {
   value: PlaybackRate
   onChange: (value: PlaybackRate) => void
+  className?: string
 }
 
-export function SpeedControl({ value, onChange }: SpeedControlProps) {
+export function SpeedControl({
+  value,
+  onChange,
+  className,
+}: SpeedControlProps) {
   return (
     <Select
       value={String(value)}
       onValueChange={(next) => onChange(Number(next) as PlaybackRate)}
     >
-      <SelectTrigger id="speed-control" aria-label="Velocidade do áudio">
+      <SelectTrigger
+        id="speed-control"
+        aria-label="Playback speed"
+        className={className}
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
