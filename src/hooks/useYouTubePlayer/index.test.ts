@@ -33,12 +33,13 @@ beforeEach(() => {
   }
 
   vi.stubGlobal("YT", {
-    Player: vi.fn().mockImplementation(
-      function (_el: HTMLElement | string, opts: { events?: { onReady?: (e: object) => void } }) {
-        opts.events?.onReady?.({})
-        return player
-      }
-    ),
+    Player: vi.fn().mockImplementation(function (
+      _el: HTMLElement | string,
+      opts: { events?: { onReady?: (e: object) => void } }
+    ) {
+      opts.events?.onReady?.({})
+      return player
+    }),
   })
 })
 
@@ -61,7 +62,10 @@ describe("useYouTubePlayer", () => {
   })
 
   it("playSegment pauses when getCurrentTime reaches endTime", () => {
-    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => { cb(0); return 0 })
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      cb(0)
+      return 0
+    })
     mockGetCurrentTime.mockReturnValue(20.1)
     const { result } = renderHook(() => useYouTubePlayer("yt-container"))
     act(() => result.current.playSegment(10, 20))
@@ -89,12 +93,13 @@ describe("useYouTubePlayer", () => {
       destroy: mockDestroy,
     }
     vi.stubGlobal("YT", {
-      Player: vi.fn().mockImplementation(
-        function (_el: HTMLElement | string, _opts: object) {
-          // deliberately do NOT call onReady
-          return player
-        }
-      ),
+      Player: vi.fn().mockImplementation(function (
+        _el: HTMLElement | string,
+        _opts: object
+      ) {
+        // deliberately do NOT call onReady
+        return player
+      }),
     })
     const { result } = renderHook(() => useYouTubePlayer("yt-container"))
     act(() => result.current.playSegment(10, 20))
@@ -118,16 +123,19 @@ describe("useYouTubePlayer", () => {
       getCurrentTime: mockGetCurrentTime,
       destroy: mockDestroy,
     }
-    const MockPlayer = vi.fn().mockImplementation(
-      function (_el: HTMLElement | string, opts: { events?: { onReady?: (e: object) => void } }) {
-        opts.events?.onReady?.({})
-        return player
-      }
-    )
+    const MockPlayer = vi.fn().mockImplementation(function (
+      _el: HTMLElement | string,
+      opts: { events?: { onReady?: (e: object) => void } }
+    ) {
+      opts.events?.onReady?.({})
+      return player
+    })
     vi.stubGlobal("YT", { Player: MockPlayer })
 
     act(() => {
-      ;(window as Window & { onYouTubeIframeAPIReady?: () => void }).onYouTubeIframeAPIReady?.()
+      ;(
+        window as Window & { onYouTubeIframeAPIReady?: () => void }
+      ).onYouTubeIframeAPIReady?.()
     })
 
     expect(MockPlayer).toHaveBeenCalled()

@@ -22,10 +22,10 @@ export function AuthControl() {
         variant="outline"
         size="sm"
         onClick={() => void signInWithGoogle()}
-        aria-label="Entrar"
+        aria-label="Sign in"
       >
         <LogInIcon className="sm:hidden" />
-        <span className="hidden sm:inline">Entrar</span>
+        <span className="hidden sm:inline">Sign in</span>
       </Button>
     )
   }
@@ -50,12 +50,12 @@ export function AuthControl() {
         <DropdownMenuItem asChild>
           <Link to="/progress">
             <TrendingUpIcon />
-            Meu progresso
+            My progress
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => void signOut()}>
           <LogOutIcon />
-          Sair
+          Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

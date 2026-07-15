@@ -6,6 +6,9 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 const recordEvaluation = vi.fn(async () => undefined)
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
 vi.mock("@/hooks/useProgress", () => ({
   useProgress: () => ({
     rollups: { completion: 0, average: 0, streak: 0, bestScoreByPhrase: {} },

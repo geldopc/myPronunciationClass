@@ -22,9 +22,11 @@ export function VideoPlayer({ phrase, isActive, onPause }: VideoPlayerProps) {
     <div id="video-player" className={!isActive ? "hidden w-full" : "w-full"}>
       <div className="relative aspect-video w-full overflow-hidden rounded-lg">
         <div id="yt-player" className="absolute inset-0" />
+        {/* Blocks YouTube's share button, suggestions overlay, and logo link */}
+        <div className="absolute inset-0 z-10" />
       </div>
       <p className="mt-1 text-center text-xs text-muted-foreground">
-        {phrase.speaker} — frase {phrase.id}
+        {phrase.speaker} — phrase {phrase.id}
       </p>
     </div>
   )

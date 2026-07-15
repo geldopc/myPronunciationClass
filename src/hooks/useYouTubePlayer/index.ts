@@ -15,7 +15,11 @@ function loadYouTubeApi() {
 export function useYouTubePlayer(
   containerId: string,
   onError?: () => void
-): { playSegment: (start: number, end: number) => void; pause: () => void; ready: boolean } {
+): {
+  playSegment: (start: number, end: number) => void
+  pause: () => void
+  ready: boolean
+} {
   const playerRef = useRef<YT.Player | null>(null)
   const rafRef = useRef<number>(0)
   const endTimeRef = useRef<number>(0)
@@ -33,10 +37,17 @@ export function useYouTubePlayer(
       container.appendChild(inner)
       playerRef.current = new window.YT.Player(inner, {
         videoId: SOURCE_VIDEO_ID,
-        playerVars: { rel: 0, modestbranding: 1, controls: 1 },
+        playerVars: { rel: 0, modestbranding: 1, controls: 0 },
         events: {
-          onReady: () => { if (active) { readyRef.current = true; setReady(true) } },
-          onError: () => { if (active) onError?.() },
+          onReady: () => {
+            if (active) {
+              readyRef.current = true
+              setReady(true)
+            }
+          },
+          onError: () => {
+            if (active) onError?.()
+          },
         },
       })
     }

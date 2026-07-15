@@ -23,7 +23,7 @@ export function ShareControl({ rollups }: { rollups: Rollups }) {
               size="sm"
               onClick={() => void navigator.clipboard.writeText(shareUrl)}
             >
-              Copiar
+              Copy
             </Button>
             <Button
               type="button"
@@ -31,7 +31,7 @@ export function ShareControl({ rollups }: { rollups: Rollups }) {
               size="sm"
               onClick={() => void revoke()}
             >
-              Revogar
+              Revoke
             </Button>
           </div>
         </>
@@ -42,7 +42,7 @@ export function ShareControl({ rollups }: { rollups: Rollups }) {
           disabled={creating}
           onClick={() => void create()}
         >
-          Compartilhar meu progresso
+          Share my progress
         </Button>
       )}
     </div>

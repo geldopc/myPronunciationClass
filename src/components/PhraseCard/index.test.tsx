@@ -41,7 +41,7 @@ describe("PhraseCard reveal by difficulty", () => {
     render(<PhraseCard {...baseProps} difficulty="moderate" />)
     expect(screen.queryByText("Hello there friend")).not.toBeNull()
     expect(screen.queryByText(/Say it clearly/)).toBeNull()
-    expect(screen.queryByText("Ver dica")).not.toBeNull()
+    expect(screen.queryByText("Show hint")).not.toBeNull()
   })
 
   it("hard hides text and hint pre-attempt", () => {
@@ -60,6 +60,6 @@ describe("PhraseCard reveal by difficulty", () => {
     )
     expect(screen.queryByText("Hello there friend")).not.toBeNull()
     expect(screen.queryByText(/Say it clearly/)).not.toBeNull()
-    expect(screen.queryByText(/Acerto:/)).not.toBeNull()
+    expect(screen.queryByText(/Score:/)).not.toBeNull()
   })
 })
