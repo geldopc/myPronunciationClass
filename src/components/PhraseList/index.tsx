@@ -3,7 +3,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PhraseCard } from "@/components/PhraseCard"
 import { SpineNode } from "@/components/PhraseList/SpineNode"
-import { VideoPlayer } from "@/components/VideoPlayer"
 import type { SpineNodeState } from "@/components/PhraseList/SpineNode"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
@@ -23,8 +22,6 @@ type PhraseListProps = {
   onRecordingChange: (phraseId: number | null) => void
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
   registerToggle: (phraseId: number, toggle: (() => void) | null) => void
-  playerMode: "audio" | "video"
-  onVideoPause: () => void
 }
 
 function getNodeState(
@@ -52,8 +49,6 @@ export function PhraseList(props: PhraseListProps) {
     onRecordingChange,
     onEvaluation,
     registerToggle,
-    playerMode,
-    onVideoPause,
   } = props
 
   function cardPropsFor(phrase: Phrase) {
@@ -87,11 +82,6 @@ export function PhraseList(props: PhraseListProps) {
         aria-label="Current phrase"
         className="mx-auto max-w-xl space-y-4"
       >
-        <VideoPlayer
-          phrase={phrase}
-          isActive={playerMode === "video"}
-          onPause={onVideoPause}
-        />
         <PhraseCard {...cardPropsFor(phrase)} />
         <div className="flex items-center justify-between">
           <Button

@@ -6,6 +6,9 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 const recordEvaluation = vi.fn(async () => undefined)
+vi.mock("@/components/Galaxy", () => ({
+  Galaxy: () => null,
+}))
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
