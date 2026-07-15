@@ -121,6 +121,7 @@ export function ListeningSpeakingApp() {
   }, [user, evaluations, difficulty, recordEvaluation])
 
   const completedCount = Object.keys(evaluations).length
+  const handleVideoError = useCallback(() => setPlayerMode("audio"), [])
 
   return (
     <div id="listening-speaking-app" className="min-h-screen bg-background">
@@ -157,7 +158,7 @@ export function ListeningSpeakingApp() {
           onEvaluation={saveEvaluation}
           registerToggle={registerToggle}
           playerMode={playerMode}
-          onVideoError={() => setPlayerMode("audio")}
+          onVideoError={handleVideoError}
         />
       </main>
     </div>
