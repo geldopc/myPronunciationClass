@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { SOURCE_VIDEO_ID } from "@/lib/phrases"
 
@@ -61,8 +61,9 @@ export function useYouTubePlayer(
     }
   }, [containerId, onError])
 
-  function playSegment(startTime: number, endTime: number) {
+  const playSegment = useCallback((startTime: number, endTime: number) => {
     if (!playerRef.current || !readyRef.current) return
+    cancelAnimationFrame(rafRef.current)
     endTimeRef.current = endTime
     playerRef.current.seekTo(startTime, true)
     playerRef.current.playVideo()
@@ -76,12 +77,12 @@ export function useYouTubePlayer(
       rafRef.current = requestAnimationFrame(poll)
     }
     rafRef.current = requestAnimationFrame(poll)
-  }
+  }, [])
 
-  function pause() {
+  const pause = useCallback(() => {
     cancelAnimationFrame(rafRef.current)
     playerRef.current?.pauseVideo()
-  }
+  }, [])
 
   return { playSegment, pause, ready }
 }
