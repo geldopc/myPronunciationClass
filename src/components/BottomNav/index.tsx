@@ -1,11 +1,8 @@
-import { Link } from "@tanstack/react-router"
-import { ListIcon, Maximize2Icon, VideoIcon, Volume2Icon } from "lucide-react"
+import { ListIcon, Maximize2Icon, VideoIcon } from "lucide-react"
 
-import { AuthControl } from "@/components/TopBar/AuthControl"
 import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle"
 import { SpeedControl } from "@/components/TopBar/SpeedControl"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
-import { ThemeToggle } from "@/components/TopBar/ThemeToggle"
 import { Button } from "@/components/ui/button"
 import type { Difficulty } from "@/lib/difficulty"
 
@@ -15,7 +12,7 @@ type BottomNavProps = {
   playbackRate: PlaybackRate
   onPlaybackRateChange: (value: PlaybackRate) => void
   focusMode: boolean
-  onToggleFocusMode: () => void
+  onFocusModeChange: (value: boolean) => void
   playerMode: "audio" | "video"
   onPlayerModeChange: (mode: "audio" | "video") => void
   completedCount: number
@@ -28,58 +25,90 @@ export function BottomNav({
   playbackRate,
   onPlaybackRateChange,
   focusMode,
-  onToggleFocusMode,
+  onFocusModeChange,
   playerMode,
   onPlayerModeChange,
   completedCount,
   total,
 }: BottomNavProps) {
+  const pct = total ? (completedCount / total) * 100 : 0
+
   return (
     <nav
       id="bottom-nav"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/60 backdrop-blur-xl"
     >
-      <div className="container mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-2">
+      <div className="container mx-auto flex max-w-3xl items-center gap-3 px-4 py-2">
+        {/* Left: difficulty */}
         <DifficultyToggle value={difficulty} onChange={onDifficultyChange} />
 
-        <div className="flex items-center gap-1">
-          <SpeedControl value={playbackRate} onChange={onPlaybackRateChange} />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            aria-label={focusMode ? "Full list" : "Focus mode"}
-            aria-pressed={focusMode}
-            onClick={onToggleFocusMode}
-          >
-            {focusMode ? <ListIcon /> : <Maximize2Icon />}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            aria-label={
-              playerMode === "video" ? "Switch to audio" : "Switch to video"
-            }
-            aria-pressed={playerMode === "video"}
-            onClick={() =>
-              onPlayerModeChange(playerMode === "video" ? "audio" : "video")
-            }
-          >
-            {playerMode === "video" ? <Volume2Icon /> : <VideoIcon />}
-          </Button>
+        {/* Center: progress bar with numbers inside */}
+        <div
+          className="relative flex h-7 flex-1 items-center overflow-hidden rounded-full bg-muted"
+          aria-label={`${completedCount} of ${total} phrases done`}
+        >
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-primary/80 transition-all duration-500"
+            style={{ width: `${pct}%` }}
+          />
+          <span className="relative w-full text-center text-xs font-medium tabular-nums mix-blend-difference">
+            {completedCount} / {total}
+          </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link
-            to="/progress"
-            className="tabular-nums text-xs text-muted-foreground transition-colors hover:text-foreground"
-            aria-label={`Progress: ${completedCount} of ${total} phrases`}
-          >
-            {completedCount}/{total}
-          </Link>
-          <ThemeToggle />
-          <AuthControl />
+        {/* Right: speed + 3-state mode selector */}
+        <div className="flex items-center gap-1">
+          <SpeedControl
+            value={playbackRate}
+            onChange={onPlaybackRateChange}
+            className="h-8 w-[4.5rem]"
+          />
+
+          <div className="flex rounded-md border border-border/60">
+            <Button
+              type="button"
+              variant={!focusMode ? "secondary" : "ghost"}
+              size="icon"
+              className="h-8 w-8 rounded-r-none"
+              aria-label="List mode"
+              aria-pressed={!focusMode}
+              onClick={() => onFocusModeChange(false)}
+            >
+              <ListIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant={
+                focusMode && playerMode === "audio" ? "secondary" : "ghost"
+              }
+              size="icon"
+              className="h-8 w-8 rounded-none border-x border-border/60"
+              aria-label="Focus mode"
+              aria-pressed={focusMode && playerMode === "audio"}
+              onClick={() => {
+                onFocusModeChange(true)
+                onPlayerModeChange("audio")
+              }}
+            >
+              <Maximize2Icon className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant={
+                focusMode && playerMode === "video" ? "secondary" : "ghost"
+              }
+              size="icon"
+              className="h-8 w-8 rounded-l-none"
+              aria-label="Video mode"
+              aria-pressed={focusMode && playerMode === "video"}
+              onClick={() => {
+                onFocusModeChange(true)
+                onPlayerModeChange("video")
+              }}
+            >
+              <VideoIcon className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

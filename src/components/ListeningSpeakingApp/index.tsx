@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import { BottomNav } from "@/components/BottomNav"
 import { Galaxy } from "@/components/Galaxy"
+import { ShapeGrid } from "@/components/ShapeGrid"
 import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
@@ -14,6 +15,7 @@ import type { Difficulty } from "@/lib/difficulty"
 import { phrases } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
 import { useAuth } from "@/providers/Auth"
+import { useTheme } from "@/providers/Theme"
 
 export function ListeningSpeakingApp() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy")
@@ -37,15 +39,33 @@ export function ListeningSpeakingApp() {
   const [supportsSpeechRecognition, setSupportsSpeechRecognition] =
     useState(false)
 
+  const { theme } = useTheme()
+  const isDark = theme === "dark"
+
   const { user } = useAuth()
   const { recordEvaluation } = useProgress()
   const adoptedRef = useRef(false)
 
-  const { playingId, play } = useAudioPlayer(playbackRate)
+  const { playingId, play, stop } = useAudioPlayer(playbackRate)
+  const [videoPlayingId, setVideoPlayingId] = useState<number | null>(null)
   const toggleRegistry = useRef(new Map<number, () => void>())
 
   const handleVideoError = useCallback(() => setPlayerMode("audio"), [])
-  const { playSegment, pause } = useYouTubePlayer("yt-player", handleVideoError)
+  const handleVideoSegmentEnd = useCallback(() => setVideoPlayingId(null), [])
+  const { playSegment, pause, setRate } = useYouTubePlayer(
+    "yt-player",
+    handleVideoError,
+    handleVideoSegmentEnd
+  )
+
+  const handleVideoPause = useCallback(() => {
+    pause()
+    setVideoPlayingId(null)
+  }, [pause])
+
+  useEffect(() => {
+    setRate(playbackRate)
+  }, [playbackRate, setRate])
 
   useEffect(() => {
     setSupportsSpeechRecognition(
@@ -77,12 +97,30 @@ export function ListeningSpeakingApp() {
       if (recordingPhraseId !== null) return
       setCurrentPhraseId(phrase.id)
       if (playerMode === "audio") {
-        play(phrase.id, phrase.audioSrc)
+        if (playingId === phrase.id) {
+          stop()
+        } else {
+          play(phrase.id, phrase.audioSrc)
+        }
       } else {
-        playSegment(phrase.startTime, phrase.endTime)
+        if (videoPlayingId === phrase.id) {
+          handleVideoPause()
+        } else {
+          playSegment(phrase.startTime, phrase.endTime)
+          setVideoPlayingId(phrase.id)
+        }
       }
     },
-    [recordingPhraseId, playerMode, play, playSegment]
+    [
+      recordingPhraseId,
+      playerMode,
+      playingId,
+      videoPlayingId,
+      play,
+      stop,
+      playSegment,
+      handleVideoPause,
+    ]
   )
 
   function handleRecordingChange(phraseId: number | null) {
@@ -136,21 +174,37 @@ export function ListeningSpeakingApp() {
   const completedCount = Object.keys(evaluations).length
   const currentPhrase =
     phrases.find((p) => p.id === currentPhraseId) ?? phrases[0]
+  const effectivePlayingId = playingId ?? videoPlayingId
 
   return (
-    <div id="listening-speaking-app" className="relative min-h-screen bg-background">
-      {/* Galaxy WebGL background — fixed, behind all content */}
-      <div className="fixed inset-0 -z-10 bg-zinc-950">
-        <Galaxy
-          mouseInteraction
-          mouseRepulsion
-          saturation={0.25}
-          hueShift={220}
-          glowIntensity={0.4}
-          twinkleIntensity={0.35}
-          rotationSpeed={0.06}
-          density={1.2}
-        />
+    <div id="listening-speaking-app" className="relative min-h-screen">
+      {/* Background — fixed, behind all content */}
+      <div
+        className={`fixed inset-0 -z-10 ${isDark ? "bg-zinc-950" : "bg-white"}`}
+      >
+        {difficulty === "hard" &&
+          (isDark ? (
+            <Galaxy
+              mouseInteraction
+              mouseRepulsion
+              saturation={0.25}
+              hueShift={220}
+              glowIntensity={0.4}
+              twinkleIntensity={0.35}
+              rotationSpeed={0.06}
+              density={1.2}
+            />
+          ) : (
+            <ShapeGrid
+              direction="diagonal"
+              speed={0.3}
+              borderColor="#e2e8f0"
+              hoverFillColor="#f1f5f9"
+              squareSize={50}
+              shape="square"
+              hoverTrailAmount={4}
+            />
+          ))}
       </div>
 
       <TopBar />
@@ -162,7 +216,7 @@ export function ListeningSpeakingApp() {
         <VideoPlayer
           phrase={currentPhrase}
           isActive={playerMode === "video" && focusMode}
-          onPause={pause}
+          onPause={handleVideoPause}
         />
         <PhraseList
           phrases={phrases}
@@ -170,7 +224,7 @@ export function ListeningSpeakingApp() {
           focusMode={focusMode}
           currentPhraseId={currentPhraseId}
           onCurrentPhraseChange={setCurrentPhraseId}
-          playingId={playingId}
+          playingId={effectivePlayingId}
           recordingPhraseId={recordingPhraseId}
           supportsSpeechRecognition={supportsSpeechRecognition}
           evaluations={evaluations}
@@ -187,9 +241,12 @@ export function ListeningSpeakingApp() {
         playbackRate={playbackRate}
         onPlaybackRateChange={setPlaybackRate}
         focusMode={focusMode}
-        onToggleFocusMode={() => setFocusMode((v) => !v)}
+        onFocusModeChange={setFocusMode}
         playerMode={playerMode}
-        onPlayerModeChange={setPlayerMode}
+        onPlayerModeChange={(mode) => {
+          setPlayerMode(mode)
+          if (mode === "audio") handleVideoPause()
+        }}
         completedCount={completedCount}
         total={phrases.length}
       />

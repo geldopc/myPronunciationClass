@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import {
   EyeIcon,
+  EyeOffIcon,
   MicIcon,
+  PauseIcon,
   PlayIcon,
   SquareIcon,
-  Volume2Icon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,7 @@ import { getRevealState } from "@/lib/difficulty"
 import type { Difficulty } from "@/lib/difficulty"
 import { isPhraseReady } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
+import { getExtraTip } from "@/lib/pronunciationTips"
 
 type PhraseCardProps = {
   phrase: Phrase
@@ -51,6 +53,10 @@ export function PhraseCard({
   const attempted = Boolean(evaluation)
   const reveal = getRevealState(difficulty, attempted)
 
+  useEffect(() => {
+    setPeeked(false)
+  }, [difficulty])
+
   const { isRecording, error, start, stop } = useSpeechRecognition({
     supported: supportsSpeechRecognition,
     onEvaluation: (result) => onEvaluation(phrase.id, result),
@@ -73,6 +79,7 @@ export function PhraseCard({
   })
 
   const showHint = reveal.showHint || (reveal.canPeekHint && peeked)
+  const extraTip = getExtraTip(phrase.id)
 
   return (
     <Card id={`phrase-card-${phrase.id}`}>
@@ -98,17 +105,35 @@ export function PhraseCard({
 
       <CardContent className="space-y-3">
         {showHint && (
-          <div className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">
-              Pronunciation tip:{" "}
-            </span>
-            {phrase.pronunciationHint}
+          <div className="space-y-2">
+            <div className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">
+                Pronunciation tip:{" "}
+              </span>
+              {phrase.pronunciationHint}
+            </div>
+            <div className="rounded-md border border-border/50 px-3 py-2 text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">General tip: </span>
+              {extraTip}
+            </div>
           </div>
         )}
 
-        {reveal.canPeekHint && !showHint && (
-          <Button variant="ghost" size="sm" onClick={() => setPeeked(true)}>
-            <EyeIcon /> Show hint
+        {reveal.canPeekHint && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setPeeked((p) => !p)}
+          >
+            {peeked ? (
+              <>
+                <EyeOffIcon /> Hide hint
+              </>
+            ) : (
+              <>
+                <EyeIcon /> Show hint
+              </>
+            )}
           </Button>
         )}
 
@@ -135,7 +160,7 @@ export function PhraseCard({
         >
           {isPlaying ? (
             <>
-              <Volume2Icon /> Playing…
+              <PauseIcon /> Pause
             </>
           ) : (
             <>

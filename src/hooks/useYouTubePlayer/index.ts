@@ -14,10 +14,12 @@ function loadYouTubeApi() {
 
 export function useYouTubePlayer(
   containerId: string,
-  onError?: () => void
+  onError?: () => void,
+  onSegmentEnd?: () => void
 ): {
   playSegment: (start: number, end: number) => void
   pause: () => void
+  setRate: (rate: number) => void
   ready: boolean
 } {
   const playerRef = useRef<YT.Player | null>(null)
@@ -25,6 +27,10 @@ export function useYouTubePlayer(
   const endTimeRef = useRef<number>(0)
   const readyRef = useRef(false)
   const [ready, setReady] = useState(false)
+  const onSegmentEndRef = useRef(onSegmentEnd)
+  useEffect(() => {
+    onSegmentEndRef.current = onSegmentEnd
+  }, [onSegmentEnd])
 
   useEffect(() => {
     let active = true
@@ -83,6 +89,7 @@ export function useYouTubePlayer(
       if (!playerRef.current) return
       if (playerRef.current.getCurrentTime() >= endTimeRef.current) {
         playerRef.current.pauseVideo()
+        onSegmentEndRef.current?.()
         return
       }
       rafRef.current = requestAnimationFrame(poll)
@@ -95,5 +102,9 @@ export function useYouTubePlayer(
     playerRef.current?.pauseVideo()
   }, [])
 
-  return { playSegment, pause, ready }
+  const setRate = useCallback((rate: number) => {
+    playerRef.current?.setPlaybackRate(rate)
+  }, [])
+
+  return { playSegment, pause, setRate, ready }
 }

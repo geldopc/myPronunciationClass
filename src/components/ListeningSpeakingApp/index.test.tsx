@@ -9,6 +9,9 @@ const recordEvaluation = vi.fn(async () => undefined)
 vi.mock("@/components/Galaxy", () => ({
   Galaxy: () => null,
 }))
+vi.mock("@/components/ShapeGrid", () => ({
+  ShapeGrid: () => null,
+}))
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))

@@ -22,6 +22,7 @@ declare global {
       pauseVideo(): void
       seekTo(seconds: number, allowSeekAhead: boolean): void
       getCurrentTime(): number
+      setPlaybackRate(suggestedRate: number): void
       destroy(): void
     }
   }
