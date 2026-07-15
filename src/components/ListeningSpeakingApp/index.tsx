@@ -6,6 +6,7 @@ import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
 import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 import { useProgress } from "@/hooks/useProgress"
+import { useYouTubePlayer } from "@/hooks/useYouTubePlayer"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
 import { phrases } from "@/lib/phrases"
@@ -41,6 +42,9 @@ export function ListeningSpeakingApp() {
   const { playingId, play } = useAudioPlayer(playbackRate)
   const toggleRegistry = useRef(new Map<number, () => void>())
 
+  const handleVideoError = useCallback(() => setPlayerMode("audio"), [])
+  const { playSegment, pause } = useYouTubePlayer("yt-player", handleVideoError)
+
   useEffect(() => {
     setSupportsSpeechRecognition(
       Boolean(window.SpeechRecognition ?? window.webkitSpeechRecognition)
@@ -66,11 +70,18 @@ export function ListeningSpeakingApp() {
     []
   )
 
-  function handlePlay(phrase: Phrase) {
-    if (recordingPhraseId !== null) return
-    setCurrentPhraseId(phrase.id)
-    play(phrase.id, phrase.audioSrc)
-  }
+  const handlePlay = useCallback(
+    (phrase: Phrase) => {
+      if (recordingPhraseId !== null) return
+      setCurrentPhraseId(phrase.id)
+      if (playerMode === "audio") {
+        play(phrase.id, phrase.audioSrc)
+      } else {
+        playSegment(phrase.startTime, phrase.endTime)
+      }
+    },
+    [recordingPhraseId, playerMode, play, playSegment]
+  )
 
   function handleRecordingChange(phraseId: number | null) {
     setRecordingPhraseId(phraseId)
@@ -110,7 +121,7 @@ export function ListeningSpeakingApp() {
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [currentPhraseId, recordingPhraseId])
+  }, [currentPhraseId, handlePlay])
 
   useEffect(() => {
     if (!user || adoptedRef.current) return
@@ -121,7 +132,6 @@ export function ListeningSpeakingApp() {
   }, [user, evaluations, difficulty, recordEvaluation])
 
   const completedCount = Object.keys(evaluations).length
-  const handleVideoError = useCallback(() => setPlayerMode("audio"), [])
 
   return (
     <div id="listening-speaking-app" className="min-h-screen bg-background">
@@ -158,7 +168,7 @@ export function ListeningSpeakingApp() {
           onEvaluation={saveEvaluation}
           registerToggle={registerToggle}
           playerMode={playerMode}
-          onVideoError={handleVideoError}
+          onVideoPause={pause}
         />
       </main>
     </div>
