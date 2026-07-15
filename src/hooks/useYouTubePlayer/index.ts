@@ -26,6 +26,7 @@ export function useYouTubePlayer(
   const rafRef = useRef<number>(0)
   const endTimeRef = useRef<number>(0)
   const readyRef = useRef(false)
+  const pendingRateRef = useRef<number>(1)
   const [ready, setReady] = useState(false)
   const onSegmentEndRef = useRef(onSegmentEnd)
   useEffect(() => {
@@ -48,6 +49,9 @@ export function useYouTubePlayer(
           onReady: () => {
             if (active) {
               readyRef.current = true
+              if (typeof playerRef.current?.setPlaybackRate === "function") {
+                playerRef.current.setPlaybackRate(pendingRateRef.current)
+              }
               setReady(true)
             }
           },
@@ -103,7 +107,10 @@ export function useYouTubePlayer(
   }, [])
 
   const setRate = useCallback((rate: number) => {
-    playerRef.current?.setPlaybackRate(rate)
+    pendingRateRef.current = rate
+    if (typeof playerRef.current?.setPlaybackRate === "function") {
+      playerRef.current.setPlaybackRate(rate)
+    }
   }, [])
 
   return { playSegment, pause, setRate, ready }
