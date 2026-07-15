@@ -19,6 +19,7 @@ export function useYouTubePlayer(
   const playerRef = useRef<YT.Player | null>(null)
   const rafRef = useRef<number>(0)
   const endTimeRef = useRef<number>(0)
+  const readyRef = useRef(false)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export function useYouTubePlayer(
         videoId: SOURCE_VIDEO_ID,
         playerVars: { rel: 0, modestbranding: 1, controls: 1 },
         events: {
-          onReady: () => { if (active) setReady(true) },
+          onReady: () => { if (active) { readyRef.current = true; setReady(true) } },
           onError: () => { if (active) onError?.() },
         },
       })
@@ -53,6 +54,7 @@ export function useYouTubePlayer(
 
     return () => {
       active = false
+      readyRef.current = false
       cancelAnimationFrame(rafRef.current)
       playerRef.current?.destroy()
       playerRef.current = null
@@ -60,7 +62,7 @@ export function useYouTubePlayer(
   }, [containerId, onError])
 
   function playSegment(startTime: number, endTime: number) {
-    if (!playerRef.current) return
+    if (!playerRef.current || !readyRef.current) return
     endTimeRef.current = endTime
     playerRef.current.seekTo(startTime, true)
     playerRef.current.playVideo()
