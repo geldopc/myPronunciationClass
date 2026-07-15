@@ -79,4 +79,58 @@ describe("useYouTubePlayer", () => {
     unmount()
     expect(mockDestroy).toHaveBeenCalled()
   })
+
+  it("playSegment is a no-op before onReady fires", () => {
+    const player = {
+      seekTo: mockSeekTo,
+      playVideo: mockPlayVideo,
+      pauseVideo: mockPauseVideo,
+      getCurrentTime: mockGetCurrentTime,
+      destroy: mockDestroy,
+    }
+    vi.stubGlobal("YT", {
+      Player: vi.fn().mockImplementation(
+        function (_el: HTMLElement | string, _opts: object) {
+          // deliberately do NOT call onReady
+          return player
+        }
+      ),
+    })
+    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    act(() => result.current.playSegment(10, 20))
+    expect(mockSeekTo).not.toHaveBeenCalled()
+  })
+
+  it("initPlayer is deferred until onYouTubeIframeAPIReady fires", () => {
+    // Remove YT so the hook takes the async path
+    vi.stubGlobal("YT", undefined)
+
+    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+
+    // Player not constructed yet — ready must still be false
+    expect(result.current.ready).toBe(false)
+
+    // Now make YT available and fire the deferred callback
+    const player = {
+      seekTo: mockSeekTo,
+      playVideo: mockPlayVideo,
+      pauseVideo: mockPauseVideo,
+      getCurrentTime: mockGetCurrentTime,
+      destroy: mockDestroy,
+    }
+    const MockPlayer = vi.fn().mockImplementation(
+      function (_el: HTMLElement | string, opts: { events?: { onReady?: (e: object) => void } }) {
+        opts.events?.onReady?.({})
+        return player
+      }
+    )
+    vi.stubGlobal("YT", { Player: MockPlayer })
+
+    act(() => {
+      ;(window as Window & { onYouTubeIframeAPIReady?: () => void }).onYouTubeIframeAPIReady?.()
+    })
+
+    expect(MockPlayer).toHaveBeenCalled()
+    expect(result.current.ready).toBe(true)
+  })
 })
