@@ -24,7 +24,7 @@ type PhraseListProps = {
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
   registerToggle: (phraseId: number, toggle: (() => void) | null) => void
   playerMode: "audio" | "video"
-  onVideoError: () => void
+  onVideoPause: () => void
 }
 
 function getNodeState(
@@ -53,7 +53,7 @@ export function PhraseList(props: PhraseListProps) {
     onEvaluation,
     registerToggle,
     playerMode,
-    onVideoError,
+    onVideoPause,
   } = props
 
   function cardPropsFor(phrase: Phrase) {
@@ -90,7 +90,7 @@ export function PhraseList(props: PhraseListProps) {
         <VideoPlayer
           phrase={phrase}
           isActive={playerMode === "video"}
-          onError={onVideoError}
+          onPause={onVideoPause}
         />
         <PhraseCard {...cardPropsFor(phrase)} />
         <div className="flex items-center justify-between">

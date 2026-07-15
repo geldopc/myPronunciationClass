@@ -1,29 +1,26 @@
 import { useEffect } from "react"
-
-import { useYouTubePlayer } from "@/hooks/useYouTubePlayer"
 import type { Phrase } from "@/lib/phrases"
 
 type VideoPlayerProps = {
   phrase: Phrase
   isActive: boolean
-  onError?: () => void
+  onPause: () => void
 }
 
-export function VideoPlayer({ phrase, isActive, onError }: VideoPlayerProps) {
-  const { playSegment, pause, ready } = useYouTubePlayer("yt-player", onError)
-
+export function VideoPlayer({ phrase, isActive, onPause }: VideoPlayerProps) {
+  // Pause when the phrase changes (navigating without clicking Ouvir)
   useEffect(() => {
-    if (!isActive) {
-      pause()
-      return
-    }
-    if (!ready) return
-    playSegment(phrase.startTime, phrase.endTime)
-  }, [phrase.id, isActive, ready, playSegment, pause])
+    onPause()
+  }, [phrase.id, onPause])
+
+  // Pause when switching away from video mode
+  useEffect(() => {
+    if (!isActive) onPause()
+  }, [isActive, onPause])
 
   return (
-    <div id="video-player" className={!isActive ? "w-full hidden" : "w-full"}>
-      <div className="relative w-full overflow-hidden rounded-lg aspect-video">
+    <div id="video-player" className={!isActive ? "hidden w-full" : "w-full"}>
+      <div className="relative aspect-video w-full overflow-hidden rounded-lg">
         <div id="yt-player" className="absolute inset-0" />
       </div>
       <p className="mt-1 text-center text-xs text-muted-foreground">
