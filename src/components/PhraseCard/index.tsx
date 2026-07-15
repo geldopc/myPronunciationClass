@@ -91,7 +91,7 @@ export function PhraseCard({
           <p className="text-lg leading-relaxed">{phrase.text}</p>
         ) : (
           <p className="text-lg text-muted-foreground italic">
-            Ouça e repita — o texto aparece depois da sua tentativa.
+            Listen and repeat — the text appears after your attempt.
           </p>
         )}
       </CardHeader>
@@ -100,7 +100,7 @@ export function PhraseCard({
         {showHint && (
           <div className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
             <span className="font-medium text-foreground">
-              Dica de pronúncia:{" "}
+              Pronunciation tip:{" "}
             </span>
             {phrase.pronunciationHint}
           </div>
@@ -108,7 +108,7 @@ export function PhraseCard({
 
         {reveal.canPeekHint && !showHint && (
           <Button variant="ghost" size="sm" onClick={() => setPeeked(true)}>
-            <EyeIcon /> Ver dica
+            <EyeIcon /> Show hint
           </Button>
         )}
 
@@ -122,7 +122,7 @@ export function PhraseCard({
 
         {!supportsSpeechRecognition && (
           <p className="text-sm text-destructive">
-            Seu navegador não oferece suporte ao reconhecimento de voz.
+            Your browser doesn't support speech recognition.
           </p>
         )}
       </CardContent>
@@ -135,11 +135,11 @@ export function PhraseCard({
         >
           {isPlaying ? (
             <>
-              <Volume2Icon /> Tocando…
+              <Volume2Icon /> Playing…
             </>
           ) : (
             <>
-              <PlayIcon /> Ouvir
+              <PlayIcon /> Listen
             </>
           )}
         </Button>
@@ -156,11 +156,11 @@ export function PhraseCard({
         >
           {isRecording ? (
             <>
-              <SquareIcon /> Parar
+              <SquareIcon /> Stop
             </>
           ) : (
             <>
-              <MicIcon /> Repetir
+              <MicIcon /> Repeat
             </>
           )}
         </Button>
@@ -169,7 +169,7 @@ export function PhraseCard({
             className="self-center text-sm font-medium text-destructive"
             aria-live="polite"
           >
-            Ouvindo…
+            Listening…
           </span>
         )}
       </CardFooter>

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button"
 import type { Difficulty } from "@/lib/difficulty"
 
 const options: { value: Difficulty; label: string; short: string }[] = [
-  { value: "easy", label: "Fácil", short: "F" },
-  { value: "moderate", label: "Médio", short: "M" },
-  { value: "hard", label: "Difícil", short: "D" },
+  { value: "easy", label: "Easy", short: "E" },
+  { value: "moderate", label: "Medium", short: "M" },
+  { value: "hard", label: "Hard", short: "H" },
 ]
 
 type DifficultyToggleProps = {
@@ -17,7 +17,7 @@ export function DifficultyToggle({ value, onChange }: DifficultyToggleProps) {
     <div
       id="difficulty-toggle"
       role="radiogroup"
-      aria-label="Nível de dificuldade"
+      aria-label="Difficulty level"
       className="inline-flex gap-1 rounded-4xl border border-border p-1"
     >
       {options.map((option) => (

@@ -29,7 +29,7 @@ afterEach(() => {
 describe("AuthControl", () => {
   it("shows a sign-in button when logged out and calls signIn", () => {
     render(<AuthControl />)
-    const button = screen.getByRole("button", { name: /entrar/i })
+    const button = screen.getByRole("button", { name: /sign in/i })
     fireEvent.click(button)
     expect(signInWithGoogle).toHaveBeenCalledTimes(1)
   })

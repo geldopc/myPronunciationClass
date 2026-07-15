@@ -11,10 +11,10 @@ describe("DifficultyToggle", () => {
     const onChange = vi.fn()
     render(<DifficultyToggle value="easy" onChange={onChange} />)
 
-    const easy = screen.getByRole("radio", { name: /Fácil/ })
+    const easy = screen.getByRole("radio", { name: /Easy/ })
     expect(easy.getAttribute("aria-checked")).toBe("true")
 
-    fireEvent.click(screen.getByRole("radio", { name: /Difícil/ }))
+    fireEvent.click(screen.getByRole("radio", { name: /Hard/ }))
     expect(onChange).toHaveBeenCalledWith("hard")
   })
 })

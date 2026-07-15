@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { ProgressBar } from "@/components/ProgressBar"
 import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
@@ -144,13 +143,9 @@ export function ListeningSpeakingApp() {
         onToggleFocusMode={() => setFocusMode((value) => !value)}
         playerMode={playerMode}
         onPlayerModeChange={setPlayerMode}
+        completedCount={completedCount}
+        total={phrases.length}
       />
-
-      <div className="sticky top-14 z-10 border-b border-border bg-background/80 backdrop-blur">
-        <div className="container mx-auto max-w-3xl px-4 py-2">
-          <ProgressBar completed={completedCount} total={phrases.length} />
-        </div>
-      </div>
 
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <PhraseList

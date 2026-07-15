@@ -39,13 +39,13 @@ export function ScoreReveal({ evaluation }: { evaluation: SpeechEvaluation }) {
       aria-live="polite"
       className="space-y-1 rounded-md border border-border p-3 text-sm"
     >
-      <p className="text-muted-foreground">Você disse</p>
+      <p className="text-muted-foreground">You said</p>
       <p className="font-medium">&ldquo;{evaluation.transcript}&rdquo;</p>
       <p
         className={`flex items-center gap-1 font-semibold ${toneClass(evaluation.score)}`}
       >
         {isSuccess && <CheckIcon />}
-        Acerto: {displayScore}%
+        Score: {displayScore}%
       </p>
     </div>
   )

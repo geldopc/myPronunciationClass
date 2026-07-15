@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import { ListIcon, Maximize2Icon, VideoIcon, Volume2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -18,6 +19,8 @@ type TopBarProps = {
   onToggleFocusMode: () => void
   playerMode: "audio" | "video"
   onPlayerModeChange: (mode: "audio" | "video") => void
+  completedCount: number
+  total: number
 }
 
 export function TopBar({
@@ -29,6 +32,8 @@ export function TopBar({
   onToggleFocusMode,
   playerMode,
   onPlayerModeChange,
+  completedCount,
+  total,
 }: TopBarProps) {
   return (
     <header
@@ -44,7 +49,7 @@ export function TopBar({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={focusMode ? "Ver lista completa" : "Modo foco"}
+            aria-label={focusMode ? "Full list" : "Focus mode"}
             aria-pressed={focusMode}
             onClick={onToggleFocusMode}
           >
@@ -54,12 +59,23 @@ export function TopBar({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label={playerMode === "video" ? "Mudar para áudio" : "Mudar para vídeo"}
+            aria-label={
+              playerMode === "video" ? "Switch to audio" : "Switch to video"
+            }
             aria-pressed={playerMode === "video"}
-            onClick={() => onPlayerModeChange(playerMode === "video" ? "audio" : "video")}
+            onClick={() =>
+              onPlayerModeChange(playerMode === "video" ? "audio" : "video")
+            }
           >
             {playerMode === "video" ? <Volume2Icon /> : <VideoIcon />}
           </Button>
+          <Link
+            to="/progress"
+            className="tabular-nums text-xs text-muted-foreground transition-colors hover:text-foreground"
+            aria-label={`Progress: ${completedCount} of ${total} phrases`}
+          >
+            {completedCount}/{total}
+          </Link>
           <ThemeToggle />
           <AuthControl />
         </div>

@@ -84,7 +84,7 @@ export function PhraseList(props: PhraseListProps) {
     return (
       <section
         id="phrase-list"
-        aria-label="Frase atual"
+        aria-label="Current phrase"
         className="mx-auto max-w-xl space-y-4"
       >
         <VideoPlayer
@@ -99,7 +99,7 @@ export function PhraseList(props: PhraseListProps) {
             disabled={index <= 0}
             onClick={() => onCurrentPhraseChange(phrases[index - 1].id)}
           >
-            <ChevronLeftIcon /> Anterior
+            <ChevronLeftIcon /> Previous
           </Button>
           <span className="text-sm text-muted-foreground tabular-nums">
             {index + 1} / {phrases.length}
@@ -109,7 +109,7 @@ export function PhraseList(props: PhraseListProps) {
             disabled={index >= phrases.length - 1}
             onClick={() => onCurrentPhraseChange(phrases[index + 1].id)}
           >
-            Próxima <ChevronRightIcon />
+            Next <ChevronRightIcon />
           </Button>
         </div>
       </section>
@@ -119,7 +119,7 @@ export function PhraseList(props: PhraseListProps) {
   return (
     <section
       id="phrase-list"
-      aria-label="Frases para praticar"
+      aria-label="Phrases to practice"
       className="space-y-4"
     >
       {phrases.map((phrase, index) => (
