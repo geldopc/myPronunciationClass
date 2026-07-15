@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
+import { BottomNav } from "@/components/BottomNav"
+import { Galaxy } from "@/components/Galaxy"
 import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
+import { VideoPlayer } from "@/components/VideoPlayer"
 import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 import { useProgress } from "@/hooks/useProgress"
 import { useYouTubePlayer } from "@/hooks/useYouTubePlayer"
@@ -54,7 +57,7 @@ export function ListeningSpeakingApp() {
     try {
       localStorage.setItem("playerMode", playerMode)
     } catch {
-      // localStorage unavailable (private browsing)
+      // localStorage unavailable
     }
   }, [playerMode])
 
@@ -131,23 +134,36 @@ export function ListeningSpeakingApp() {
   }, [user, evaluations, difficulty, recordEvaluation])
 
   const completedCount = Object.keys(evaluations).length
+  const currentPhrase =
+    phrases.find((p) => p.id === currentPhraseId) ?? phrases[0]
 
   return (
-    <div id="listening-speaking-app" className="min-h-screen bg-background">
-      <TopBar
-        difficulty={difficulty}
-        onDifficultyChange={setDifficulty}
-        playbackRate={playbackRate}
-        onPlaybackRateChange={setPlaybackRate}
-        focusMode={focusMode}
-        onToggleFocusMode={() => setFocusMode((value) => !value)}
-        playerMode={playerMode}
-        onPlayerModeChange={setPlayerMode}
-        completedCount={completedCount}
-        total={phrases.length}
-      />
+    <div id="listening-speaking-app" className="relative min-h-screen bg-background">
+      {/* Galaxy WebGL background — fixed, behind all content */}
+      <div className="fixed inset-0 -z-10 bg-zinc-950">
+        <Galaxy
+          mouseInteraction
+          mouseRepulsion
+          saturation={0.25}
+          hueShift={220}
+          glowIntensity={0.4}
+          twinkleIntensity={0.35}
+          rotationSpeed={0.06}
+          density={1.2}
+        />
+      </div>
 
-      <main className="container mx-auto max-w-3xl px-4 py-8">
+      <TopBar />
+
+      <main className="container mx-auto max-w-3xl px-4 py-8 pb-24">
+        {/* VideoPlayer is always mounted to keep #yt-player in the DOM.
+            Hidden (display:none) when not in focus+video mode so the
+            YouTube IFrame API never loses its container reference. */}
+        <VideoPlayer
+          phrase={currentPhrase}
+          isActive={playerMode === "video" && focusMode}
+          onPause={pause}
+        />
         <PhraseList
           phrases={phrases}
           difficulty={difficulty}
@@ -162,10 +178,21 @@ export function ListeningSpeakingApp() {
           onRecordingChange={handleRecordingChange}
           onEvaluation={saveEvaluation}
           registerToggle={registerToggle}
-          playerMode={playerMode}
-          onVideoPause={pause}
         />
       </main>
+
+      <BottomNav
+        difficulty={difficulty}
+        onDifficultyChange={setDifficulty}
+        playbackRate={playbackRate}
+        onPlaybackRateChange={setPlaybackRate}
+        focusMode={focusMode}
+        onToggleFocusMode={() => setFocusMode((v) => !v)}
+        playerMode={playerMode}
+        onPlayerModeChange={setPlayerMode}
+        completedCount={completedCount}
+        total={phrases.length}
+      />
     </div>
   )
 }

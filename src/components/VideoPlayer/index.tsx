@@ -19,7 +19,7 @@ export function VideoPlayer({ phrase, isActive, onPause }: VideoPlayerProps) {
   }, [isActive, onPause])
 
   return (
-    <div id="video-player" className={!isActive ? "hidden w-full" : "w-full"}>
+    <div id="video-player" className={!isActive ? "hidden" : "mx-auto w-full max-w-xl mb-4"}>
       <div className="relative aspect-video w-full overflow-hidden rounded-lg">
         <div id="yt-player" className="absolute inset-0" />
         {/* Blocks YouTube's share button, suggestions overlay, and logo link */}
