@@ -9,7 +9,7 @@ import { computeRollups } from "@/lib/rollups"
 import { phrases } from "@/lib/phrases"
 import { useAuth } from "@/providers/Auth"
 import type { Difficulty } from "@/lib/difficulty"
-import type { Rollups } from "@/lib/progress-model"
+import type { PhraseStat, Rollups } from "@/lib/progress-model"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 
 const EMPTY: Rollups = {
@@ -22,11 +22,13 @@ const EMPTY: Rollups = {
 export function useProgress() {
   const { user } = useAuth()
   const [rollups, setRollups] = useState<Rollups>(EMPTY)
+  const [phraseStats, setPhraseStats] = useState<PhraseStat[]>([])
   const [loading, setLoading] = useState(false)
 
   const refresh = useCallback(async () => {
     if (!user) {
       setRollups(EMPTY)
+      setPhraseStats([])
       return
     }
     setLoading(true)
@@ -36,6 +38,7 @@ export function useProgress() {
     ])
     const today = new Date().toISOString().slice(0, 10)
     setRollups(computeRollups(stats, phrases.length, days, today))
+    setPhraseStats([...stats].sort((a, b) => a.phraseId - b.phraseId))
     setLoading(false)
   }, [user])
 
@@ -61,5 +64,5 @@ export function useProgress() {
     [user, refresh]
   )
 
-  return { rollups, loading, recordEvaluation }
+  return { rollups, phraseStats, loading, recordEvaluation }
 }
