@@ -3,6 +3,7 @@ import {
   Bar,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   RadialBarChart,
   RadialBar,
@@ -174,8 +175,9 @@ export function ProgressDashboard({
             data={chartData}
             margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
           >
-            <XAxis dataKey="phraseId" tick={{ fontSize: 11 }} />
-            <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="phraseId" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+            <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="bestScore">
               {chartData.map((entry) => (
