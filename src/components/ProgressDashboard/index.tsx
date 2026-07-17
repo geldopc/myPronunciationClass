@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import {
   BarChart,
   Bar,
@@ -111,24 +112,27 @@ export function ProgressDashboard({
   displayName,
   avatarUrl,
 }: Props) {
-  // Build chart data for all 36 phrases (fill in zeros for not-yet-attempted)
-  const chartData: ChartEntry[] = phrases.map((phrase) => {
-    const stat = phraseStats.find((s) => s.phraseId === phrase.id)
-    return {
-      phraseId: phrase.id,
-      bestScore: stat?.bestScore ?? 0,
-      attemptsCount: stat?.attemptsCount ?? 0,
-    }
-  })
+  const { chartData, top5, worst5 } = useMemo(() => {
+    const chartData: ChartEntry[] = phrases.map((phrase) => {
+      const stat = phraseStats.find((s) => s.phraseId === phrase.id)
+      return {
+        phraseId: phrase.id,
+        bestScore: stat?.bestScore ?? 0,
+        attemptsCount: stat?.attemptsCount ?? 0,
+      }
+    })
 
-  // Top 5 and Worst 5 filtered to attempted phrases only
-  const attempted = phraseStats.filter((s) => s.attemptsCount > 0)
-  const top5 = [...attempted]
-    .sort((a, b) => b.bestScore - a.bestScore)
-    .slice(0, 5)
-  const worst5 = [...attempted]
-    .sort((a, b) => a.bestScore - b.bestScore)
-    .slice(0, 5)
+    const attempted = phraseStats.filter((s) => s.attemptsCount > 0)
+    const top5 = [...attempted]
+      .sort((a, b) => b.bestScore - a.bestScore)
+      .slice(0, 5)
+    const worst5 = [...attempted]
+      .sort((a, b) => a.bestScore - b.bestScore)
+      .filter((s) => !top5.some((t) => t.phraseId === s.phraseId))
+      .slice(0, 5)
+
+    return { chartData, top5, worst5 }
+  }, [phraseStats])
 
   return (
     <div className="space-y-8">
@@ -137,7 +141,7 @@ export function ProgressDashboard({
         <Avatar size="lg">
           <AvatarImage src={avatarUrl} alt={displayName} />
           <AvatarFallback>
-            {displayName.slice(0, 1).toUpperCase()}
+            {(displayName?.slice(0, 1) || "?").toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-semibold">{displayName}</h2>
