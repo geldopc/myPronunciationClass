@@ -44,7 +44,7 @@ export function BottomNav({
 
         {/* Center: progress bar with numbers inside */}
         <div
-          className="relative flex h-7 flex-1 items-center overflow-hidden rounded-full bg-muted"
+          className="relative flex h-7 flex-1 min-w-[5rem] items-center overflow-hidden rounded-full bg-muted"
           aria-label={`${completedCount} of ${total} phrases done`}
         >
           <div
@@ -58,18 +58,20 @@ export function BottomNav({
 
         {/* Right: speed + 3-state mode selector */}
         <div className="flex items-center gap-1">
-          <SpeedControl
-            value={playbackRate}
-            onChange={onPlaybackRateChange}
-            className="h-8 w-[4.5rem]"
-          />
+          <div className="hidden sm:flex">
+            <SpeedControl
+              value={playbackRate}
+              onChange={onPlaybackRateChange}
+              className="h-8 w-[4.5rem]"
+            />
+          </div>
 
           <div className="flex rounded-md border border-border/60">
             <Button
               type="button"
               variant={!focusMode ? "secondary" : "ghost"}
               size="icon"
-              className="h-8 w-8 rounded-r-none"
+              className="h-10 w-10 rounded-r-none"
               aria-label="List mode"
               aria-pressed={!focusMode}
               onClick={() => onFocusModeChange(false)}
@@ -82,7 +84,7 @@ export function BottomNav({
                 focusMode && playerMode === "audio" ? "secondary" : "ghost"
               }
               size="icon"
-              className="h-8 w-8 rounded-none border-x border-border/60"
+              className="h-10 w-10 rounded-none border-x border-border/60"
               aria-label="Focus mode"
               aria-pressed={focusMode && playerMode === "audio"}
               onClick={() => {
@@ -98,7 +100,7 @@ export function BottomNav({
                 focusMode && playerMode === "video" ? "secondary" : "ghost"
               }
               size="icon"
-              className="h-8 w-8 rounded-l-none"
+              className="h-10 w-10 rounded-l-none"
               aria-label="Video mode"
               aria-pressed={focusMode && playerMode === "video"}
               onClick={() => {
