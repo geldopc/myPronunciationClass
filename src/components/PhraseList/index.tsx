@@ -77,7 +77,10 @@ export function PhraseList(props: PhraseListProps) {
     const phrase = phrases[index]
 
     return (
-      <div className="flex min-h-[calc(100vh-64px-56px)] flex-col justify-center">
+      <div
+        className="flex flex-col justify-center"
+        style={{ minHeight: 'calc(100vh - 60px - 56px - env(safe-area-inset-bottom))' }}
+      >
         <section
           id="phrase-list"
           aria-label="Current phrase"
