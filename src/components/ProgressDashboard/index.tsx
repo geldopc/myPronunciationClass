@@ -143,26 +143,26 @@ export function ProgressDashboard({
         <h2 className="text-xl font-semibold">{displayName}</h2>
       </div>
 
-      {/* Stat tiles row */}
-      <dl className="grid grid-cols-3 gap-4 text-center">
-        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-          <dt className="text-sm text-muted-foreground">Conclusão</dt>
-          <dd className="text-2xl font-bold">{rollups.completion}%</dd>
+      {/* Desktop: donut + tiles side by side; Mobile: stacked */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-center gap-2 sm:shrink-0">
+          <h3 className="font-semibold">Progresso Geral</h3>
+          <DonutChart value={rollups.completion} />
         </div>
-        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-          <dt className="text-sm text-muted-foreground">Média</dt>
-          <dd className="text-2xl font-bold">{rollups.average}</dd>
-        </div>
-        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-          <dt className="text-sm text-muted-foreground">Sequência</dt>
-          <dd className="text-2xl font-bold">{rollups.streak}</dd>
-        </div>
-      </dl>
-
-      {/* Completion donut */}
-      <div className="flex flex-col items-center gap-2">
-        <h3 className="font-semibold">Progresso Geral</h3>
-        <DonutChart value={rollups.completion} />
+        <dl className="grid flex-1 grid-cols-3 gap-4 text-center">
+          <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
+            <dt className="text-sm text-muted-foreground">Conclusão</dt>
+            <dd className="text-2xl font-bold">{rollups.completion}%</dd>
+          </div>
+          <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
+            <dt className="text-sm text-muted-foreground">Média</dt>
+            <dd className="text-2xl font-bold">{rollups.average}</dd>
+          </div>
+          <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
+            <dt className="text-sm text-muted-foreground">Sequência</dt>
+            <dd className="text-2xl font-bold">{rollups.streak}</dd>
+          </div>
+        </dl>
       </div>
 
       {/* Score bar chart — scrollable on mobile */}
@@ -176,8 +176,14 @@ export function ProgressDashboard({
             margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="phraseId" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
-            <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+            <XAxis
+              dataKey="phraseId"
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
+            <YAxis
+              domain={[0, 100]}
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="bestScore">
               {chartData.map((entry) => (

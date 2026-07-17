@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { XIcon } from "lucide-react"
+import { ArrowLeftIcon, XIcon } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 
 import { Logo } from "@/components/Logo"
 import { AuthControl } from "@/components/TopBar/AuthControl"
@@ -89,7 +90,7 @@ function AppInfoDialog({ onClose }: { onClose: () => void }) {
   )
 }
 
-export function TopBar() {
+export function TopBar({ backTo }: { backTo?: string } = {}) {
   const [showInfo, setShowInfo] = useState(false)
 
   return (
@@ -99,14 +100,26 @@ export function TopBar() {
         className="sticky top-0 z-20 border-b border-border/30 bg-background/50 backdrop-blur-xl"
       >
         <div className="container mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-          <button
-            type="button"
-            onClick={() => setShowInfo(true)}
-            aria-label="About myPronunciationClass"
-            className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            <Logo className="h-9 w-auto" />
-          </button>
+          <div className="flex items-center gap-3">
+            {backTo && (
+              <Link
+                to={backTo}
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Voltar para Lições"
+              >
+                <ArrowLeftIcon className="h-4 w-4" />
+                Lições
+              </Link>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowInfo(true)}
+              aria-label="About myPronunciationClass"
+              className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              <Logo className="h-9 w-auto" />
+            </button>
+          </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <AuthControl />
