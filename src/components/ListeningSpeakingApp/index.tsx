@@ -209,7 +209,12 @@ export function ListeningSpeakingApp() {
 
       <TopBar />
 
-      <main className="container mx-auto max-w-3xl px-4 py-8 pb-24">
+      <main
+        className="container mx-auto max-w-3xl px-4 py-8"
+        style={{
+          paddingBottom: "max(96px, calc(56px + env(safe-area-inset-bottom)))",
+        }}
+      >
         {/* VideoPlayer is always mounted to keep #yt-player in the DOM.
             Hidden (display:none) when not in focus+video mode so the
             YouTube IFrame API never loses its container reference. */}

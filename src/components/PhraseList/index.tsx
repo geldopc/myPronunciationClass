@@ -77,32 +77,34 @@ export function PhraseList(props: PhraseListProps) {
     const phrase = phrases[index]
 
     return (
-      <section
-        id="phrase-list"
-        aria-label="Current phrase"
-        className="mx-auto max-w-xl space-y-4"
-      >
-        <PhraseCard {...cardPropsFor(phrase)} />
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            disabled={index <= 0}
-            onClick={() => onCurrentPhraseChange(phrases[index - 1].id)}
-          >
-            <ChevronLeftIcon /> Previous
-          </Button>
-          <span className="text-sm text-muted-foreground tabular-nums">
-            {index + 1} / {phrases.length}
-          </span>
-          <Button
-            variant="ghost"
-            disabled={index >= phrases.length - 1}
-            onClick={() => onCurrentPhraseChange(phrases[index + 1].id)}
-          >
-            Next <ChevronRightIcon />
-          </Button>
-        </div>
-      </section>
+      <div className="flex min-h-[calc(100vh-64px-56px)] flex-col justify-center">
+        <section
+          id="phrase-list"
+          aria-label="Current phrase"
+          className="mx-auto max-w-xl space-y-4"
+        >
+          <PhraseCard {...cardPropsFor(phrase)} />
+          <div className="flex items-center justify-between">
+            <Button
+              variant="ghost"
+              disabled={index <= 0}
+              onClick={() => onCurrentPhraseChange(phrases[index - 1].id)}
+            >
+              <ChevronLeftIcon /> Previous
+            </Button>
+            <span className="text-sm text-muted-foreground tabular-nums">
+              {index + 1} / {phrases.length}
+            </span>
+            <Button
+              variant="ghost"
+              disabled={index >= phrases.length - 1}
+              onClick={() => onCurrentPhraseChange(phrases[index + 1].id)}
+            >
+              Next <ChevronRightIcon />
+            </Button>
+          </div>
+        </section>
+      </div>
     )
   }
 

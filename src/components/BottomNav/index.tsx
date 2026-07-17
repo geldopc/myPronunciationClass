@@ -38,13 +38,16 @@ export function BottomNav({
       id="bottom-nav"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border/40 bg-background/60 backdrop-blur-xl"
     >
-      <div className="container mx-auto flex max-w-3xl items-center gap-3 px-4 py-2">
+      <div
+        className="container mx-auto flex max-w-3xl items-center gap-3 px-4 py-2"
+        style={{ paddingBottom: "max(8px, env(safe-area-inset-bottom))" }}
+      >
         {/* Left: difficulty */}
         <DifficultyToggle value={difficulty} onChange={onDifficultyChange} />
 
         {/* Center: progress bar with numbers inside */}
         <div
-          className="relative flex h-7 flex-1 min-w-[5rem] items-center overflow-hidden rounded-full bg-muted"
+          className="relative flex h-7 min-w-[5rem] flex-1 items-center overflow-hidden rounded-full bg-muted"
           aria-label={`${completedCount} of ${total} phrases done`}
         >
           <div
