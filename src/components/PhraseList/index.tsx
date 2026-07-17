@@ -79,7 +79,9 @@ export function PhraseList(props: PhraseListProps) {
     return (
       <div
         className="flex flex-col justify-center"
-        style={{ minHeight: 'calc(100vh - 60px - 56px - env(safe-area-inset-bottom))' }}
+        style={{
+          minHeight: "calc(100vh - 60px - 56px - env(safe-area-inset-bottom))",
+        }}
       >
         <section
           id="phrase-list"

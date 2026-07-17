@@ -1,5 +1,6 @@
 import { Navigate, createFileRoute } from "@tanstack/react-router"
 
+import { TopBar } from "@/components/TopBar"
 import { ProgressView } from "@/components/ProgressView"
 import { useAuth } from "@/providers/Auth"
 
@@ -9,5 +10,10 @@ function ProgressPage() {
   const { user, loading } = useAuth()
   if (loading) return null
   if (!user) return <Navigate to="/" />
-  return <ProgressView />
+  return (
+    <>
+      <TopBar backTo="/" />
+      <ProgressView />
+    </>
+  )
 }
