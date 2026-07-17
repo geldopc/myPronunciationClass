@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import {
   EyeIcon,
-  EyeOffIcon,
   MicIcon,
   PauseIcon,
   PlayIcon,
@@ -49,13 +48,22 @@ export function PhraseCard({
   registerToggle,
 }: PhraseCardProps) {
   const [peeked, setPeeked] = useState(false)
+  const [tipIndex, setTipIndex] = useState(0)
   const phraseReady = isPhraseReady(phrase)
   const attempted = Boolean(evaluation)
   const reveal = getRevealState(difficulty, attempted)
+  // Compute showHint before any useEffect that lists it as a dependency
+  const showHint = reveal.showHint || (reveal.canPeekHint && peeked)
+  const extraTip = getExtraTip(phrase.id)
 
   useEffect(() => {
     setPeeked(false)
   }, [difficulty])
+
+  // Reset to first slide whenever the carousel closes or the phrase changes
+  useEffect(() => {
+    setTipIndex(0)
+  }, [phrase.id, showHint])
 
   const { isRecording, error, start, stop } = useSpeechRecognition({
     supported: supportsSpeechRecognition,
@@ -78,9 +86,6 @@ export function PhraseCard({
     return () => registerToggle(phrase.id, null)
   })
 
-  const showHint = reveal.showHint || (reveal.canPeekHint && peeked)
-  const extraTip = getExtraTip(phrase.id)
-
   return (
     <Card id={`phrase-card-${phrase.id}`}>
       <CardHeader className="gap-2">
@@ -93,6 +98,17 @@ export function PhraseCard({
           <span className="tabular-nums">
             {String(phrase.id).padStart(2, "0")}
           </span>
+          {reveal.canPeekHint && (
+            <button
+              type="button"
+              onClick={() => setPeeked((p) => !p)}
+              className="ml-auto flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+              aria-label={peeked ? "Hide hint" : "Show hint"}
+            >
+              <EyeIcon className="h-3 w-3" />
+              {peeked ? "Hide" : "Hint"}
+            </button>
+          )}
         </div>
         {reveal.showText ? (
           <p className="text-lg leading-relaxed">{phrase.text}</p>
@@ -105,36 +121,31 @@ export function PhraseCard({
 
       <CardContent className="space-y-3">
         {showHint && (
-          <div className="space-y-2">
-            <div className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">
-                Pronunciation tip:{" "}
+          <div className="rounded-md bg-muted px-3 py-2 text-sm">
+            <div className="mb-1.5 flex items-center justify-between">
+              <span className="text-xs font-semibold text-foreground">
+                {tipIndex === 0 ? "Phonetic tip" : "Technique tip"}
               </span>
-              {phrase.pronunciationHint}
+              <div className="flex gap-1">
+                {[0, 1].map((i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setTipIndex(i)}
+                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                      tipIndex === i
+                        ? "bg-foreground"
+                        : "bg-muted-foreground/30"
+                    }`}
+                    aria-label={`Tip ${i + 1}`}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="rounded-md border border-border/50 px-3 py-2 text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">General tip: </span>
-              {extraTip}
-            </div>
+            <p className="text-muted-foreground">
+              {tipIndex === 0 ? phrase.pronunciationHint : extraTip}
+            </p>
           </div>
-        )}
-
-        {reveal.canPeekHint && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setPeeked((p) => !p)}
-          >
-            {peeked ? (
-              <>
-                <EyeOffIcon /> Hide hint
-              </>
-            ) : (
-              <>
-                <EyeIcon /> Show hint
-              </>
-            )}
-          </Button>
         )}
 
         {evaluation && <ScoreReveal evaluation={evaluation} />}
