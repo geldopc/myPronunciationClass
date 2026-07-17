@@ -23,9 +23,13 @@ vi.mock("@/providers/Auth", () => ({
 }))
 
 import { useProgress } from "@/hooks/useProgress"
+import type { PhraseStat } from "@/lib/progress-model"
+
+let capturedPhraseStats: PhraseStat[] = []
 
 function Probe() {
-  const { rollups, recordEvaluation } = useProgress()
+  const { rollups, phraseStats, recordEvaluation } = useProgress()
+  capturedPhraseStats = phraseStats
   return (
     <button
       type="button"
@@ -42,6 +46,7 @@ afterEach(() => {
   cleanup()
   recordAttempt.mockClear()
   mockUser = { uid: "u1", displayName: "Ada", avatarUrl: "" }
+  capturedPhraseStats = []
 })
 
 describe("useProgress", () => {
@@ -55,6 +60,8 @@ describe("useProgress", () => {
       score: 70,
       transcript: "hi",
     })
+    expect(capturedPhraseStats).toHaveLength(1)
+    expect(capturedPhraseStats[0].phraseId).toBe(1)
   })
 
   it("does not persist when logged out", async () => {
