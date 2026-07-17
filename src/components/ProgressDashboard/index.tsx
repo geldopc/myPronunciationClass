@@ -122,8 +122,12 @@ export function ProgressDashboard({
 
   // Top 5 and Worst 5 filtered to attempted phrases only
   const attempted = phraseStats.filter((s) => s.attemptsCount > 0)
-  const top5 = [...attempted].sort((a, b) => b.bestScore - a.bestScore).slice(0, 5)
-  const worst5 = [...attempted].sort((a, b) => a.bestScore - b.bestScore).slice(0, 5)
+  const top5 = [...attempted]
+    .sort((a, b) => b.bestScore - a.bestScore)
+    .slice(0, 5)
+  const worst5 = [...attempted]
+    .sort((a, b) => a.bestScore - b.bestScore)
+    .slice(0, 5)
 
   return (
     <div className="space-y-8">
@@ -131,22 +135,24 @@ export function ProgressDashboard({
       <div className="flex items-center gap-3">
         <Avatar size="lg">
           <AvatarImage src={avatarUrl} alt={displayName} />
-          <AvatarFallback>{displayName.slice(0, 1).toUpperCase()}</AvatarFallback>
+          <AvatarFallback>
+            {displayName.slice(0, 1).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-semibold">{displayName}</h2>
       </div>
 
       {/* Stat tiles row */}
       <dl className="grid grid-cols-3 gap-4 text-center">
-        <div className="rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
           <dd className="text-2xl font-bold">{rollups.completion}%</dd>
           <dt className="text-sm text-muted-foreground">Conclusão</dt>
         </div>
-        <div className="rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
           <dd className="text-2xl font-bold">{rollups.average}</dd>
           <dt className="text-sm text-muted-foreground">Média</dt>
         </div>
-        <div className="rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
           <dd className="text-2xl font-bold">{rollups.streak}</dd>
           <dt className="text-sm text-muted-foreground">Sequência</dt>
         </div>
@@ -194,7 +200,7 @@ export function ProgressDashboard({
                   className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm"
                 >
                   <span>Frase {stat.phraseId}</span>
-                  <span className="font-medium text-green-600">
+                  <span className="font-medium text-green-500 dark:text-green-400">
                     {stat.bestScore}
                   </span>
                 </li>
@@ -214,7 +220,7 @@ export function ProgressDashboard({
                   className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm"
                 >
                   <span>Frase {stat.phraseId}</span>
-                  <span className="font-medium text-red-500">
+                  <span className="font-medium text-red-400 dark:text-red-300">
                     {stat.bestScore}
                   </span>
                 </li>
