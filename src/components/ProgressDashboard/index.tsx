@@ -144,17 +144,17 @@ export function ProgressDashboard({
 
       {/* Stat tiles row */}
       <dl className="grid grid-cols-3 gap-4 text-center">
-        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
-          <dd className="text-2xl font-bold">{rollups.completion}%</dd>
+        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
           <dt className="text-sm text-muted-foreground">Conclusão</dt>
+          <dd className="text-2xl font-bold">{rollups.completion}%</dd>
         </div>
-        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
-          <dd className="text-2xl font-bold">{rollups.average}</dd>
+        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
           <dt className="text-sm text-muted-foreground">Média</dt>
+          <dd className="text-2xl font-bold">{rollups.average}</dd>
         </div>
-        <div className="flex flex-col rounded-lg border border-border bg-card p-4">
-          <dd className="text-2xl font-bold">{rollups.streak}</dd>
+        <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
           <dt className="text-sm text-muted-foreground">Sequência</dt>
+          <dd className="text-2xl font-bold">{rollups.streak}</dd>
         </div>
       </dl>
 
