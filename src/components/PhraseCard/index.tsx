@@ -58,12 +58,8 @@ export function PhraseCard({
 
   useEffect(() => {
     setPeeked(false)
-  }, [difficulty])
-
-  // Reset to first slide whenever the carousel closes or the phrase changes
-  useEffect(() => {
     setTipIndex(0)
-  }, [phrase.id, showHint])
+  }, [phrase.id, difficulty])
 
   const { isRecording, error, start, stop } = useSpeechRecognition({
     supported: supportsSpeechRecognition,
