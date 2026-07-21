@@ -12,7 +12,7 @@ Pure Firestore data layer. All lesson and phrase content moves from the static `
 
 ## Tech Stack
 
-React 19, TypeScript, Tailwind v4, TanStack Router (SPA), Firebase Auth, Firestore, existing `useYouTubePlayer` hook.
+React 19, TypeScript, Tailwind v4, TanStack Router (SPA), Firebase Auth, Firestore, shadcn/ui (primary component source), existing `useYouTubePlayer` hook.
 
 ## Global Constraints
 
