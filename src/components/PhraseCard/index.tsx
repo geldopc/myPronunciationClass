@@ -110,7 +110,9 @@ export function PhraseCard({
       if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         e.preventDefault()
-        setTipIndex((p) => (e.key === "ArrowUp" ? (p - 1 + 2) % 2 : (p + 1) % 2))
+        setTipIndex((p) =>
+          e.key === "ArrowUp" ? (p - 1 + 2) % 2 : (p + 1) % 2
+        )
       }
     }
     window.addEventListener("keydown", onKeyDown)
@@ -190,7 +192,7 @@ export function PhraseCard({
 
       <CardContent
         className={cn(
-          flat ? "flex min-h-0 flex-1 flex-col gap-3" : "space-y-3",
+          flat ? "flex min-h-0 flex-1 flex-col gap-3" : "space-y-3"
         )}
       >
         {/* Non-flat: tip at top (existing dot nav) */}
@@ -236,47 +238,28 @@ export function PhraseCard({
           </p>
         )}
 
-        {/* Flat: spacer pushes tip to bottom; vertical ↑/↓ nav + ↑↓ keyboard */}
+        {/* Flat: spacer pushes tip box to bottom; nav lives in the footer row */}
         {flat && <div className="min-h-0 flex-1" />}
 
         {flat && showHint && (
-          <div className="rounded-md bg-muted px-3 py-3 text-sm">
-            <div className="flex items-start gap-3">
-              <div className="min-w-0 flex-1">
-                <p className="mb-1 text-xs font-semibold text-foreground">
-                  {tipIndex === 0 ? "Phonetic tip" : "Technique tip"}
-                </p>
-                <p className="leading-relaxed text-muted-foreground">
-                  {tipIndex === 0 ? phrase.pronunciationHint : extraTip}
-                </p>
-              </div>
-              <div className="ml-1 flex flex-none flex-col items-center gap-0.5">
-                <button
-                  type="button"
-                  onClick={() => setTipIndex((p) => (p - 1 + 2) % 2)}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
-                  aria-label="Previous tip (↑)"
-                >
-                  <ChevronUpIcon className="h-4 w-4" />
-                </button>
-                <span className="text-[10px] leading-none tabular-nums text-muted-foreground/50">
-                  {tipIndex + 1}/2
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setTipIndex((p) => (p + 1) % 2)}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
-                  aria-label="Next tip (↓)"
-                >
-                  <ChevronDownIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
+          <div className="rounded-md bg-muted px-3 py-2.5 text-sm">
+            <p className="mb-1 text-xs font-semibold text-foreground">
+              {tipIndex === 0 ? "Phonetic tip" : "Technique tip"}
+            </p>
+            <p className="leading-relaxed text-muted-foreground">
+              {tipIndex === 0 ? phrase.pronunciationHint : extraTip}
+            </p>
           </div>
         )}
       </CardContent>
 
-      <CardFooter className={cn("flex flex-wrap gap-2", flat && "mt-auto")}>
+      <CardFooter
+        className={cn(
+          flat
+            ? "mt-auto flex flex-nowrap items-center gap-2"
+            : "flex flex-wrap gap-2",
+        )}
+      >
         {nav && (
           <Button
             variant="ghost"
@@ -335,9 +318,36 @@ export function PhraseCard({
             <ChevronRightIcon />
           </Button>
         )}
+        {/* Tip nav: horizontal cluster in footer, only in flat mode when hint visible */}
+        {flat && showHint && (
+          <div className="flex flex-none items-center">
+            <button
+              type="button"
+              onClick={() => setTipIndex((p) => (p - 1 + 2) % 2)}
+              className="flex h-8 w-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="Previous tip (↑)"
+            >
+              <ChevronUpIcon className="h-3.5 w-3.5" />
+            </button>
+            <span className="w-6 text-center text-[10px] tabular-nums text-muted-foreground/60">
+              {tipIndex + 1}/2
+            </span>
+            <button
+              type="button"
+              onClick={() => setTipIndex((p) => (p + 1) % 2)}
+              className="flex h-8 w-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="Next tip (↓)"
+            >
+              <ChevronDownIcon className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
         {isRecording && (
           <span
-            className="self-center text-sm font-medium text-destructive"
+            className={cn(
+              "text-sm font-medium text-destructive",
+              flat ? "sr-only" : "self-center",
+            )}
             aria-live="polite"
           >
             Listening…
