@@ -230,7 +230,7 @@ export function ListeningSpeakingApp() {
           )}
         >
           {isVideoMode && (
-            <div className="flex items-center gap-2.5 px-5 pb-2 pt-3 text-sm">
+            <div className="flex items-center gap-2.5 px-5 pt-3 pb-2 text-sm">
               <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
                 {currentPhrase.speaker.charAt(0)}
               </span>
@@ -240,7 +240,7 @@ export function ListeningSpeakingApp() {
               <span aria-hidden className="text-muted-foreground">
                 ·
               </span>
-              <span className="tabular-nums text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground tabular-nums">
                 {String(currentPhraseIndex + 1).padStart(2, "0")} /{" "}
                 {phrases.length}
               </span>

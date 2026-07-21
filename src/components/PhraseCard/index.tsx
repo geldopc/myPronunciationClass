@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import {
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronUpIcon,
   EyeIcon,
   MicIcon,
   PauseIcon,
@@ -101,6 +103,20 @@ export function PhraseCard({
     return () => registerToggle(phrase.id, null)
   })
 
+  useEffect(() => {
+    if (!showHint || !flat) return
+    function onKeyDown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement | null
+      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault()
+        setTipIndex((p) => (e.key === "ArrowUp" ? (p - 1 + 2) % 2 : (p + 1) % 2))
+      }
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [showHint, flat])
+
   return (
     <Card
       id={`phrase-card-${phrase.id}`}
@@ -118,7 +134,9 @@ export function PhraseCard({
             <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
               {phrase.speaker.charAt(0)}
             </span>
-            <span className="font-medium text-foreground">{phrase.speaker}</span>
+            <span className="font-medium text-foreground">
+              {phrase.speaker}
+            </span>
             <span aria-hidden>·</span>
             <span className="tabular-nums">
               {String(phrase.id).padStart(2, "0")}
@@ -150,7 +168,7 @@ export function PhraseCard({
             <p
               className={cn(
                 "text-lg text-muted-foreground italic",
-                flat && "flex-1",
+                flat && "flex-1"
               )}
             >
               Listen and repeat — the text appears after your attempt.
@@ -170,8 +188,13 @@ export function PhraseCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
-        {showHint && (
+      <CardContent
+        className={cn(
+          flat ? "flex min-h-0 flex-1 flex-col gap-3" : "space-y-3",
+        )}
+      >
+        {/* Non-flat: tip at top (existing dot nav) */}
+        {!flat && showHint && (
           <div className="rounded-md bg-muted px-3 py-2 text-sm">
             <div className="mb-1.5 flex items-center justify-between">
               <span className="text-xs font-semibold text-foreground">
@@ -211,6 +234,45 @@ export function PhraseCard({
           <p className="text-sm text-destructive">
             Your browser doesn't support speech recognition.
           </p>
+        )}
+
+        {/* Flat: spacer pushes tip to bottom; vertical ↑/↓ nav + ↑↓ keyboard */}
+        {flat && <div className="min-h-0 flex-1" />}
+
+        {flat && showHint && (
+          <div className="rounded-md bg-muted px-3 py-3 text-sm">
+            <div className="flex items-start gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="mb-1 text-xs font-semibold text-foreground">
+                  {tipIndex === 0 ? "Phonetic tip" : "Technique tip"}
+                </p>
+                <p className="leading-relaxed text-muted-foreground">
+                  {tipIndex === 0 ? phrase.pronunciationHint : extraTip}
+                </p>
+              </div>
+              <div className="ml-1 flex flex-none flex-col items-center gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => setTipIndex((p) => (p - 1 + 2) % 2)}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                  aria-label="Previous tip (↑)"
+                >
+                  <ChevronUpIcon className="h-4 w-4" />
+                </button>
+                <span className="text-[10px] leading-none tabular-nums text-muted-foreground/50">
+                  {tipIndex + 1}/2
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setTipIndex((p) => (p + 1) % 2)}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                  aria-label="Next tip (↓)"
+                >
+                  <ChevronDownIcon className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </CardContent>
 
