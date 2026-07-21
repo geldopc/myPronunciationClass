@@ -10,7 +10,12 @@ type VideoPlayerProps = {
   onPause: () => void
 }
 
-export function VideoPlayer({ phrase, isActive, unified = false, onPause }: VideoPlayerProps) {
+export function VideoPlayer({
+  phrase,
+  isActive,
+  unified = false,
+  onPause,
+}: VideoPlayerProps) {
   // Pause when the phrase changes (navigating without clicking Ouvir)
   useEffect(() => {
     onPause()
@@ -28,15 +33,12 @@ export function VideoPlayer({ phrase, isActive, unified = false, onPause }: Vide
         !isActive
           ? "hidden"
           : unified
-            ? "w-full flex-none"
+            ? "mx-auto w-full flex-none"
             : "mx-auto mb-2 w-full flex-none"
       }
       style={
         isActive
-          ? {
-              maxWidth: unified ? undefined : "min(100%, calc(30dvh * 16 / 9))",
-              maxHeight: "30dvh",
-            }
+          ? { maxWidth: "min(100%, calc(30dvh * 16 / 9))", maxHeight: "30dvh" }
           : undefined
       }
     >
