@@ -104,46 +104,70 @@ export function PhraseCard({
   return (
     <Card
       id={`phrase-card-${phrase.id}`}
-      style={flat ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : undefined}
+      style={
+        flat ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : undefined
+      }
       className={cn(
-        flat ? "shadow-none ring-0 dark:ring-0 flex-1 min-h-0" : "min-h-72",
-        className,
+        flat ? "min-h-0 flex-1 shadow-none ring-0 dark:ring-0" : "min-h-72",
+        className
       )}
     >
       <CardHeader className="gap-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
-            {phrase.speaker.charAt(0)}
-          </span>
-          <span className="font-medium text-foreground">{phrase.speaker}</span>
-          <span aria-hidden>·</span>
-          <span className="tabular-nums">
-            {String(phrase.id).padStart(2, "0")}
-          </span>
-          <div className="ml-auto flex items-center gap-2">
-            {nav?.label && (
-              <span className="text-xs tabular-nums">{nav.label}</span>
-            )}
-            {reveal.canPeekHint && (
-              <button
-                type="button"
-                onClick={() => setPeeked((p) => !p)}
-                className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
-                aria-label={peeked ? "Hide hint" : "Show hint"}
-              >
-                <EyeIcon className="h-3 w-3" />
-                {peeked ? "Hide" : "Hint"}
-              </button>
-            )}
+        {!flat && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
+              {phrase.speaker.charAt(0)}
+            </span>
+            <span className="font-medium text-foreground">{phrase.speaker}</span>
+            <span aria-hidden>·</span>
+            <span className="tabular-nums">
+              {String(phrase.id).padStart(2, "0")}
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              {nav?.label && (
+                <span className="text-xs tabular-nums">{nav.label}</span>
+              )}
+              {reveal.canPeekHint && (
+                <button
+                  type="button"
+                  onClick={() => setPeeked((p) => !p)}
+                  className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+                  aria-label={peeked ? "Hide hint" : "Show hint"}
+                >
+                  <EyeIcon className="h-3 w-3" />
+                  {peeked ? "Hide" : "Hint"}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-        {reveal.showText ? (
-          <p className="text-lg leading-relaxed">{phrase.text}</p>
-        ) : (
-          <p className="text-lg text-muted-foreground italic">
-            Listen and repeat — the text appears after your attempt.
-          </p>
         )}
+        <div className={cn(flat && "flex items-start gap-2")}>
+          {reveal.showText ? (
+            <p className={cn("text-lg leading-relaxed", flat && "flex-1")}>
+              {phrase.text}
+            </p>
+          ) : (
+            <p
+              className={cn(
+                "text-lg text-muted-foreground italic",
+                flat && "flex-1",
+              )}
+            >
+              Listen and repeat — the text appears after your attempt.
+            </p>
+          )}
+          {flat && reveal.canPeekHint && (
+            <button
+              type="button"
+              onClick={() => setPeeked((p) => !p)}
+              className="mt-1.5 flex flex-none items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+              aria-label={peeked ? "Hide hint" : "Show hint"}
+            >
+              <EyeIcon className="h-3 w-3" />
+              {peeked ? "Hide" : "Hint"}
+            </button>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-3">
