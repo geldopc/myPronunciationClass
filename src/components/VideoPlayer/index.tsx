@@ -21,16 +21,18 @@ export function VideoPlayer({ phrase, isActive, onPause }: VideoPlayerProps) {
   return (
     <div
       id="video-player"
-      className={!isActive ? "hidden" : "mx-auto mb-4 w-full max-w-xl"}
+      className={!isActive ? "hidden" : "mx-auto mb-2 w-full flex-none"}
+      style={
+        isActive
+          ? { maxWidth: "min(100%, calc(30dvh * 16 / 9))", maxHeight: "30dvh" }
+          : undefined
+      }
     >
       <div className="relative aspect-video w-full overflow-hidden rounded-lg">
         <div id="yt-player" className="absolute inset-0" />
         {/* Blocks YouTube's share button, suggestions overlay, and logo link */}
         <div className="absolute inset-0 z-10" />
       </div>
-      <p className="mt-1 text-center text-xs text-muted-foreground">
-        {phrase.speaker} — phrase {phrase.id}
-      </p>
     </div>
   )
 }

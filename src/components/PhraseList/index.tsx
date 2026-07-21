@@ -1,6 +1,3 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import { PhraseCard } from "@/components/PhraseCard"
 import { SpineNode } from "@/components/PhraseList/SpineNode"
 import type { SpineNodeState } from "@/components/PhraseList/SpineNode"
@@ -77,64 +74,57 @@ export function PhraseList(props: PhraseListProps) {
     const phrase = phrases[index]
 
     return (
-      <div
-        className="flex flex-col justify-center"
-        style={{
-          minHeight: "calc(100vh - 60px - 56px - env(safe-area-inset-bottom))",
-        }}
-      >
+      <div className="flex flex-1 flex-col justify-center overflow-y-auto">
         <section
           id="phrase-list"
           aria-label="Current phrase"
-          className="mx-auto max-w-xl space-y-4"
+          className="mx-auto max-w-xl"
         >
-          <PhraseCard {...cardPropsFor(phrase)} />
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              disabled={index <= 0}
-              onClick={() => onCurrentPhraseChange(phrases[index - 1].id)}
-            >
-              <ChevronLeftIcon /> Previous
-            </Button>
-            <span className="text-sm text-muted-foreground tabular-nums">
-              {index + 1} / {phrases.length}
-            </span>
-            <Button
-              variant="ghost"
-              disabled={index >= phrases.length - 1}
-              onClick={() => onCurrentPhraseChange(phrases[index + 1].id)}
-            >
-              Next <ChevronRightIcon />
-            </Button>
-          </div>
+          <PhraseCard
+            {...cardPropsFor(phrase)}
+            nav={{
+              onPrev:
+                index > 0
+                  ? () => onCurrentPhraseChange(phrases[index - 1].id)
+                  : undefined,
+              onNext:
+                index < phrases.length - 1
+                  ? () => onCurrentPhraseChange(phrases[index + 1].id)
+                  : undefined,
+              prevDisabled: index <= 0,
+              nextDisabled: index >= phrases.length - 1,
+              label: `${index + 1} / ${phrases.length}`,
+            }}
+          />
         </section>
       </div>
     )
   }
 
   return (
-    <section
-      id="phrase-list"
-      aria-label="Phrases to practice"
-      className="space-y-4"
-    >
-      {phrases.map((phrase, index) => (
-        <div key={phrase.id} className="flex gap-4">
-          <div className="flex flex-col items-center pt-6">
-            <SpineNode
-              phraseId={phrase.id}
-              state={getNodeState(phrase, currentPhraseId, evaluations)}
-            />
-            {index < phrases.length - 1 && (
-              <span className="mt-1 w-px flex-1 bg-border" aria-hidden />
-            )}
+    <div className="flex-1 overflow-y-auto">
+      <section
+        id="phrase-list"
+        aria-label="Phrases to practice"
+        className="space-y-4"
+      >
+        {phrases.map((phrase, index) => (
+          <div key={phrase.id} className="flex gap-4">
+            <div className="flex flex-col items-center pt-6">
+              <SpineNode
+                phraseId={phrase.id}
+                state={getNodeState(phrase, currentPhraseId, evaluations)}
+              />
+              {index < phrases.length - 1 && (
+                <span className="mt-1 w-px flex-1 bg-border" aria-hidden />
+              )}
+            </div>
+            <div className="flex-1 pb-2">
+              <PhraseCard {...cardPropsFor(phrase)} />
+            </div>
           </div>
-          <div className="flex-1 pb-2">
-            <PhraseCard {...cardPropsFor(phrase)} />
-          </div>
-        </div>
-      ))}
-    </section>
+        ))}
+      </section>
+    </div>
   )
 }
