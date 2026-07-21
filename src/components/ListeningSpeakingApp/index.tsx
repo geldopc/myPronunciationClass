@@ -175,6 +175,7 @@ export function ListeningSpeakingApp() {
   const completedCount = Object.keys(evaluations).length
   const currentPhrase =
     phrases.find((p) => p.id === currentPhraseId) ?? phrases[0]
+  const currentPhraseIndex = phrases.findIndex((p) => p.id === currentPhraseId)
   const effectivePlayingId = playingId ?? videoPlayingId
   const isVideoMode = playerMode === "video" && focusMode
 
@@ -225,9 +226,26 @@ export function ListeningSpeakingApp() {
           className={cn(
             "flex min-h-0 flex-col",
             isVideoMode &&
-              "flex-1 overflow-hidden rounded-4xl bg-card shadow-md ring-1 ring-foreground/5 dark:ring-foreground/10",
+              "flex-1 overflow-hidden rounded-4xl bg-card shadow-md ring-1 ring-foreground/5 dark:ring-foreground/10"
           )}
         >
+          {isVideoMode && (
+            <div className="flex items-center gap-2.5 px-5 pb-2 pt-3 text-sm">
+              <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
+                {currentPhrase.speaker.charAt(0)}
+              </span>
+              <span className="font-medium text-foreground">
+                {currentPhrase.speaker}
+              </span>
+              <span aria-hidden className="text-muted-foreground">
+                ·
+              </span>
+              <span className="tabular-nums text-xs text-muted-foreground">
+                {String(currentPhraseIndex + 1).padStart(2, "0")} /{" "}
+                {phrases.length}
+              </span>
+            </div>
+          )}
           <VideoPlayer
             phrase={currentPhrase}
             isActive={isVideoMode}
