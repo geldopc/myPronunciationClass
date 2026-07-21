@@ -52,7 +52,8 @@ export function useYouTubePlayer(
               // Make the generated iframe fill its absolute-positioned container
               const iframe = playerRef.current?.getIframe()
               if (iframe) {
-                iframe.style.cssText = "position:absolute;inset:0;width:100%;height:100%"
+                iframe.style.cssText =
+                  "position:absolute;inset:0;width:100%;height:100%"
               }
               if (typeof playerRef.current?.setPlaybackRate === "function") {
                 playerRef.current.setPlaybackRate(pendingRateRef.current)

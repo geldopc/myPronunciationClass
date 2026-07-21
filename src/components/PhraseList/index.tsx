@@ -80,7 +80,11 @@ export function PhraseList(props: PhraseListProps) {
         <section
           id="phrase-list"
           aria-label="Current phrase"
-          className={videoMode ? "flex flex-1 flex-col mx-auto w-full max-w-xl" : "mx-auto max-w-xl"}
+          className={
+            videoMode
+              ? "mx-auto flex w-full max-w-xl flex-1 flex-col"
+              : "mx-auto max-w-xl"
+          }
         >
           <PhraseCard
             {...cardPropsFor(phrase)}

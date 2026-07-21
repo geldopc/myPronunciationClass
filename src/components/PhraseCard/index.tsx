@@ -257,7 +257,7 @@ export function PhraseCard({
         className={cn(
           flat
             ? "mt-auto flex flex-nowrap items-center gap-2"
-            : "flex flex-wrap gap-2",
+            : "flex flex-wrap gap-2"
         )}
       >
         {nav && (
@@ -329,7 +329,7 @@ export function PhraseCard({
             >
               <ChevronUpIcon className="h-3.5 w-3.5" />
             </button>
-            <span className="w-6 text-center text-[10px] tabular-nums text-muted-foreground/60">
+            <span className="w-6 text-center text-[10px] text-muted-foreground/60 tabular-nums">
               {tipIndex + 1}/2
             </span>
             <button
@@ -346,7 +346,7 @@ export function PhraseCard({
           <span
             className={cn(
               "text-sm font-medium text-destructive",
-              flat ? "sr-only" : "self-center",
+              flat ? "sr-only" : "self-center"
             )}
             aria-live="polite"
           >
