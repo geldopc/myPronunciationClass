@@ -48,7 +48,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6",
     "eslint": "^9",
-    "firebase-tools": "^15.23.0",
+    "firebase-tools": "^14.23.0",
     "jsdom": "^28",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
