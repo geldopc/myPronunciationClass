@@ -14,6 +14,7 @@ import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
 import { phrases } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
+import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/Auth"
 import { useTheme } from "@/providers/Theme"
 
@@ -175,6 +176,7 @@ export function ListeningSpeakingApp() {
   const currentPhrase =
     phrases.find((p) => p.id === currentPhraseId) ?? phrases[0]
   const effectivePlayingId = playingId ?? videoPlayingId
+  const isVideoMode = playerMode === "video" && focusMode
 
   return (
     <div id="listening-speaking-app" className="relative min-h-screen">
@@ -216,29 +218,39 @@ export function ListeningSpeakingApp() {
           paddingBottom: "max(96px, calc(56px + env(safe-area-inset-bottom)))",
         }}
       >
-        {/* VideoPlayer is always mounted to keep #yt-player in the DOM.
-            Hidden (display:none) when not in focus+video mode so the
-            YouTube IFrame API never loses its container reference. */}
-        <VideoPlayer
-          phrase={currentPhrase}
-          isActive={playerMode === "video" && focusMode}
-          onPause={handleVideoPause}
-        />
-        <PhraseList
-          phrases={phrases}
-          difficulty={difficulty}
-          focusMode={focusMode}
-          currentPhraseId={currentPhraseId}
-          onCurrentPhraseChange={setCurrentPhraseId}
-          playingId={effectivePlayingId}
-          recordingPhraseId={recordingPhraseId}
-          supportsSpeechRecognition={supportsSpeechRecognition}
-          evaluations={evaluations}
-          onPlay={handlePlay}
-          onRecordingChange={handleRecordingChange}
-          onEvaluation={saveEvaluation}
-          registerToggle={registerToggle}
-        />
+        {/* Unified wrapper: in video+focus mode this div becomes the card surface
+            (rounded, shadow, bg-card) so VideoPlayer and PhraseCard share one panel.
+            VideoPlayer is always mounted to keep #yt-player in the DOM. */}
+        <div
+          className={cn(
+            "flex min-h-0 flex-col",
+            isVideoMode &&
+              "flex-1 overflow-hidden rounded-4xl bg-card shadow-md ring-1 ring-foreground/5 dark:ring-foreground/10",
+          )}
+        >
+          <VideoPlayer
+            phrase={currentPhrase}
+            isActive={isVideoMode}
+            unified={isVideoMode}
+            onPause={handleVideoPause}
+          />
+          <PhraseList
+            phrases={phrases}
+            difficulty={difficulty}
+            focusMode={focusMode}
+            currentPhraseId={currentPhraseId}
+            onCurrentPhraseChange={setCurrentPhraseId}
+            playingId={effectivePlayingId}
+            recordingPhraseId={recordingPhraseId}
+            supportsSpeechRecognition={supportsSpeechRecognition}
+            evaluations={evaluations}
+            videoMode={isVideoMode}
+            onPlay={handlePlay}
+            onRecordingChange={handleRecordingChange}
+            onEvaluation={saveEvaluation}
+            registerToggle={registerToggle}
+          />
+        </div>
       </main>
 
       <BottomNav

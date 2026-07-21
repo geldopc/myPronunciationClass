@@ -23,6 +23,7 @@ declare global {
       seekTo(seconds: number, allowSeekAhead: boolean): void
       getCurrentTime(): number
       setPlaybackRate(suggestedRate: number): void
+      getIframe(): HTMLIFrameElement
       destroy(): void
     }
   }

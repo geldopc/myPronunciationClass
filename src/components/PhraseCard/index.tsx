@@ -11,6 +11,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 import { ScoreReveal } from "@/components/PhraseCard/ScoreReveal"
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
@@ -38,6 +39,10 @@ type PhraseCardProps = {
   supportsSpeechRecognition: boolean
   evaluation?: SpeechEvaluation
   nav?: NavProps
+  /** Render as the bottom half of a unified panel: square top corners,
+   *  no shadow/ring, fills available vertical space with footer pinned. */
+  flat?: boolean
+  className?: string
   onPlay: (phrase: Phrase) => void
   onRecordingChange: (phraseId: number | null) => void
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
@@ -54,6 +59,8 @@ export function PhraseCard({
   supportsSpeechRecognition,
   evaluation,
   nav,
+  flat = false,
+  className,
   onPlay,
   onRecordingChange,
   onEvaluation,
@@ -95,7 +102,14 @@ export function PhraseCard({
   })
 
   return (
-    <Card id={`phrase-card-${phrase.id}`}>
+    <Card
+      id={`phrase-card-${phrase.id}`}
+      style={flat ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : undefined}
+      className={cn(
+        flat ? "shadow-none ring-0 dark:ring-0 flex-1 min-h-0" : "min-h-72",
+        className,
+      )}
+    >
       <CardHeader className="gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-xs font-medium text-foreground">
@@ -176,7 +190,7 @@ export function PhraseCard({
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-wrap gap-2">
+      <CardFooter className={cn("flex flex-wrap gap-2", flat && "mt-auto")}>
         {nav && (
           <Button
             variant="ghost"
