@@ -15,6 +15,7 @@ type PhraseListProps = {
   recordingPhraseId: number | null
   supportsSpeechRecognition: boolean
   evaluations: Record<number, SpeechEvaluation>
+  videoMode?: boolean
   onPlay: (phrase: Phrase) => void
   onRecordingChange: (phraseId: number | null) => void
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
@@ -42,6 +43,7 @@ export function PhraseList(props: PhraseListProps) {
     recordingPhraseId,
     supportsSpeechRecognition,
     evaluations,
+    videoMode = false,
     onPlay,
     onRecordingChange,
     onEvaluation,
@@ -78,10 +80,11 @@ export function PhraseList(props: PhraseListProps) {
         <section
           id="phrase-list"
           aria-label="Current phrase"
-          className="mx-auto max-w-xl"
+          className={videoMode ? "flex flex-1 flex-col mx-auto w-full max-w-xl" : "mx-auto max-w-xl"}
         >
           <PhraseCard
             {...cardPropsFor(phrase)}
+            flat={videoMode}
             nav={{
               onPrev:
                 index > 0
