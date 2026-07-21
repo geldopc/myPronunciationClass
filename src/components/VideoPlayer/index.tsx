@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import type { Phrase } from "@/lib/phrases"
+import { cn } from "@/lib/utils"
 
 type VideoPlayerProps = {
   phrase: Phrase
@@ -16,12 +17,10 @@ export function VideoPlayer({
   unified = false,
   onPause,
 }: VideoPlayerProps) {
-  // Pause when the phrase changes (navigating without clicking Ouvir)
   useEffect(() => {
     onPause()
   }, [phrase.id, onPause])
 
-  // Pause when switching away from video mode
   useEffect(() => {
     if (!isActive) onPause()
   }, [isActive, onPause])
@@ -29,21 +28,24 @@ export function VideoPlayer({
   return (
     <div
       id="video-player"
-      className={
-        !isActive
-          ? "hidden"
-          : unified
-            ? "mx-auto w-full flex-none"
-            : "mx-auto mb-2 w-full flex-none"
-      }
+      className={cn(
+        !isActive && "hidden",
+        isActive && unified && "mx-auto w-full flex-none overflow-hidden",
+        isActive && !unified && "mx-auto mb-2 w-full flex-none",
+      )}
       style={
         isActive
-          ? { maxWidth: "min(100%, calc(30dvh * 16 / 9))", maxHeight: "30dvh" }
+          ? unified
+            ? { maxHeight: "45dvh" }
+            : { maxWidth: "min(100%, calc(30dvh * 16 / 9))", maxHeight: "30dvh" }
           : undefined
       }
     >
       <div
-        className={`relative aspect-video w-full overflow-hidden${unified ? "" : " rounded-lg"}`}
+        className={cn(
+          "relative aspect-video w-full overflow-hidden",
+          !unified && "rounded-lg",
+        )}
       >
         <div id="yt-player" className="absolute inset-0" />
         {/* Blocks YouTube's share button, suggestions overlay, and logo link */}
