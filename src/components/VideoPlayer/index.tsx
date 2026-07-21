@@ -31,20 +31,23 @@ export function VideoPlayer({
       className={cn(
         !isActive && "hidden",
         isActive && unified && "mx-auto w-full flex-none overflow-hidden",
-        isActive && !unified && "mx-auto mb-2 w-full flex-none",
+        isActive && !unified && "mx-auto mb-2 w-full flex-none"
       )}
       style={
         isActive
           ? unified
             ? { maxHeight: "45dvh" }
-            : { maxWidth: "min(100%, calc(30dvh * 16 / 9))", maxHeight: "30dvh" }
+            : {
+                maxWidth: "min(100%, calc(30dvh * 16 / 9))",
+                maxHeight: "30dvh",
+              }
           : undefined
       }
     >
       <div
         className={cn(
           "relative aspect-video w-full overflow-hidden",
-          !unified && "rounded-lg",
+          !unified && "rounded-lg"
         )}
       >
         <div id="yt-player" className="absolute inset-0" />
