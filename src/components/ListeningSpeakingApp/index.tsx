@@ -210,8 +210,9 @@ export function ListeningSpeakingApp() {
       <TopBar />
 
       <main
-        className="container mx-auto max-w-3xl px-4 py-8"
+        className="container mx-auto flex max-w-3xl flex-col overflow-hidden px-4 pt-4"
         style={{
+          height: "calc(100dvh - 60px)",
           paddingBottom: "max(96px, calc(56px + env(safe-area-inset-bottom)))",
         }}
       >

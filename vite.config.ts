@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite"
 
 const config = defineConfig(({ command }) => ({
   base: command === "build" ? "/myPronunciationClass/" : "/",
+  server: { port: 3000 },
   resolve: { tsconfigPaths: true },
   plugins: [
     devtools(),

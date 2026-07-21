@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
   EyeIcon,
   MicIcon,
   PauseIcon,
@@ -18,6 +20,14 @@ import { isPhraseReady } from "@/lib/phrases"
 import type { Phrase } from "@/lib/phrases"
 import { getExtraTip } from "@/lib/pronunciationTips"
 
+type NavProps = {
+  onPrev?: () => void
+  onNext?: () => void
+  prevDisabled?: boolean
+  nextDisabled?: boolean
+  label?: string
+}
+
 type PhraseCardProps = {
   phrase: Phrase
   difficulty: Difficulty
@@ -27,6 +37,7 @@ type PhraseCardProps = {
   isAnotherPhraseRecording: boolean
   supportsSpeechRecognition: boolean
   evaluation?: SpeechEvaluation
+  nav?: NavProps
   onPlay: (phrase: Phrase) => void
   onRecordingChange: (phraseId: number | null) => void
   onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
@@ -42,6 +53,7 @@ export function PhraseCard({
   isAnotherPhraseRecording,
   supportsSpeechRecognition,
   evaluation,
+  nav,
   onPlay,
   onRecordingChange,
   onEvaluation,
@@ -94,17 +106,22 @@ export function PhraseCard({
           <span className="tabular-nums">
             {String(phrase.id).padStart(2, "0")}
           </span>
-          {reveal.canPeekHint && (
-            <button
-              type="button"
-              onClick={() => setPeeked((p) => !p)}
-              className="ml-auto flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
-              aria-label={peeked ? "Hide hint" : "Show hint"}
-            >
-              <EyeIcon className="h-3 w-3" />
-              {peeked ? "Hide" : "Hint"}
-            </button>
-          )}
+          <div className="ml-auto flex items-center gap-2">
+            {nav?.label && (
+              <span className="text-xs tabular-nums">{nav.label}</span>
+            )}
+            {reveal.canPeekHint && (
+              <button
+                type="button"
+                onClick={() => setPeeked((p) => !p)}
+                className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+                aria-label={peeked ? "Hide hint" : "Show hint"}
+              >
+                <EyeIcon className="h-3 w-3" />
+                {peeked ? "Hide" : "Hint"}
+              </button>
+            )}
+          </div>
         </div>
         {reveal.showText ? (
           <p className="text-lg leading-relaxed">{phrase.text}</p>
@@ -160,6 +177,17 @@ export function PhraseCard({
       </CardContent>
 
       <CardFooter className="flex flex-wrap gap-2">
+        {nav && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={nav.onPrev}
+            disabled={nav.prevDisabled}
+            aria-label="Previous phrase"
+          >
+            <ChevronLeftIcon />
+          </Button>
+        )}
         <Button
           className="flex-1"
           onClick={() => onPlay(phrase)}
@@ -196,6 +224,17 @@ export function PhraseCard({
             </>
           )}
         </Button>
+        {nav && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={nav.onNext}
+            disabled={nav.nextDisabled}
+            aria-label="Next phrase"
+          >
+            <ChevronRightIcon />
+          </Button>
+        )}
         {isRecording && (
           <span
             className="self-center text-sm font-medium text-destructive"

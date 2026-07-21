@@ -104,7 +104,7 @@ export function TopBar({ backTo }: { backTo?: string } = {}) {
             {backTo && (
               <Link
                 to={backTo}
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 aria-label="Voltar para Lições"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
