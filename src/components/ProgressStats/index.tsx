@@ -1,19 +1,21 @@
 import { ProgressBar } from "@/components/ProgressBar"
 import { SpineNode } from "@/components/PhraseList/SpineNode"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { phrases } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 import type { Rollups } from "@/lib/progress-model"
 
 type ProgressStatsProps = {
   rollups: Rollups
   displayName: string
   avatarUrl: string
+  phrases: Phrase[]
 }
 
 export function ProgressStats({
   rollups,
   displayName,
   avatarUrl,
+  phrases,
 }: ProgressStatsProps) {
   const completed = Object.values(rollups.bestScoreByPhrase).length
 
@@ -50,13 +52,13 @@ export function ProgressStats({
         {phrases.map((phrase) => (
           <li key={phrase.id} className="flex items-center gap-1">
             <SpineNode
-              phraseId={String(phrase.id)}
+              phraseId={phrase.id}
               state={
                 phrase.id in rollups.bestScoreByPhrase ? "done" : "untouched"
               }
             />
             <span className="text-xs text-muted-foreground">
-              {rollups.bestScoreByPhrase[phrase.id]}
+              {rollups.bestScoreByPhrase[phrase.id] ?? "—"}
             </span>
           </li>
         ))}

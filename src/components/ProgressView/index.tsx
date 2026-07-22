@@ -1,11 +1,15 @@
 import { ProgressDashboard } from "@/components/ProgressDashboard"
 import { ShareControl } from "@/components/ShareControl"
+import { useLesson } from "@/hooks/useLesson"
 import { useProgress } from "@/hooks/useProgress"
 import { useAuth } from "@/providers/Auth"
+
+const HARDCODED_LESSON_ID = "friends-s5e14"
 
 export function ProgressView() {
   const { user } = useAuth()
   const { rollups, phraseStats } = useProgress()
+  const { phrases } = useLesson(HARDCODED_LESSON_ID)
 
   if (!user) return null
 
@@ -17,6 +21,7 @@ export function ProgressView() {
       <ProgressDashboard
         rollups={rollups}
         phraseStats={phraseStats}
+        phrases={phrases}
         displayName={user.displayName}
         avatarUrl={user.avatarUrl}
       />

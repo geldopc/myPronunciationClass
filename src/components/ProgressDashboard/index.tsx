@@ -11,18 +11,19 @@ import {
   Cell,
 } from "recharts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import type { Phrase } from "@/lib/lessons"
 import type { PhraseStat, Rollups } from "@/lib/progress-model"
-import { phrases } from "@/lib/phrases"
 
 type Props = {
   rollups: Rollups
   phraseStats: PhraseStat[]
+  phrases: Phrase[]
   displayName: string
   avatarUrl: string
 }
 
 type ChartEntry = {
-  phraseId: number
+  phraseId: string
   bestScore: number
   attemptsCount: number
 }
@@ -109,12 +110,13 @@ function DonutChart({ value }: { value: number }) {
 export function ProgressDashboard({
   rollups,
   phraseStats,
+  phrases,
   displayName,
   avatarUrl,
 }: Props) {
   const { chartData, top5, worst5 } = useMemo(() => {
     const data: ChartEntry[] = phrases.map((phrase) => {
-      const stat = phraseStats.find((s) => s.phraseId === String(phrase.id))
+      const stat = phraseStats.find((s) => s.phraseId === phrase.id)
       return {
         phraseId: phrase.id,
         bestScore: stat?.bestScore ?? 0,
@@ -132,7 +134,7 @@ export function ProgressDashboard({
       .slice(0, 5)
 
     return { chartData: data, top5: best5, worst5: bottom5 }
-  }, [phraseStats])
+  }, [phrases, phraseStats])
 
   return (
     <div className="space-y-8">

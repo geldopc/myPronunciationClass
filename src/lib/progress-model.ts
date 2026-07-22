@@ -20,7 +20,7 @@ export type Rollups = {
   completion: number
   average: number
   streak: number
-  bestScoreByPhrase: Record<string, number>
+  bestScoreByPhrase: Record<string, number | undefined>
 }
 
 export type ShareProfile = {

@@ -12,6 +12,7 @@ describe("ProgressStats", () => {
       <ProgressStats
         displayName="Ada"
         avatarUrl=""
+        phrases={[]}
         rollups={{
           completion: 50,
           average: 80,

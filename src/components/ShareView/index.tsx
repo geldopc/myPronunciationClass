@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 
 import { ProgressStats } from "@/components/ProgressStats"
+import { useLesson } from "@/hooks/useLesson"
 import { readShare } from "@/lib/shares"
 import type { Share } from "@/lib/progress-model"
+
+const HARDCODED_LESSON_ID = "friends-s5e14"
 
 type LoadState =
   | { status: "loading" }
@@ -11,6 +14,7 @@ type LoadState =
 
 export function ShareView({ slug }: { slug: string }) {
   const [state, setState] = useState<LoadState>({ status: "loading" })
+  const { phrases } = useLesson(HARDCODED_LESSON_ID)
 
   useEffect(() => {
     let active = true
@@ -55,6 +59,7 @@ export function ShareView({ slug }: { slug: string }) {
         rollups={state.share.snapshot}
         displayName={state.share.displayName}
         avatarUrl={state.share.avatarUrl}
+        phrases={phrases}
       />
     </main>
   )
