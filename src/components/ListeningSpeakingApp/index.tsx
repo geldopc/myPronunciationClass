@@ -158,7 +158,7 @@ export function ListeningSpeakingApp() {
     }
   }, [user, evaluations, difficulty, recordEvaluation])
 
-  if (lessonLoading) {
+  if (lessonLoading || phrases.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <span className="text-sm text-muted-foreground">Carregando lição…</span>
