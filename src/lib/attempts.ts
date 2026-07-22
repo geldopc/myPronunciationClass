@@ -19,13 +19,15 @@ export async function recordAttempt(
     createdAt: serverTimestamp(),
   })
 
-  const statRef = doc(db, "users", uid, "phraseStats", String(attempt.phraseId))
+  const statKey = `${attempt.lessonId}_${attempt.phraseId}`
+  const statRef = doc(db, "users", uid, "phraseStats", statKey)
   await runTransaction(db, async (transaction) => {
     const snapshot = await transaction.get(statRef)
     const previous = snapshot.exists()
       ? (snapshot.data() as { bestScore: number; attemptsCount: number })
       : { bestScore: 0, attemptsCount: 0 }
     transaction.set(statRef, {
+      lessonId: attempt.lessonId,
       phraseId: attempt.phraseId,
       bestScore: Math.max(previous.bestScore, attempt.score),
       attemptsCount: previous.attemptsCount + 1,
@@ -34,22 +36,32 @@ export async function recordAttempt(
   })
 }
 
-export async function readPhraseStats(uid: string): Promise<PhraseStat[]> {
+export async function readPhraseStats(
+  uid: string,
+  lessonId?: string
+): Promise<PhraseStat[]> {
   const snapshot = await getDocs(collection(db, "users", uid, "phraseStats"))
-  return snapshot.docs.map((entry) => {
-    const data = entry.data() as {
-      phraseId: number
-      bestScore: number
-      attemptsCount: number
-      lastPracticedAt?: { toMillis: () => number }
-    }
-    return {
-      phraseId: data.phraseId,
-      bestScore: data.bestScore,
-      attemptsCount: data.attemptsCount,
-      lastPracticedAt: data.lastPracticedAt?.toMillis() ?? 0,
-    }
-  })
+  return snapshot.docs
+    .filter((entry) => {
+      if (!lessonId) return true
+      return entry.id.startsWith(`${lessonId}_`)
+    })
+    .map((entry) => {
+      const data = entry.data() as {
+        lessonId: string
+        phraseId: string
+        bestScore: number
+        attemptsCount: number
+        lastPracticedAt?: { toMillis: () => number }
+      }
+      return {
+        lessonId: data.lessonId,
+        phraseId: data.phraseId,
+        bestScore: data.bestScore,
+        attemptsCount: data.attemptsCount,
+        lastPracticedAt: data.lastPracticedAt?.toMillis() ?? 0,
+      }
+    })
 }
 
 export async function readPracticeDays(uid: string): Promise<string[]> {
