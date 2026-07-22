@@ -7,10 +7,18 @@ import {
 
 import { auth, googleProvider } from "@/lib/firebase"
 
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true"
+
 export type AuthUser = {
   uid: string
   displayName: string
   avatarUrl: string
+}
+
+const MOCK_USER: AuthUser = {
+  uid: "mock-user-001",
+  displayName: "Dev User",
+  avatarUrl: "",
 }
 
 type AuthContextValue = {
@@ -27,6 +35,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (USE_MOCK) {
+      setUser(MOCK_USER)
+      setLoading(false)
+      return
+    }
     return onAuthStateChanged(auth, (firebaseUser) => {
       setUser(
         firebaseUser

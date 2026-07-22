@@ -7,6 +7,13 @@ import {
   query,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase"
+import {
+  mockFetchLessons,
+  mockFetchLesson,
+  mockFetchPhrases,
+} from "@/lib/mock/lessons"
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true"
 
 export type Lesson = {
   id: string
@@ -32,6 +39,7 @@ export function isPhraseReady(phrase: Phrase): boolean {
 }
 
 export async function fetchLessons(): Promise<Lesson[]> {
+  if (USE_MOCK) return mockFetchLessons()
   const snap = await getDocs(collection(db, "lessons"))
   return snap.docs.map((d) => ({
     id: d.id,
@@ -40,12 +48,14 @@ export async function fetchLessons(): Promise<Lesson[]> {
 }
 
 export async function fetchLesson(lessonId: string): Promise<Lesson | null> {
+  if (USE_MOCK) return mockFetchLesson(lessonId)
   const snap = await getDoc(doc(db, "lessons", lessonId))
   if (!snap.exists()) return null
   return { id: snap.id, ...(snap.data() as Omit<Lesson, "id">) }
 }
 
 export async function fetchPhrases(lessonId: string): Promise<Phrase[]> {
+  if (USE_MOCK) return mockFetchPhrases(lessonId)
   const q = query(
     collection(db, "lessons", lessonId, "phrases"),
     orderBy("order")
