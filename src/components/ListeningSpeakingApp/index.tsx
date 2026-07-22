@@ -7,7 +7,6 @@ import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
 import { VideoPlayer } from "@/components/VideoPlayer"
-import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 import { useProgress } from "@/hooks/useProgress"
 import { useYouTubePlayer } from "@/hooks/useYouTubePlayer"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
@@ -21,14 +20,6 @@ import { useTheme } from "@/providers/Theme"
 export function ListeningSpeakingApp() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy")
   const [focusMode, setFocusMode] = useState(true)
-  const [playerMode, setPlayerMode] = useState<"audio" | "video">(() => {
-    try {
-      const stored = localStorage.getItem("playerMode")
-      return stored === "video" ? "video" : "audio"
-    } catch {
-      return "audio"
-    }
-  })
   const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
   const [currentPhraseId, setCurrentPhraseId] = useState<number>(phrases[0].id)
   const [recordingPhraseId, setRecordingPhraseId] = useState<number | null>(
@@ -47,11 +38,10 @@ export function ListeningSpeakingApp() {
   const { recordEvaluation } = useProgress()
   const adoptedRef = useRef(false)
 
-  const { playingId, play, stop } = useAudioPlayer(playbackRate)
   const [videoPlayingId, setVideoPlayingId] = useState<number | null>(null)
   const toggleRegistry = useRef(new Map<number, () => void>())
 
-  const handleVideoError = useCallback(() => setPlayerMode("audio"), [])
+  const handleVideoError = useCallback(() => {}, [])
   const handleVideoSegmentEnd = useCallback(() => setVideoPlayingId(null), [])
   const { playSegment, pause, setRate } = useYouTubePlayer(
     "yt-player",
@@ -74,14 +64,6 @@ export function ListeningSpeakingApp() {
     )
   }, [])
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("playerMode", playerMode)
-    } catch {
-      // localStorage unavailable
-    }
-  }, [playerMode])
-
   const registerToggle = useCallback(
     (phraseId: number, toggle: (() => void) | null) => {
       if (toggle) {
@@ -97,31 +79,14 @@ export function ListeningSpeakingApp() {
     (phrase: Phrase) => {
       if (recordingPhraseId !== null) return
       setCurrentPhraseId(phrase.id)
-      if (playerMode === "audio") {
-        if (playingId === phrase.id) {
-          stop()
-        } else {
-          play(phrase.id, phrase.audioSrc)
-        }
+      if (videoPlayingId === phrase.id) {
+        handleVideoPause()
       } else {
-        if (videoPlayingId === phrase.id) {
-          handleVideoPause()
-        } else {
-          playSegment(phrase.startTime, phrase.endTime)
-          setVideoPlayingId(phrase.id)
-        }
+        playSegment(phrase.startTime, phrase.endTime)
+        setVideoPlayingId(phrase.id)
       }
     },
-    [
-      recordingPhraseId,
-      playerMode,
-      playingId,
-      videoPlayingId,
-      play,
-      stop,
-      playSegment,
-      handleVideoPause,
-    ]
+    [recordingPhraseId, videoPlayingId, playSegment, handleVideoPause]
   )
 
   function handleRecordingChange(phraseId: number | null) {
@@ -176,8 +141,8 @@ export function ListeningSpeakingApp() {
   const currentPhrase =
     phrases.find((p) => p.id === currentPhraseId) ?? phrases[0]
   const currentPhraseIndex = phrases.findIndex((p) => p.id === currentPhraseId)
-  const effectivePlayingId = playingId ?? videoPlayingId
-  const isVideoMode = playerMode === "video" && focusMode
+  const effectivePlayingId = videoPlayingId
+  const isVideoMode = focusMode
 
   return (
     <div id="listening-speaking-app" className="relative min-h-screen">
@@ -278,11 +243,6 @@ export function ListeningSpeakingApp() {
         onPlaybackRateChange={setPlaybackRate}
         focusMode={focusMode}
         onFocusModeChange={setFocusMode}
-        playerMode={playerMode}
-        onPlayerModeChange={(mode) => {
-          setPlayerMode(mode)
-          if (mode === "audio") handleVideoPause()
-        }}
         completedCount={completedCount}
         total={phrases.length}
       />

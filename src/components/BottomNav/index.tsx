@@ -1,4 +1,4 @@
-import { ListIcon, Maximize2Icon, VideoIcon } from "lucide-react"
+import { ListIcon, Maximize2Icon } from "lucide-react"
 
 import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle"
 import { SpeedControl } from "@/components/TopBar/SpeedControl"
@@ -13,8 +13,6 @@ type BottomNavProps = {
   onPlaybackRateChange: (value: PlaybackRate) => void
   focusMode: boolean
   onFocusModeChange: (value: boolean) => void
-  playerMode: "audio" | "video"
-  onPlayerModeChange: (mode: "audio" | "video") => void
   completedCount: number
   total: number
 }
@@ -26,8 +24,6 @@ export function BottomNav({
   onPlaybackRateChange,
   focusMode,
   onFocusModeChange,
-  playerMode,
-  onPlayerModeChange,
   completedCount,
   total,
 }: BottomNavProps) {
@@ -83,35 +79,14 @@ export function BottomNav({
             </Button>
             <Button
               type="button"
-              variant={
-                focusMode && playerMode === "audio" ? "secondary" : "ghost"
-              }
-              size="icon"
-              className="h-10 w-10 rounded-none border-x border-border/60"
-              aria-label="Focus mode"
-              aria-pressed={focusMode && playerMode === "audio"}
-              onClick={() => {
-                onFocusModeChange(true)
-                onPlayerModeChange("audio")
-              }}
-            >
-              <Maximize2Icon className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant={
-                focusMode && playerMode === "video" ? "secondary" : "ghost"
-              }
+              variant={focusMode ? "secondary" : "ghost"}
               size="icon"
               className="h-10 w-10 rounded-l-none"
-              aria-label="Video mode"
-              aria-pressed={focusMode && playerMode === "video"}
-              onClick={() => {
-                onFocusModeChange(true)
-                onPlayerModeChange("video")
-              }}
+              aria-label="Focus mode"
+              aria-pressed={focusMode}
+              onClick={() => onFocusModeChange(true)}
             >
-              <VideoIcon className="h-4 w-4" />
+              <Maximize2Icon className="h-4 w-4" />
             </Button>
           </div>
         </div>
