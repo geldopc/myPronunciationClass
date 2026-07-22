@@ -8,8 +8,8 @@ const HARDCODED_LESSON_ID = "friends-s5e14"
 
 export function ProgressView() {
   const { user } = useAuth()
-  const { rollups, phraseStats } = useProgress()
   const { phrases } = useLesson(HARDCODED_LESSON_ID)
+  const { rollups, phraseStats } = useProgress(HARDCODED_LESSON_ID, phrases.length)
 
   if (!user) return null
 

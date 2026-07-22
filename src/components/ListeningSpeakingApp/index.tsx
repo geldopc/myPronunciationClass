@@ -42,7 +42,7 @@ export function ListeningSpeakingApp() {
     phrases,
     loading: lessonLoading,
   } = useLesson(HARDCODED_LESSON_ID)
-  const { recordEvaluation } = useProgress(HARDCODED_LESSON_ID)
+  const { recordEvaluation } = useProgress(HARDCODED_LESSON_ID, phrases.length)
   const adoptedRef = useRef(false)
 
   // Set first phrase once lesson phrases load

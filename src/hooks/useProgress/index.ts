@@ -18,7 +18,7 @@ const EMPTY: Rollups = {
   bestScoreByPhrase: {},
 }
 
-export function useProgress(lessonId?: string) {
+export function useProgress(lessonId?: string, phraseTotal?: number) {
   const { user } = useAuth()
   const [rollups, setRollups] = useState<Rollups>(EMPTY)
   const [phraseStats, setPhraseStats] = useState<PhraseStat[]>([])
@@ -36,12 +36,12 @@ export function useProgress(lessonId?: string) {
       readPracticeDays(user.uid),
     ])
     const today = new Date().toISOString().slice(0, 10)
-    setRollups(computeRollups(stats, stats.length, days, today))
+    setRollups(computeRollups(stats, phraseTotal ?? stats.length, days, today))
     setPhraseStats(
       [...stats].sort((a, b) => a.phraseId.localeCompare(b.phraseId))
     )
     setLoading(false)
-  }, [user, lessonId])
+  }, [user, lessonId, phraseTotal])
 
   useEffect(() => {
     void refresh()
