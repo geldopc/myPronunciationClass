@@ -35,15 +35,15 @@ export function ProgressStats({
 
       <dl className="grid grid-cols-3 gap-4 text-center">
         <div>
-          <dt className="text-sm text-muted-foreground">Conclusão</dt>
+          <dt className="text-sm text-muted-foreground">Completion</dt>
           <dd className="text-2xl font-semibold">{rollups.completion}%</dd>
         </div>
         <div>
-          <dt className="text-sm text-muted-foreground">Média</dt>
+          <dt className="text-sm text-muted-foreground">Average</dt>
           <dd className="text-2xl font-semibold">{rollups.average}</dd>
         </div>
         <div>
-          <dt className="text-sm text-muted-foreground">Sequência</dt>
+          <dt className="text-sm text-muted-foreground">Streak</dt>
           <dd className="text-2xl font-semibold">{rollups.streak}</dd>
         </div>
       </dl>

@@ -8,11 +8,11 @@ export type SpeechEvaluation = {
 }
 
 const recognitionErrorMessages: Record<string, string> = {
-  "audio-capture": "Nenhum microfone foi encontrado.",
-  "not-allowed": "Permita o uso do microfone no navegador.",
-  "service-not-allowed": "O serviço de reconhecimento não está disponível.",
-  network: "Não foi possível acessar o serviço de reconhecimento.",
-  "no-speech": "Não foi detectada fala. Tente novamente.",
+  "audio-capture": "No microphone found.",
+  "not-allowed": "Allow microphone access in your browser.",
+  "service-not-allowed": "Speech recognition service is not available.",
+  network: "Could not reach the speech recognition service.",
+  "no-speech": "No speech detected. Please try again.",
 }
 
 type UseSpeechRecognitionOptions = {

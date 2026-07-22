@@ -152,20 +152,20 @@ export function ProgressDashboard({
       {/* Desktop: donut + tiles side by side; Mobile: stacked */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         <div className="flex flex-col items-center gap-2 sm:shrink-0">
-          <h3 className="font-semibold">Progresso Geral</h3>
+          <h3 className="font-semibold">Overall Progress</h3>
           <DonutChart value={rollups.completion} />
         </div>
         <dl className="grid flex-1 grid-cols-3 gap-4 text-center">
           <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-            <dt className="text-sm text-muted-foreground">Conclusão</dt>
+            <dt className="text-sm text-muted-foreground">Completion</dt>
             <dd className="text-2xl font-bold">{rollups.completion}%</dd>
           </div>
           <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-            <dt className="text-sm text-muted-foreground">Média</dt>
+            <dt className="text-sm text-muted-foreground">Average</dt>
             <dd className="text-2xl font-bold">{rollups.average}</dd>
           </div>
           <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
-            <dt className="text-sm text-muted-foreground">Sequência</dt>
+            <dt className="text-sm text-muted-foreground">Streak</dt>
             <dd className="text-2xl font-bold">{rollups.streak}</dd>
           </div>
         </dl>
@@ -173,7 +173,7 @@ export function ProgressDashboard({
 
       {/* Score bar chart — scrollable on mobile */}
       <div>
-        <h3 className="mb-2 font-semibold">Pontuação por Frase</h3>
+        <h3 className="mb-2 font-semibold">Score by Phrase</h3>
         <div className="overflow-x-auto">
           <BarChart
             width={720}
@@ -203,9 +203,9 @@ export function ProgressDashboard({
       {/* Top 5 / Worst 5 phrase lists */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
-          <h3 className="mb-3 font-semibold">Top 5 Frases</h3>
+          <h3 className="mb-3 font-semibold">Top 5 Phrases</h3>
           {top5.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sem dados ainda</p>
+            <p className="text-sm text-muted-foreground">No data yet</p>
           ) : (
             <ol className="space-y-2">
               {top5.map((stat) => (
@@ -213,7 +213,7 @@ export function ProgressDashboard({
                   key={stat.phraseId}
                   className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm"
                 >
-                  <span>Frase {stat.phraseId}</span>
+                  <span>Phrase {stat.phraseId}</span>
                   <span className="font-medium text-green-500 dark:text-green-400">
                     {stat.bestScore}
                   </span>
@@ -223,9 +223,9 @@ export function ProgressDashboard({
           )}
         </div>
         <div>
-          <h3 className="mb-3 font-semibold">Piores 5 Frases</h3>
+          <h3 className="mb-3 font-semibold">Worst 5 Phrases</h3>
           {worst5.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sem dados ainda</p>
+            <p className="text-sm text-muted-foreground">No data yet</p>
           ) : (
             <ol className="space-y-2">
               {worst5.map((stat) => (
@@ -233,7 +233,7 @@ export function ProgressDashboard({
                   key={stat.phraseId}
                   className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm"
                 >
-                  <span>Frase {stat.phraseId}</span>
+                  <span>Phrase {stat.phraseId}</span>
                   <span className="font-medium text-red-400 dark:text-red-300">
                     {stat.bestScore}
                   </span>

@@ -16,7 +16,7 @@ export function ProgressBar({ completed, total }: ProgressBarProps) {
           aria-valuenow={completed}
           aria-valuemin={0}
           aria-valuemax={total}
-          aria-label="Progresso da prática"
+          aria-label="Practice progress"
         />
       </div>
       <span className="text-sm text-muted-foreground tabular-nums">
