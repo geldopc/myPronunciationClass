@@ -6,7 +6,6 @@ import {
   recordAttempt,
 } from "@/lib/attempts"
 import { computeRollups } from "@/lib/rollups"
-import { phrases } from "@/lib/phrases"
 import { useAuth } from "@/providers/Auth"
 import type { Difficulty } from "@/lib/difficulty"
 import type { PhraseStat, Rollups } from "@/lib/progress-model"
@@ -19,7 +18,7 @@ const EMPTY: Rollups = {
   bestScoreByPhrase: {},
 }
 
-export function useProgress() {
+export function useProgress(lessonId?: string) {
   const { user } = useAuth()
   const [rollups, setRollups] = useState<Rollups>(EMPTY)
   const [phraseStats, setPhraseStats] = useState<PhraseStat[]>([])
@@ -33,14 +32,14 @@ export function useProgress() {
     }
     setLoading(true)
     const [stats, days] = await Promise.all([
-      readPhraseStats(user.uid),
+      readPhraseStats(user.uid, lessonId),
       readPracticeDays(user.uid),
     ])
     const today = new Date().toISOString().slice(0, 10)
-    setRollups(computeRollups(stats, phrases.length, days, today))
-    setPhraseStats([...stats].sort((a, b) => a.phraseId - b.phraseId))
+    setRollups(computeRollups(stats, stats.length, days, today))
+    setPhraseStats([...stats].sort((a, b) => a.phraseId.localeCompare(b.phraseId)))
     setLoading(false)
-  }, [user])
+  }, [user, lessonId])
 
   useEffect(() => {
     void refresh()
@@ -48,12 +47,14 @@ export function useProgress() {
 
   const recordEvaluation = useCallback(
     async (
-      phraseId: number,
+      phraseId: string,
+      lessonIdArg: string,
       difficulty: Difficulty,
       evaluation: SpeechEvaluation
     ) => {
       if (!user) return
       await recordAttempt(user.uid, {
+        lessonId: lessonIdArg,
         phraseId,
         difficulty,
         score: evaluation.score,

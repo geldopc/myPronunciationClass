@@ -9,7 +9,7 @@ const recordAttempt = vi.hoisted(() => vi.fn(async () => undefined))
 vi.mock("@/lib/attempts", () => ({
   recordAttempt,
   readPhraseStats: vi.fn(async () => [
-    { phraseId: 1, bestScore: 90, attemptsCount: 1, lastPracticedAt: 0 },
+    { phraseId: "1", lessonId: "friends-s5e14", bestScore: 90, attemptsCount: 1, lastPracticedAt: 0 },
   ]),
   readPracticeDays: vi.fn(async () => []),
 }))
@@ -34,7 +34,7 @@ function Probe() {
     <button
       type="button"
       onClick={() =>
-        recordEvaluation(2, "easy", { transcript: "hi", score: 70 })
+        recordEvaluation("2", "friends-s5e14", "easy", { transcript: "hi", score: 70 })
       }
     >
       {rollups.completion}
@@ -55,13 +55,14 @@ describe("useProgress", () => {
     await screen.findByRole("button")
     screen.getByRole("button").click()
     expect(recordAttempt).toHaveBeenCalledWith("u1", {
-      phraseId: 2,
+      lessonId: "friends-s5e14",
+      phraseId: "2",
       difficulty: "easy",
       score: 70,
       transcript: "hi",
     })
     expect(capturedPhraseStats).toHaveLength(1)
-    expect(capturedPhraseStats[0].phraseId).toBe(1)
+    expect(capturedPhraseStats[0].phraseId).toBe("1")
   })
 
   it("does not persist when logged out", async () => {
