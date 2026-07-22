@@ -113,8 +113,8 @@ export function ProgressDashboard({
   avatarUrl,
 }: Props) {
   const { chartData, top5, worst5 } = useMemo(() => {
-    const chartData: ChartEntry[] = phrases.map((phrase) => {
-      const stat = phraseStats.find((s) => s.phraseId === phrase.id)
+    const data: ChartEntry[] = phrases.map((phrase) => {
+      const stat = phraseStats.find((s) => s.phraseId === String(phrase.id))
       return {
         phraseId: phrase.id,
         bestScore: stat?.bestScore ?? 0,
@@ -123,15 +123,15 @@ export function ProgressDashboard({
     })
 
     const attempted = phraseStats.filter((s) => s.attemptsCount > 0)
-    const top5 = [...attempted]
+    const best5 = [...attempted]
       .sort((a, b) => b.bestScore - a.bestScore)
       .slice(0, 5)
-    const worst5 = [...attempted]
+    const bottom5 = [...attempted]
       .sort((a, b) => a.bestScore - b.bestScore)
-      .filter((s) => !top5.some((t) => t.phraseId === s.phraseId))
+      .filter((s) => !best5.some((t) => t.phraseId === s.phraseId))
       .slice(0, 5)
 
-    return { chartData, top5, worst5 }
+    return { chartData: data, top5: best5, worst5: bottom5 }
   }, [phraseStats])
 
   return (
@@ -141,7 +141,7 @@ export function ProgressDashboard({
         <Avatar size="lg">
           <AvatarImage src={avatarUrl} alt={displayName} />
           <AvatarFallback>
-            {(displayName?.slice(0, 1) || "?").toUpperCase()}
+            {(displayName.slice(0, 1) || "?").toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-semibold">{displayName}</h2>

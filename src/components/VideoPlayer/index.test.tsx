@@ -3,21 +3,21 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { VideoPlayer } from "@/components/VideoPlayer"
-import type { Phrase } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 
 afterEach(cleanup)
 
 const phrase: Phrase = {
-  id: 1,
+  id: "1",
+  order: 1,
   text: "Hello there friend",
-  audioSrc: "/audios/frase1.mp3",
   pronunciationHint: "Say it clearly",
   speaker: "Joey",
   startTime: 0,
   endTime: 8.395,
 }
 
-const phrase2: Phrase = { ...phrase, id: 2 }
+const phrase2: Phrase = { ...phrase, id: "2", order: 2 }
 
 describe("VideoPlayer", () => {
   it("hides the player container when isActive is false", () => {

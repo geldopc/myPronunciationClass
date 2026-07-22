@@ -33,7 +33,10 @@ export function isPhraseReady(phrase: Phrase): boolean {
 
 export async function fetchLessons(): Promise<Lesson[]> {
   const snap = await getDocs(collection(db, "lessons"))
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Lesson, "id">) }))
+  return snap.docs.map((d) => ({
+    id: d.id,
+    ...(d.data() as Omit<Lesson, "id">),
+  }))
 }
 
 export async function fetchLesson(lessonId: string): Promise<Lesson | null> {
@@ -48,5 +51,8 @@ export async function fetchPhrases(lessonId: string): Promise<Phrase[]> {
     orderBy("order")
   )
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Phrase, "id">) }))
+  return snap.docs.map((d) => ({
+    id: d.id,
+    ...(d.data() as Omit<Phrase, "id">),
+  }))
 }

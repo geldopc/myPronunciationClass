@@ -67,6 +67,7 @@ export function useYouTubePlayer(
       })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (typeof window.YT !== "undefined" && window.YT.Player) {
       initPlayer()
     } else {

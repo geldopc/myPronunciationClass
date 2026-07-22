@@ -37,7 +37,9 @@ export function useProgress(lessonId?: string) {
     ])
     const today = new Date().toISOString().slice(0, 10)
     setRollups(computeRollups(stats, stats.length, days, today))
-    setPhraseStats([...stats].sort((a, b) => a.phraseId.localeCompare(b.phraseId)))
+    setPhraseStats(
+      [...stats].sort((a, b) => a.phraseId.localeCompare(b.phraseId))
+    )
     setLoading(false)
   }, [user, lessonId])
 

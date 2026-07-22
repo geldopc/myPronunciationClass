@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+/* eslint-disable import/first -- vi.mock hoisting requires imports after mocks */
 import { describe, it, expect, vi } from "vitest"
 import { renderHook, waitFor } from "@testing-library/react"
 

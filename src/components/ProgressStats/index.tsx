@@ -50,13 +50,13 @@ export function ProgressStats({
         {phrases.map((phrase) => (
           <li key={phrase.id} className="flex items-center gap-1">
             <SpineNode
-              phraseId={phrase.id}
+              phraseId={String(phrase.id)}
               state={
                 phrase.id in rollups.bestScoreByPhrase ? "done" : "untouched"
               }
             />
             <span className="text-xs text-muted-foreground">
-              {rollups.bestScoreByPhrase[phrase.id] ?? "—"}
+              {rollups.bestScoreByPhrase[phrase.id]}
             </span>
           </li>
         ))}

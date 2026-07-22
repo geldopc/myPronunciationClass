@@ -7,26 +7,28 @@ import { PhraseList } from "@/components/PhraseList"
 import { TopBar } from "@/components/TopBar"
 import type { PlaybackRate } from "@/components/TopBar/SpeedControl"
 import { VideoPlayer } from "@/components/VideoPlayer"
+import { useLesson } from "@/hooks/useLesson"
 import { useProgress } from "@/hooks/useProgress"
 import { useYouTubePlayer } from "@/hooks/useYouTubePlayer"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
-import { phrases } from "@/lib/phrases"
-import type { Phrase } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/Auth"
 import { useTheme } from "@/providers/Theme"
+
+const HARDCODED_LESSON_ID = "friends-s5e14"
 
 export function ListeningSpeakingApp() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy")
   const [focusMode, setFocusMode] = useState(true)
   const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1)
-  const [currentPhraseId, setCurrentPhraseId] = useState<number>(phrases[0].id)
-  const [recordingPhraseId, setRecordingPhraseId] = useState<number | null>(
+  const [currentPhraseId, setCurrentPhraseId] = useState<string>("")
+  const [recordingPhraseId, setRecordingPhraseId] = useState<string | null>(
     null
   )
   const [evaluations, setEvaluations] = useState<
-    Record<number, SpeechEvaluation>
+    Record<string, SpeechEvaluation>
   >({})
   const [supportsSpeechRecognition, setSupportsSpeechRecognition] =
     useState(false)
@@ -35,16 +37,26 @@ export function ListeningSpeakingApp() {
   const isDark = theme === "dark"
 
   const { user } = useAuth()
-  const { recordEvaluation } = useProgress()
+  const { lesson, phrases, loading: lessonLoading } = useLesson(HARDCODED_LESSON_ID)
+  const { recordEvaluation } = useProgress(HARDCODED_LESSON_ID)
   const adoptedRef = useRef(false)
 
-  const [videoPlayingId, setVideoPlayingId] = useState<number | null>(null)
-  const toggleRegistry = useRef(new Map<number, () => void>())
+  // Set first phrase once lesson phrases load
+  useEffect(() => {
+    if (phrases.length > 0 && currentPhraseId === "") {
+      setCurrentPhraseId(phrases[0].id)
+    }
+  }, [phrases, currentPhraseId])
 
-  const handleVideoError = useCallback(() => {}, [])
+  const [videoPlayingId, setVideoPlayingId] = useState<string | null>(null)
+  const toggleRegistry = useRef(new Map<string, () => void>())
+
+  const handleVideoError = useCallback((): void => {}, [])
   const handleVideoSegmentEnd = useCallback(() => setVideoPlayingId(null), [])
+  const youtubeId = lesson?.youtubeId ?? ""
   const { playSegment, pause, setRate } = useYouTubePlayer(
     "yt-player",
+    youtubeId,
     handleVideoError,
     handleVideoSegmentEnd
   )
@@ -65,7 +77,7 @@ export function ListeningSpeakingApp() {
   }, [])
 
   const registerToggle = useCallback(
-    (phraseId: number, toggle: (() => void) | null) => {
+    (phraseId: string, toggle: (() => void) | null) => {
       if (toggle) {
         toggleRegistry.current.set(phraseId, toggle)
       } else {
@@ -89,14 +101,14 @@ export function ListeningSpeakingApp() {
     [recordingPhraseId, videoPlayingId, playSegment, handleVideoPause]
   )
 
-  function handleRecordingChange(phraseId: number | null) {
+  function handleRecordingChange(phraseId: string | null) {
     setRecordingPhraseId(phraseId)
     if (phraseId !== null) setCurrentPhraseId(phraseId)
   }
 
-  function saveEvaluation(phraseId: number, evaluation: SpeechEvaluation) {
+  function saveEvaluation(phraseId: string, evaluation: SpeechEvaluation) {
     setEvaluations((current) => ({ ...current, [phraseId]: evaluation }))
-    void recordEvaluation(phraseId, difficulty, evaluation)
+    void recordEvaluation(phraseId, HARDCODED_LESSON_ID, difficulty, evaluation)
   }
 
   useEffect(() => {
@@ -127,15 +139,23 @@ export function ListeningSpeakingApp() {
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [currentPhraseId, handlePlay])
+  }, [currentPhraseId, handlePlay, phrases])
 
   useEffect(() => {
     if (!user || adoptedRef.current) return
     adoptedRef.current = true
     for (const [phraseId, evaluation] of Object.entries(evaluations)) {
-      void recordEvaluation(Number(phraseId), difficulty, evaluation)
+      void recordEvaluation(phraseId, HARDCODED_LESSON_ID, difficulty, evaluation)
     }
   }, [user, evaluations, difficulty, recordEvaluation])
+
+  if (lessonLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <span className="text-sm text-muted-foreground">Carregando lição…</span>
+      </div>
+    )
+  }
 
   const completedCount = Object.keys(evaluations).length
   const currentPhrase =

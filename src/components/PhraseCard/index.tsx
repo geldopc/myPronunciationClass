@@ -19,8 +19,8 @@ import { useSpeechRecognition } from "@/hooks/useSpeechRecognition"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import { getRevealState } from "@/lib/difficulty"
 import type { Difficulty } from "@/lib/difficulty"
-import { isPhraseReady } from "@/lib/phrases"
-import type { Phrase } from "@/lib/phrases"
+import { isPhraseReady } from "@/lib/lessons"
+import type { Phrase } from "@/lib/lessons"
 import { getExtraTip } from "@/lib/pronunciationTips"
 
 type NavProps = {
@@ -46,9 +46,9 @@ type PhraseCardProps = {
   flat?: boolean
   className?: string
   onPlay: (phrase: Phrase) => void
-  onRecordingChange: (phraseId: number | null) => void
-  onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
-  registerToggle: (phraseId: number, toggle: (() => void) | null) => void
+  onRecordingChange: (phraseId: string | null) => void
+  onEvaluation: (phraseId: string, evaluation: SpeechEvaluation) => void
+  registerToggle: (phraseId: string, toggle: (() => void) | null) => void
 }
 
 export function PhraseCard({

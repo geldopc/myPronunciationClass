@@ -45,7 +45,8 @@ describe("recordAttempt", () => {
 
   it("appends an attempt and upserts the phrase stat in a transaction", async () => {
     await recordAttempt("u1", {
-      phraseId: 3,
+      lessonId: "test-lesson",
+      phraseId: "3",
       difficulty: "easy",
       score: 88,
       transcript: "hello",
@@ -56,7 +57,8 @@ describe("recordAttempt", () => {
 
   it("keeps the higher score and increments the attempt count against an existing stat", async () => {
     await recordAttempt("u1", {
-      phraseId: 3,
+      lessonId: "test-lesson",
+      phraseId: "3",
       difficulty: "easy",
       score: 40,
       transcript: "hello",
@@ -64,18 +66,19 @@ describe("recordAttempt", () => {
 
     expect(setMock).toHaveBeenCalledTimes(1)
     const written = setMock.mock.calls[0][1] as {
-      phraseId: number
+      phraseId: string
       bestScore: number
       attemptsCount: number
     }
-    expect(written.phraseId).toBe(3)
+    expect(written.phraseId).toBe("3")
     expect(written.bestScore).toBe(50)
     expect(written.attemptsCount).toBe(3)
   })
 
   it("raises the best score when the new attempt scores higher than the existing best", async () => {
     await recordAttempt("u1", {
-      phraseId: 3,
+      lessonId: "test-lesson",
+      phraseId: "3",
       difficulty: "easy",
       score: 95,
       transcript: "hello",

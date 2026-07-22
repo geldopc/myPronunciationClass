@@ -21,6 +21,10 @@ export const pronunciationTips = [
   "Phrase-final words carry the most stress and information — make them clear and deliberate.",
 ]
 
-export function getExtraTip(phraseId: number): string {
-  return pronunciationTips[phraseId % pronunciationTips.length]
+export function getExtraTip(phraseId: string): string {
+  const n = parseInt(phraseId, 10)
+  const index = isNaN(n)
+    ? [...phraseId].reduce((acc, c) => acc + c.charCodeAt(0), 0)
+    : n
+  return pronunciationTips[index % pronunciationTips.length]
 }

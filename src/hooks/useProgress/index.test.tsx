@@ -9,7 +9,13 @@ const recordAttempt = vi.hoisted(() => vi.fn(async () => undefined))
 vi.mock("@/lib/attempts", () => ({
   recordAttempt,
   readPhraseStats: vi.fn(async () => [
-    { phraseId: "1", lessonId: "friends-s5e14", bestScore: 90, attemptsCount: 1, lastPracticedAt: 0 },
+    {
+      phraseId: "1",
+      lessonId: "friends-s5e14",
+      bestScore: 90,
+      attemptsCount: 1,
+      lastPracticedAt: 0,
+    },
   ]),
   readPracticeDays: vi.fn(async () => []),
 }))
@@ -34,7 +40,10 @@ function Probe() {
     <button
       type="button"
       onClick={() =>
-        recordEvaluation("2", "friends-s5e14", "easy", { transcript: "hi", score: 70 })
+        recordEvaluation("2", "friends-s5e14", "easy", {
+          transcript: "hi",
+          score: 70,
+        })
       }
     >
       {rollups.completion}

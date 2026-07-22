@@ -4,7 +4,8 @@ import { computeRollups, computeStreak } from "@/lib/rollups"
 import type { PhraseStat } from "@/lib/progress-model"
 
 const stat = (phraseId: number, bestScore: number): PhraseStat => ({
-  phraseId,
+  lessonId: "test-lesson",
+  phraseId: String(phraseId),
   bestScore,
   attemptsCount: 1,
   lastPracticedAt: 0,

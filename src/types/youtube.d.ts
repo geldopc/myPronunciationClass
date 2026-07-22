@@ -18,13 +18,13 @@ declare global {
 
   namespace YT {
     interface Player {
-      playVideo(): void
-      pauseVideo(): void
-      seekTo(seconds: number, allowSeekAhead: boolean): void
-      getCurrentTime(): number
-      setPlaybackRate(suggestedRate: number): void
-      getIframe(): HTMLIFrameElement
-      destroy(): void
+      playVideo: () => void
+      pauseVideo: () => void
+      seekTo: (seconds: number, allowSeekAhead: boolean) => void
+      getCurrentTime: () => number
+      setPlaybackRate: (suggestedRate: number) => void
+      getIframe: () => HTMLIFrameElement
+      destroy: () => void
     }
   }
 }

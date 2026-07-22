@@ -4,14 +4,14 @@ import { afterEach, describe, expect, it } from "vitest"
 
 import { PhraseCard } from "@/components/PhraseCard"
 import { getExtraTip } from "@/lib/pronunciationTips"
-import type { Phrase } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 
 afterEach(cleanup)
 
 const phrase: Phrase = {
-  id: 1,
+  id: "1",
+  order: 1,
   text: "Hello there friend",
-  audioSrc: "/audios/frase1.mp3",
   pronunciationHint: "Say it clearly",
   speaker: "Joey",
   startTime: 0,

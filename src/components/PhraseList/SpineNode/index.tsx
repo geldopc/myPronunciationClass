@@ -10,7 +10,7 @@ export function SpineNode({
   phraseId,
   state,
 }: {
-  phraseId: number
+  phraseId: string
   state: SpineNodeState
 }) {
   return (

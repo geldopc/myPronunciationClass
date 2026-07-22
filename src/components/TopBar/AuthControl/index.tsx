@@ -1,6 +1,21 @@
 import { Link } from "@tanstack/react-router"
 import { LogOutIcon, TrendingUpIcon } from "lucide-react"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import { useAuth } from "@/providers/Auth"
+
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -28,21 +43,6 @@ function GoogleIcon({ className }: { className?: string }) {
     </svg>
   )
 }
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { useAuth } from "@/providers/Auth"
 
 export function AuthControl() {
   const { user, signInWithGoogle, signOut } = useAuth()

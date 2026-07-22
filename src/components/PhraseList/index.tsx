@@ -3,29 +3,29 @@ import { SpineNode } from "@/components/PhraseList/SpineNode"
 import type { SpineNodeState } from "@/components/PhraseList/SpineNode"
 import type { SpeechEvaluation } from "@/hooks/useSpeechRecognition"
 import type { Difficulty } from "@/lib/difficulty"
-import type { Phrase } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 
 type PhraseListProps = {
   phrases: Phrase[]
   difficulty: Difficulty
   focusMode: boolean
-  currentPhraseId: number
-  onCurrentPhraseChange: (phraseId: number) => void
-  playingId: number | null
-  recordingPhraseId: number | null
+  currentPhraseId: string
+  onCurrentPhraseChange: (phraseId: string) => void
+  playingId: string | null
+  recordingPhraseId: string | null
   supportsSpeechRecognition: boolean
-  evaluations: Record<number, SpeechEvaluation>
+  evaluations: Record<string, SpeechEvaluation>
   videoMode?: boolean
   onPlay: (phrase: Phrase) => void
-  onRecordingChange: (phraseId: number | null) => void
-  onEvaluation: (phraseId: number, evaluation: SpeechEvaluation) => void
-  registerToggle: (phraseId: number, toggle: (() => void) | null) => void
+  onRecordingChange: (phraseId: string | null) => void
+  onEvaluation: (phraseId: string, evaluation: SpeechEvaluation) => void
+  registerToggle: (phraseId: string, toggle: (() => void) | null) => void
 }
 
 function getNodeState(
   phrase: Phrase,
-  currentPhraseId: number,
-  evaluations: Record<number, SpeechEvaluation>
+  currentPhraseId: string,
+  evaluations: Record<string, SpeechEvaluation>
 ): SpineNodeState {
   if (phrase.id in evaluations) return "done"
   if (phrase.id === currentPhraseId) return "current"

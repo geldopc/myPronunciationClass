@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import type { Phrase } from "@/lib/phrases"
+import type { Phrase } from "@/lib/lessons"
 import { cn } from "@/lib/utils"
 
 type VideoPlayerProps = {

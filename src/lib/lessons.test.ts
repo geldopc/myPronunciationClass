@@ -1,3 +1,4 @@
+/* eslint-disable import/first -- vi.mock hoisting requires imports after mocks */
 import { describe, it, expect, vi, beforeEach } from "vitest"
 
 vi.mock("firebase/firestore", () => ({
@@ -51,8 +52,15 @@ describe("fetchLesson", () => {
 
 describe("fetchPhrases", () => {
   it("returns phrases with string id and no audioSrc", async () => {
-    const mockPhrase = { id: "phrase-1", order: 1, text: "Hello", speaker: "Ross",
-      pronunciationHint: "tip", startTime: 0, endTime: 3 }
+    const mockPhrase = {
+      id: "phrase-1",
+      order: 1,
+      text: "Hello",
+      speaker: "Ross",
+      pronunciationHint: "tip",
+      startTime: 0,
+      endTime: 3,
+    }
     vi.mocked(getDocs).mockResolvedValue({
       docs: [{ id: mockPhrase.id, data: () => ({ ...mockPhrase }) }],
     } as never)

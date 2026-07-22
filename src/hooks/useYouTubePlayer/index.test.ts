@@ -50,12 +50,12 @@ afterEach(() => {
 
 describe("useYouTubePlayer", () => {
   it("reports ready after player initialises", () => {
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     expect(result.current.ready).toBe(true)
   })
 
   it("playSegment calls seekTo then playVideo", () => {
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     act(() => result.current.playSegment(10, 20))
     expect(mockSeekTo).toHaveBeenCalledWith(10, true)
     expect(mockPlayVideo).toHaveBeenCalled()
@@ -67,19 +67,19 @@ describe("useYouTubePlayer", () => {
       return 0
     })
     mockGetCurrentTime.mockReturnValue(20.1)
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     act(() => result.current.playSegment(10, 20))
     expect(mockPauseVideo).toHaveBeenCalled()
   })
 
   it("pause calls pauseVideo", () => {
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     act(() => result.current.pause())
     expect(mockPauseVideo).toHaveBeenCalled()
   })
 
   it("destroys player on unmount", () => {
-    const { unmount } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { unmount } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     unmount()
     expect(mockDestroy).toHaveBeenCalled()
   })
@@ -101,7 +101,7 @@ describe("useYouTubePlayer", () => {
         return player
       }),
     })
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
     act(() => result.current.playSegment(10, 20))
     expect(mockSeekTo).not.toHaveBeenCalled()
   })
@@ -110,7 +110,7 @@ describe("useYouTubePlayer", () => {
     // Remove YT so the hook takes the async path
     vi.stubGlobal("YT", undefined)
 
-    const { result } = renderHook(() => useYouTubePlayer("yt-container"))
+    const { result } = renderHook(() => useYouTubePlayer("yt-container", "test-video-id"))
 
     // Player not constructed yet — ready must still be false
     expect(result.current.ready).toBe(false)
