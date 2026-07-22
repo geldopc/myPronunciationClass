@@ -102,14 +102,12 @@ export function TopBar({ backTo }: { backTo?: string } = {}) {
         <div className="container mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             {backTo && (
-              <Link
-                to={backTo}
-                className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                aria-label="Voltar para Lições"
-              >
-                <ArrowLeftIcon className="h-4 w-4" />
-                Lições
-              </Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to={backTo} aria-label="Back to Lessons">
+                  <ArrowLeftIcon className="h-4 w-4" />
+                  Lessons
+                </Link>
+              </Button>
             )}
             <button
               type="button"
