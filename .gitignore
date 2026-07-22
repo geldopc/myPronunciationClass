@@ -30,3 +30,5 @@ advisor-plans/
 .claude/
 CLAUDE.md
 docs/superpowers/
+
+scripts/serviceAccount.json
