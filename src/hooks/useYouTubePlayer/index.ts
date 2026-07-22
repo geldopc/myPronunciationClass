@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { SOURCE_VIDEO_ID } from "@/lib/phrases"
-
 let apiScriptAdded = false
 
 function loadYouTubeApi() {
@@ -14,6 +12,7 @@ function loadYouTubeApi() {
 
 export function useYouTubePlayer(
   containerId: string,
+  videoId: string,
   onError?: () => void,
   onSegmentEnd?: () => void
 ): {
@@ -43,7 +42,7 @@ export function useYouTubePlayer(
       const inner = document.createElement("div")
       container.appendChild(inner)
       playerRef.current = new window.YT.Player(inner, {
-        videoId: SOURCE_VIDEO_ID,
+        videoId: videoId,
         playerVars: { rel: 0, modestbranding: 1, controls: 0 },
         events: {
           onReady: () => {
@@ -86,7 +85,7 @@ export function useYouTubePlayer(
       playerRef.current?.destroy()
       playerRef.current = null
     }
-  }, [containerId, onError])
+  }, [containerId, videoId, onError])
 
   const playSegment = useCallback((startTime: number, endTime: number) => {
     if (!playerRef.current || !readyRef.current) return
