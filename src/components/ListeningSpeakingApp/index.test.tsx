@@ -8,9 +8,24 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 const recordEvaluation = vi.fn(async () => undefined)
 vi.mock("@/hooks/useLesson", () => ({
   useLesson: () => ({
-    lesson: { id: "friends-s5e14", title: "Friends S5E14", youtubeId: "XZVHmRvfDHM", thumbnailUrl: "", createdAt: 0, createdBy: "" },
+    lesson: {
+      id: "friends-s5e14",
+      title: "Friends S5E14",
+      youtubeId: "XZVHmRvfDHM",
+      thumbnailUrl: "",
+      createdAt: 0,
+      createdBy: "",
+    },
     phrases: [
-      { id: "1", order: 1, text: "Hey, how was your conference?", speaker: "Chandler", pronunciationHint: "tip", startTime: 0, endTime: 8 },
+      {
+        id: "1",
+        order: 1,
+        text: "Hey, how was your conference?",
+        speaker: "Chandler",
+        pronunciationHint: "tip",
+        startTime: 0,
+        endTime: 8,
+      },
     ],
     loading: false,
   }),

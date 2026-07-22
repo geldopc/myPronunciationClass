@@ -1,4 +1,5 @@
-export const pronunciationTips = [
+/** Static technique tips cycled per phrase via a string hash. */
+const pronunciationTips = [
   "Connect words ending in consonants to words starting with vowels: 'turn it' → 'tur-nit'.",
   "The 'schwa' /ə/ is English's most common vowel — unstressed syllables almost always reduce to it.",
   "In casual speech, 'want to' → 'wanna', 'going to' → 'gonna', 'have to' → 'hafta'.",
@@ -21,6 +22,7 @@ export const pronunciationTips = [
   "Phrase-final words carry the most stress and information — make them clear and deliberate.",
 ]
 
+/** Pick a technique tip for a phrase using its Firestore string ID as a hash seed. */
 export function getExtraTip(phraseId: string): string {
   const n = parseInt(phraseId, 10)
   const index = isNaN(n)

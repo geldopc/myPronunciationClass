@@ -1,16 +1,16 @@
-import 'firebase-admin';
-import { Firestore, Timestamp } from '@google-cloud/firestore';
+import "firebase-admin"
+import { Firestore, Timestamp } from "@google-cloud/firestore"
 
-declare module 'firebase-admin' {
+declare module "firebase-admin" {
   namespace credential {
-    function cert(serviceAccountPathOrObject: any): any;
-    function applicationDefault(): any;
-    function refreshToken(refreshTokenPathOrObject: any): any;
+    function cert(serviceAccountPathOrObject: any): any
+    function applicationDefault(): any
+    function refreshToken(refreshTokenPathOrObject: any): any
   }
 
   namespace firestore {
-    export { Timestamp };
+    export { Timestamp }
   }
 
-  function firestore(): Firestore;
+  function firestore(): Firestore
 }

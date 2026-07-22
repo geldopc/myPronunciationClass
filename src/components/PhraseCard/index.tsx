@@ -21,7 +21,7 @@ import { getRevealState } from "@/lib/difficulty"
 import type { Difficulty } from "@/lib/difficulty"
 import { isPhraseReady } from "@/lib/lessons"
 import type { Phrase } from "@/lib/lessons"
-import { getExtraTip } from "@/lib/pronunciationTips"
+import { getExtraTip } from "@/lib/tips"
 
 type NavProps = {
   onPrev?: () => void

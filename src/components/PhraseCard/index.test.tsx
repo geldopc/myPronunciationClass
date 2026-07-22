@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 
 import { PhraseCard } from "@/components/PhraseCard"
-import { getExtraTip } from "@/lib/pronunciationTips"
+import { getExtraTip } from "@/lib/tips"
 import type { Phrase } from "@/lib/lessons"
 
 afterEach(cleanup)

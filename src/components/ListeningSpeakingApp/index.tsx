@@ -37,7 +37,11 @@ export function ListeningSpeakingApp() {
   const isDark = theme === "dark"
 
   const { user } = useAuth()
-  const { lesson, phrases, loading: lessonLoading } = useLesson(HARDCODED_LESSON_ID)
+  const {
+    lesson,
+    phrases,
+    loading: lessonLoading,
+  } = useLesson(HARDCODED_LESSON_ID)
   const { recordEvaluation } = useProgress(HARDCODED_LESSON_ID)
   const adoptedRef = useRef(false)
 
@@ -145,7 +149,12 @@ export function ListeningSpeakingApp() {
     if (!user || adoptedRef.current) return
     adoptedRef.current = true
     for (const [phraseId, evaluation] of Object.entries(evaluations)) {
-      void recordEvaluation(phraseId, HARDCODED_LESSON_ID, difficulty, evaluation)
+      void recordEvaluation(
+        phraseId,
+        HARDCODED_LESSON_ID,
+        difficulty,
+        evaluation
+      )
     }
   }, [user, evaluations, difficulty, recordEvaluation])
 
