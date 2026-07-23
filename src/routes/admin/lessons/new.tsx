@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { ArrowLeftIcon } from "lucide-react"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 
 import { TopBar } from "@/components/TopBar"
 import { Button } from "@/components/ui/button"
@@ -75,12 +76,20 @@ function NewLessonPage() {
 
   return (
     <>
-      <TopBar backTo="/admin" />
+      <TopBar />
       <main
         id="new-lesson-page"
         className="container mx-auto max-w-lg space-y-6 px-4 py-8"
       >
-        <h1 className="text-2xl font-semibold">New lesson</h1>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+            <Link to="/admin">
+              <ArrowLeftIcon className="h-4 w-4" />
+              Admin
+            </Link>
+          </Button>
+          <h1 className="text-2xl font-semibold">New lesson</h1>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
