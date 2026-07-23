@@ -11,13 +11,15 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts"
-import type { Phrase } from "@/lib/lessons"
-import type { PhraseStat, Rollups } from "@/lib/progress-model"
+import type { Lesson, Phrase } from "@/lib/lessons"
+import type { LessonRollup, PhraseStat, Rollups } from "@/lib/progress-model"
 
 type Props = {
   rollups: Rollups
   phraseStats: PhraseStat[]
   phrases: Phrase[]
+  byLesson?: LessonRollup[]
+  lessons?: Lesson[]
 }
 
 type ChartEntry = {
@@ -104,7 +106,7 @@ function DonutChart({ value }: { value: number }) {
   )
 }
 
-export function ProgressDashboard({ rollups, phraseStats, phrases }: Props) {
+export function ProgressDashboard({ rollups, phraseStats, phrases, byLesson, lessons }: Props) {
   const { chartData, top5, worst5 } = useMemo(() => {
     const data: ChartEntry[] = phrases.map((phrase) => {
       const stat = phraseStats.find((s) => s.phraseId === phrase.id)
@@ -223,6 +225,60 @@ export function ProgressDashboard({ rollups, phraseStats, phrases }: Props) {
           )}
         </div>
       </div>
+
+      {/* Per-lesson progress cards */}
+      {byLesson && byLesson.length > 0 && lessons && lessons.length > 0 && (
+        <div>
+          <h3 className="mb-3 text-sm font-semibold">Progress by Lesson</h3>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {byLesson.map((row) => {
+              const lesson = lessons.find((l) => l.id === row.lessonId)
+              if (!lesson) return null
+              const lastDate = row.lastPracticedAt
+                ? new Date(row.lastPracticedAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })
+                : null
+              return (
+                <div
+                  key={row.lessonId}
+                  id={`lesson-progress-${row.lessonId}`}
+                  className="flex gap-3 rounded-xl border border-border bg-card p-3"
+                >
+                  {lesson.thumbnailUrl && (
+                    <img
+                      src={lesson.thumbnailUrl}
+                      alt={lesson.title}
+                      className="h-14 w-24 shrink-0 rounded-md object-cover"
+                    />
+                  )}
+                  <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
+                    <p className="line-clamp-2 text-xs font-medium leading-tight">
+                      {lesson.title}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{row.completion}% done</span>
+                      {lastDate && <span>{lastDate}</span>}
+                    </div>
+                    <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-green-500 transition-all"
+                        style={{ width: `${row.completion}%` }}
+                      />
+                    </div>
+                    {row.average > 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        Avg score: {row.average}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

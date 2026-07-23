@@ -7,6 +7,7 @@ export const MOCK_LESSON: Lesson = {
   thumbnailUrl: "https://img.youtube.com/vi/XZVHmRvfDHM/hqdefault.jpg",
   createdAt: 1700000000000,
   createdBy: "system",
+  phraseCount: 36,
 }
 
 export const MOCK_PHRASES: Phrase[] = [

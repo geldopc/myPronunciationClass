@@ -16,11 +16,19 @@ export type PhraseStat = {
   lastPracticedAt: number
 }
 
+export type LessonRollup = {
+  lessonId: string
+  completion: number
+  average: number
+  lastPracticedAt: number | null
+}
+
 export type Rollups = {
   completion: number
   average: number
   streak: number
   bestScoreByPhrase: Record<string, number | undefined>
+  byLesson: LessonRollup[]
 }
 
 export type ShareProfile = {

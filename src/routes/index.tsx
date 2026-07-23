@@ -1,9 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router"
-
-import { ListeningSpeakingApp } from "@/components/ListeningSpeakingApp"
+import { createFileRoute, Navigate } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/")({ component: HomePage })
 
 function HomePage() {
-  return <ListeningSpeakingApp />
+  const lessonId = localStorage.getItem("lessonId")
+  if (lessonId) {
+    return <Navigate to="/lessons/$lessonId" params={{ lessonId }} />
+  }
+  return <Navigate to="/lessons" />
 }

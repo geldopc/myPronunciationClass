@@ -24,6 +24,7 @@ export function computeRollups(
     average,
     streak: computeStreak(practiceDays, today),
     bestScoreByPhrase,
+    byLesson: [],
   }
 }
 

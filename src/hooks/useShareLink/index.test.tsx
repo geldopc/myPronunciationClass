@@ -27,6 +27,7 @@ const rollups = {
   average: 80,
   streak: 1,
   bestScoreByPhrase: { 1: 90 },
+  byLesson: [],
 }
 
 function Probe() {

@@ -5,10 +5,12 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   orderBy,
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import {
@@ -26,6 +28,7 @@ export type Lesson = {
   thumbnailUrl: string
   createdAt: number
   createdBy: string
+  phraseCount: number
 }
 
 export type Phrase = {
@@ -80,6 +83,7 @@ export async function createLesson(data: {
   if (USE_MOCK) return `mock-lesson-${Date.now()}`
   const ref = await addDoc(collection(db, "lessons"), {
     ...data,
+    phraseCount: 0,
     createdAt: serverTimestamp(),
   })
   return ref.id
@@ -96,6 +100,7 @@ export async function upsertPhrase(
     return phraseId
   }
   const ref = await addDoc(collection(db, "lessons", lessonId, "phrases"), data)
+  await updateDoc(doc(db, "lessons", lessonId), { phraseCount: increment(1) })
   return ref.id
 }
 
@@ -105,4 +110,5 @@ export async function deletePhrase(
 ): Promise<void> {
   if (USE_MOCK) return
   await deleteDoc(doc(db, "lessons", lessonId, "phrases", phraseId))
+  await updateDoc(doc(db, "lessons", lessonId), { phraseCount: increment(-1) })
 }

@@ -51,6 +51,7 @@ describe("shares", () => {
       average: 80,
       streak: 1,
       bestScoreByPhrase: { 1: 90 },
+      byLesson: [],
     }
 
     const slug = await createShare("u1", profile, snapshot)

@@ -18,6 +18,7 @@ describe("ProgressStats", () => {
           average: 80,
           streak: 3,
           bestScoreByPhrase: { 1: 90 },
+          byLesson: [],
         }}
       />
     )

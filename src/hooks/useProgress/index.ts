@@ -16,6 +16,7 @@ const EMPTY: Rollups = {
   average: 0,
   streak: 0,
   bestScoreByPhrase: {},
+  byLesson: [],
 }
 
 export function useProgress(lessonId?: string, phraseTotal?: number) {

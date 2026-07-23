@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
+import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as AdminLessonsNewRouteImport } from './routes/admin/lessons/new'
 import { Route as AdminLessonsLessonIdRouteImport } from './routes/admin/lessons/$lessonId'
 
@@ -32,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LessonsIndexRoute = LessonsIndexRouteImport.update({
+  id: '/lessons/',
+  path: '/lessons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -40,6 +47,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
   path: '/s/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLessonsNewRoute = AdminLessonsNewRouteImport.update({
@@ -57,16 +69,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/progress': typeof ProgressRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/s/$slug': typeof SSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
   '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/progress': typeof ProgressRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/s/$slug': typeof SSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/lessons': typeof LessonsIndexRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
   '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
@@ -75,8 +91,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/progress': typeof ProgressRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/s/$slug': typeof SSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
   '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
@@ -86,16 +104,20 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/progress'
+    | '/lessons/$lessonId'
     | '/s/$slug'
     | '/admin/'
+    | '/lessons/'
     | '/admin/lessons/$lessonId'
     | '/admin/lessons/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/progress'
+    | '/lessons/$lessonId'
     | '/s/$slug'
     | '/admin'
+    | '/lessons'
     | '/admin/lessons/$lessonId'
     | '/admin/lessons/new'
   id:
@@ -103,8 +125,10 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/progress'
+    | '/lessons/$lessonId'
     | '/s/$slug'
     | '/admin/'
+    | '/lessons/'
     | '/admin/lessons/$lessonId'
     | '/admin/lessons/new'
   fileRoutesById: FileRoutesById
@@ -113,7 +137,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   ProgressRoute: typeof ProgressRoute
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   SSlugRoute: typeof SSlugRoute
+  LessonsIndexRoute: typeof LessonsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -139,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lessons/': {
+      id: '/lessons/'
+      path: '/lessons'
+      fullPath: '/lessons/'
+      preLoaderRoute: typeof LessonsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -151,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: '/s/$slug'
       fullPath: '/s/$slug'
       preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lessons/$lessonId': {
+      id: '/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/lessons/new': {
@@ -188,7 +228,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   ProgressRoute: ProgressRoute,
+  LessonsLessonIdRoute: LessonsLessonIdRoute,
   SSlugRoute: SSlugRoute,
+  LessonsIndexRoute: LessonsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

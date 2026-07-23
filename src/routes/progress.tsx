@@ -12,7 +12,7 @@ function ProgressPage() {
   if (!user) return <Navigate to="/" />
   return (
     <>
-      <TopBar backTo="/" />
+      <TopBar backTo="/lessons" />
       <ProgressView />
     </>
   )

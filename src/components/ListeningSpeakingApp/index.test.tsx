@@ -67,7 +67,7 @@ describe("ListeningSpeakingApp persistence", () => {
   it("renders and exposes a persistence hook without breaking the anonymous UI", () => {
     const { container } = render(
       <ThemeProvider>
-        <ListeningSpeakingApp />
+        <ListeningSpeakingApp lessonId="friends-s5e14" />
       </ThemeProvider>
     )
     expect(container.querySelector("#listening-speaking-app")).toBeTruthy()

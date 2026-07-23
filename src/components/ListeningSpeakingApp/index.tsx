@@ -17,9 +17,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/Auth";
 import { useTheme } from "@/providers/Theme";
 
-const HARDCODED_LESSON_ID = "friends-s5e14";
-
-export function ListeningSpeakingApp() {
+export function ListeningSpeakingApp({ lessonId }: { lessonId: string }) {
 	const [difficulty, setDifficulty] = useState<Difficulty>("easy");
 	const [focusMode, setFocusMode] = useState(true);
 	const [playbackRate, setPlaybackRate] = useState<PlaybackRate>(1);
@@ -41,8 +39,8 @@ export function ListeningSpeakingApp() {
 		lesson,
 		phrases,
 		loading: lessonLoading,
-	} = useLesson(HARDCODED_LESSON_ID);
-	const { recordEvaluation } = useProgress(HARDCODED_LESSON_ID, phrases.length);
+	} = useLesson(lessonId);
+	const { recordEvaluation } = useProgress(lessonId, phrases.length);
 	const adoptedRef = useRef(false);
 
 	// Set first phrase once lesson phrases load
@@ -114,7 +112,7 @@ export function ListeningSpeakingApp() {
 		setEvaluations((current) => ({ ...current, [phraseId]: evaluation }));
 		void recordEvaluation(
 			phraseId,
-			HARDCODED_LESSON_ID,
+			lessonId,
 			difficulty,
 			evaluation,
 		);
@@ -158,7 +156,7 @@ export function ListeningSpeakingApp() {
 		for (const [phraseId, evaluation] of Object.entries(evaluations)) {
 			void recordEvaluation(
 				phraseId,
-				HARDCODED_LESSON_ID,
+				lessonId,
 				difficulty,
 				evaluation,
 			);
@@ -211,7 +209,7 @@ export function ListeningSpeakingApp() {
 					))}
 			</div>
 
-			<TopBar />
+			<TopBar lessonId={lessonId} />
 
 			<main
 				className="flex flex-col mx-auto px-4 pt-4 max-w-3xl overflow-hidden container"
