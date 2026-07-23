@@ -197,7 +197,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 
       {/* Player controls row */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-mono text-sm tabular-nums text-muted-foreground">
+        <span className="font-mono text-sm text-muted-foreground tabular-nums">
           {formatTime(currentTime)} / {formatTime(duration)}
         </span>
         <div className="flex gap-2">
@@ -239,7 +239,12 @@ export function ClipEditor({ lessonId, videoId }: Props) {
             Mark end
           </Button>
         </div>
-        <Button size="sm" variant="ghost" className="ml-auto" onClick={newPhrase}>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="ml-auto"
+          onClick={newPhrase}
+        >
           + New phrase
         </Button>
       </div>
@@ -247,7 +252,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
       {/* Timeline + Form */}
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             Timeline
           </p>
           {loadingPhrases ? (
@@ -274,7 +279,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
         </div>
 
         <div className="space-y-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {selectedPhraseId ? "Edit phrase" : "New phrase"}
           </p>
 

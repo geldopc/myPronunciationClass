@@ -9,22 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as AdminLessonsNewRouteImport } from './routes/admin/lessons/new'
 import { Route as AdminLessonsLessonIdRouteImport } from './routes/admin/lessons/$lessonId'
 
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProgressRoute = ProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -32,95 +32,88 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
   path: '/s/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminLessonsNewRoute = AdminLessonsNewRouteImport.update({
-  id: '/admin/lessons/new',
+  id: '/lessons/new',
   path: '/lessons/new',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminLessonsLessonIdRoute = AdminLessonsLessonIdRouteImport.update({
-  id: '/admin/lessons/$lessonId',
+  id: '/lessons/$lessonId',
   path: '/lessons/$lessonId',
   getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/progress': typeof ProgressRoute
   '/s/$slug': typeof SSlugRoute
-  '/admin': typeof AdminRoute
   '/admin/': typeof AdminIndexRoute
-  '/admin/lessons/new': typeof AdminLessonsNewRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
+  '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/progress': typeof ProgressRoute
   '/s/$slug': typeof SSlugRoute
-  '/admin': typeof AdminRoute
-  '/admin/': typeof AdminIndexRoute
-  '/admin/lessons/new': typeof AdminLessonsNewRoute
+  '/admin': typeof AdminIndexRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
+  '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/progress': typeof ProgressRoute
   '/s/$slug': typeof SSlugRoute
-  '/admin': typeof AdminRoute
   '/admin/': typeof AdminIndexRoute
-  '/admin/lessons/new': typeof AdminLessonsNewRoute
   '/admin/lessons/$lessonId': typeof AdminLessonsLessonIdRoute
+  '/admin/lessons/new': typeof AdminLessonsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/progress'
     | '/s/$slug'
-    | '/admin'
     | '/admin/'
-    | '/admin/lessons/new'
     | '/admin/lessons/$lessonId'
+    | '/admin/lessons/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/progress'
     | '/s/$slug'
     | '/admin'
-    | '/admin/'
-    | '/admin/lessons/new'
     | '/admin/lessons/$lessonId'
+    | '/admin/lessons/new'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/progress'
     | '/s/$slug'
-    | '/admin'
     | '/admin/'
-    | '/admin/lessons/new'
     | '/admin/lessons/$lessonId'
+    | '/admin/lessons/new'
   fileRoutesById: FileRoutesById
-}
-export interface AdminRouteChildren {
-  AdminIndexRoute: typeof AdminIndexRoute
-  AdminLessonsNewRoute: typeof AdminLessonsNewRoute
-  AdminLessonsLessonIdRoute: typeof AdminLessonsLessonIdRoute
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ProgressRoute: typeof ProgressRoute
   SSlugRoute: typeof SSlugRoute
-  AdminRoute: typeof AdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,25 +125,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/$slug': {
-      id: '/s/$slug'
-      path: '/s/$slug'
-      fullPath: '/s/$slug'
-      preLoaderRoute: typeof SSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -159,6 +145,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/lessons/new': {
       id: '/admin/lessons/new'
@@ -177,19 +170,25 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const adminRouteChildren: AdminRouteChildren = {
-  AdminIndexRoute: AdminIndexRoute,
-  AdminLessonsNewRoute: AdminLessonsNewRoute,
-  AdminLessonsLessonIdRoute: AdminLessonsLessonIdRoute,
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminLessonsLessonIdRoute: typeof AdminLessonsLessonIdRoute
+  AdminLessonsNewRoute: typeof AdminLessonsNewRoute
 }
 
-const AdminRouteWithChildren = AdminRoute._addFileChildren(adminRouteChildren)
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminLessonsLessonIdRoute: AdminLessonsLessonIdRoute,
+  AdminLessonsNewRoute: AdminLessonsNewRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   ProgressRoute: ProgressRoute,
   SSlugRoute: SSlugRoute,
-  AdminRoute: AdminRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

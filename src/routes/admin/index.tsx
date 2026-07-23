@@ -78,7 +78,10 @@ function AdminDashboard() {
   }
 
   return (
-    <main id="admin-dashboard" className="container mx-auto max-w-4xl space-y-10 px-4 py-8">
+    <main
+      id="admin-dashboard"
+      className="container mx-auto max-w-4xl space-y-10 px-4 py-8"
+    >
       <h1 className="text-2xl font-semibold">Admin</h1>
 
       {/* Lessons panel */}
@@ -125,7 +128,10 @@ function AdminDashboard() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Button asChild size="sm" variant="ghost">
-                        <Link to="/admin/lessons/$lessonId" params={{ lessonId: lesson.id }}>
+                        <Link
+                          to="/admin/lessons/$lessonId"
+                          params={{ lessonId: lesson.id }}
+                        >
                           <Pencil />
                           Edit clips
                         </Link>
@@ -150,7 +156,9 @@ function AdminDashboard() {
                 <tr className="border-b border-border bg-muted/40">
                   <th className="px-4 py-2 text-left font-medium">Email</th>
                   <th className="px-4 py-2 text-left font-medium">Status</th>
-                  <th className="px-4 py-2 text-left font-medium">Invited by</th>
+                  <th className="px-4 py-2 text-left font-medium">
+                    Invited by
+                  </th>
                   <th className="px-4 py-2" />
                 </tr>
               </thead>
@@ -163,7 +171,9 @@ function AdminDashboard() {
                     <td className="px-4 py-3">{admin.email}</td>
                     <td className="px-4 py-3">
                       <Badge
-                        variant={admin.status === "active" ? "default" : "outline"}
+                        variant={
+                          admin.status === "active" ? "default" : "outline"
+                        }
                       >
                         {admin.status}
                       </Badge>
@@ -201,7 +211,11 @@ function AdminDashboard() {
               onChange={(e) => setInviteEmail(e.target.value)}
             />
           </div>
-          <Button type="submit" size="sm" disabled={inviting || !inviteEmail.trim()}>
+          <Button
+            type="submit"
+            size="sm"
+            disabled={inviting || !inviteEmail.trim()}
+          >
             {inviting ? "Sending…" : "Send invite"}
           </Button>
           {inviteMsg && (

@@ -22,6 +22,7 @@ declare global {
       pauseVideo: () => void
       seekTo: (seconds: number, allowSeekAhead: boolean) => void
       getCurrentTime: () => number
+      getDuration: () => number
       setPlaybackRate: (suggestedRate: number) => void
       getIframe: () => HTMLIFrameElement
       destroy: () => void

@@ -27,7 +27,10 @@ async function fetchThumbnail(youtubeId: string): Promise<string> {
   const res = await fetch(url)
   if (!res.ok) return `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
   const data = (await res.json()) as { thumbnail_url?: string }
-  return data.thumbnail_url ?? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
+  return (
+    data.thumbnail_url ??
+    `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
+  )
 }
 
 function NewLessonPage() {

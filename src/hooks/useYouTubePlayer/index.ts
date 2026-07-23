@@ -19,6 +19,8 @@ export function useYouTubePlayer(
   playSegment: (start: number, end: number) => void
   pause: () => void
   setRate: (rate: number) => void
+  getCurrentTime: () => number
+  getDuration: () => number
   ready: boolean
 } {
   const playerRef = useRef<YT.Player | null>(null)
