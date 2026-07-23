@@ -38,7 +38,12 @@ function computeByLesson(
         practiced.length === 0
           ? null
           : Math.max(...practiced.map((s) => s.lastPracticedAt))
-      return { lessonId: lesson.id, completion, average, lastPracticedAt: lastAt }
+      return {
+        lessonId: lesson.id,
+        completion,
+        average,
+        lastPracticedAt: lastAt,
+      }
     })
     .filter((r) => r.completion > 0 || grouped.has(r.lessonId))
 }

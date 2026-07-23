@@ -7,7 +7,12 @@ type Props = {
   onClick: () => void
 }
 
-export function LessonCard({ lesson, completion, lastPracticedAt, onClick }: Props) {
+export function LessonCard({
+  lesson,
+  completion,
+  lastPracticedAt,
+  onClick,
+}: Props) {
   const lastDate = lastPracticedAt
     ? new Date(lastPracticedAt).toLocaleDateString()
     : null
@@ -33,7 +38,7 @@ export function LessonCard({ lesson, completion, lastPracticedAt, onClick }: Pro
       </div>
 
       <div className="flex flex-col gap-1 p-4">
-        <p className="line-clamp-2 text-sm font-semibold leading-snug">
+        <p className="line-clamp-2 text-sm leading-snug font-semibold">
           {lesson.title}
         </p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">

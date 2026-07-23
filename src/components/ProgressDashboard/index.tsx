@@ -106,7 +106,13 @@ function DonutChart({ value }: { value: number }) {
   )
 }
 
-export function ProgressDashboard({ rollups, phraseStats, phrases, byLesson, lessons }: Props) {
+export function ProgressDashboard({
+  rollups,
+  phraseStats,
+  phrases,
+  byLesson,
+  lessons,
+}: Props) {
   const { chartData, top5, worst5 } = useMemo(() => {
     const data: ChartEntry[] = phrases.map((phrase) => {
       const stat = phraseStats.find((s) => s.phraseId === phrase.id)
@@ -254,7 +260,7 @@ export function ProgressDashboard({ rollups, phraseStats, phrases, byLesson, les
                     />
                   )}
                   <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
-                    <p className="line-clamp-2 text-xs font-medium leading-tight">
+                    <p className="line-clamp-2 text-xs leading-tight font-medium">
                       {lesson.title}
                     </p>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">

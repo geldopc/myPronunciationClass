@@ -124,13 +124,10 @@ function LessonSwitcher({ activeLessonId }: { activeLessonId: string }) {
 
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-30"
-            onClick={() => setOpen(false)}
-          />
+          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
           <ul
             role="listbox"
-            className="absolute left-0 top-full z-40 mt-1 w-64 overflow-hidden rounded-lg border border-border bg-background shadow-lg"
+            className="absolute top-full left-0 z-40 mt-1 w-64 overflow-hidden rounded-lg border border-border bg-background shadow-lg"
           >
             {lessons.map((lesson) => (
               <li key={lesson.id}>
