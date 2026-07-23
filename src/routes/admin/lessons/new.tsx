@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 
+import { TopBar } from "@/components/TopBar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -73,11 +74,13 @@ function NewLessonPage() {
   }
 
   return (
-    <main
-      id="new-lesson-page"
-      className="container mx-auto max-w-lg space-y-6 px-4 py-8"
-    >
-      <h1 className="text-2xl font-semibold">New lesson</h1>
+    <>
+      <TopBar backTo="/admin" />
+      <main
+        id="new-lesson-page"
+        className="container mx-auto max-w-lg space-y-6 px-4 py-8"
+      >
+        <h1 className="text-2xl font-semibold">New lesson</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
@@ -106,6 +109,7 @@ function NewLessonPage() {
           {submitting ? "Creating…" : "Add lesson"}
         </Button>
       </form>
-    </main>
+      </main>
+    </>
   )
 }

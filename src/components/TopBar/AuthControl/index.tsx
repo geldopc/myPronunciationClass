@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router"
-import { LogOutIcon, TrendingUpIcon } from "lucide-react"
+import { LogOutIcon, Settings2Icon, TrendingUpIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -113,6 +113,12 @@ export function AuthControl() {
           <Link to="/progress">
             <TrendingUpIcon />
             My progress
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/admin">
+            <Settings2Icon />
+            Admin
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => void signOut()}>

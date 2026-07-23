@@ -1,6 +1,5 @@
 import { useMemo } from "react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ProgressDashboard } from "@/components/ProgressDashboard"
 import { ShareControl } from "@/components/ShareControl"
 import { useLesson } from "@/hooks/useLesson"
@@ -68,16 +67,7 @@ export function ProgressView() {
       id="progress-view"
       className="container mx-auto max-w-5xl px-4 py-6 pb-16"
     >
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Avatar size="lg">
-            <AvatarImage src={user.avatarUrl} alt={user.displayName} />
-            <AvatarFallback>
-              {(user.displayName.slice(0, 1) || "?").toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <h2 className="text-xl font-semibold">{user.displayName}</h2>
-        </div>
+      <div className="mb-6 flex items-center justify-end">
         <ShareControl rollups={rollups} />
       </div>
 

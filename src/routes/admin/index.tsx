@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Pencil, Trash2 } from "lucide-react"
 
+import { TopBar } from "@/components/TopBar"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -78,10 +80,12 @@ function AdminDashboard() {
   }
 
   return (
-    <main
-      id="admin-dashboard"
-      className="container mx-auto max-w-4xl space-y-10 px-4 py-8"
-    >
+    <>
+      <TopBar />
+      <main
+        id="admin-dashboard"
+        className="container mx-auto max-w-4xl space-y-10 px-4 py-8"
+      >
       <h1 className="text-2xl font-semibold">Admin</h1>
 
       {/* Lessons panel */}
@@ -224,5 +228,6 @@ function AdminDashboard() {
         </form>
       </section>
     </main>
+    </>
   )
 }
