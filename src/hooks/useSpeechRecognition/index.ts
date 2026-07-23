@@ -73,8 +73,7 @@ export function useSpeechRecognition({
 
     recognition.onerror = (event) => {
       setError(
-        recognitionErrorMessages[event.error] ??
-          "Não foi possível reconhecer a fala."
+        recognitionErrorMessages[event.error] ?? "Could not recognize speech."
       )
       finish()
     }
@@ -86,7 +85,7 @@ export function useSpeechRecognition({
       onRecordingChange(true)
       recognition.start()
     } catch {
-      setError("A gravação já está sendo iniciada. Tente novamente.")
+      setError("Recording is already starting. Please try again.")
       finish()
     }
   }

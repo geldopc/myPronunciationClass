@@ -9,8 +9,8 @@ import {
   RadialBarChart,
   RadialBar,
   Cell,
+  ResponsiveContainer,
 } from "recharts"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { Phrase } from "@/lib/lessons"
 import type { PhraseStat, Rollups } from "@/lib/progress-model"
 
@@ -18,8 +18,6 @@ type Props = {
   rollups: Rollups
   phraseStats: PhraseStat[]
   phrases: Phrase[]
-  displayName: string
-  avatarUrl: string
 }
 
 type ChartEntry = {
@@ -57,19 +55,20 @@ function CustomTooltip({
 }
 
 function DonutChart({ value }: { value: number }) {
+  const size = 128
+  const cx = size / 2
   const donutEndAngle = 90 - (360 * value) / 100
 
   return (
-    <div className="relative mx-auto" style={{ width: 192, height: 192 }}>
-      {/* Full grey background ring */}
+    <div className="relative" style={{ width: size, height: size }}>
       <div className="absolute inset-0">
         <RadialBarChart
-          width={192}
-          height={192}
-          cx={96}
-          cy={96}
-          innerRadius={55}
-          outerRadius={85}
+          width={size}
+          height={size}
+          cx={cx}
+          cy={cx}
+          innerRadius={36}
+          outerRadius={56}
           startAngle={90}
           endAngle={-270}
           data={[{ value: 1 }]}
@@ -81,16 +80,15 @@ function DonutChart({ value }: { value: number }) {
           />
         </RadialBarChart>
       </div>
-      {/* Progress arc (only rendered when there is progress) */}
       {value > 0 && (
         <div className="absolute inset-0">
           <RadialBarChart
-            width={192}
-            height={192}
-            cx={96}
-            cy={96}
-            innerRadius={55}
-            outerRadius={85}
+            width={size}
+            height={size}
+            cx={cx}
+            cy={cx}
+            innerRadius={36}
+            outerRadius={56}
             startAngle={90}
             endAngle={donutEndAngle}
             data={[{ value: 1 }]}
@@ -99,21 +97,14 @@ function DonutChart({ value }: { value: number }) {
           </RadialBarChart>
         </div>
       )}
-      {/* Center label */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold">{value}%</span>
+        <span className="text-xl font-bold">{value}%</span>
       </div>
     </div>
   )
 }
 
-export function ProgressDashboard({
-  rollups,
-  phraseStats,
-  phrases,
-  displayName,
-  avatarUrl,
-}: Props) {
+export function ProgressDashboard({ rollups, phraseStats, phrases }: Props) {
   const { chartData, top5, worst5 } = useMemo(() => {
     const data: ChartEntry[] = phrases.map((phrase) => {
       const stat = phraseStats.find((s) => s.phraseId === phrase.id)
@@ -137,25 +128,16 @@ export function ProgressDashboard({
   }, [phrases, phraseStats])
 
   return (
-    <div className="space-y-8">
-      {/* Header with avatar and display name */}
-      <div className="flex items-center gap-3">
-        <Avatar size="lg">
-          <AvatarImage src={avatarUrl} alt={displayName} />
-          <AvatarFallback>
-            {(displayName.slice(0, 1) || "?").toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <h2 className="text-xl font-semibold">{displayName}</h2>
-      </div>
-
-      {/* Desktop: donut + tiles side by side; Mobile: stacked */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-        <div className="flex flex-col items-center gap-2 sm:shrink-0">
-          <h3 className="font-semibold">Overall Progress</h3>
+    <div id="progress-dashboard" className="space-y-5">
+      {/* Metrics row: donut + stat tiles */}
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-center gap-1 sm:shrink-0">
+          <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            Overall
+          </span>
           <DonutChart value={rollups.completion} />
         </div>
-        <dl className="grid flex-1 grid-cols-3 gap-4 text-center">
+        <dl className="grid flex-1 grid-cols-3 gap-3 text-center">
           <div className="flex flex-col-reverse rounded-lg border border-border bg-card p-4">
             <dt className="text-sm text-muted-foreground">Completion</dt>
             <dd className="text-2xl font-bold">{rollups.completion}%</dd>
@@ -171,24 +153,22 @@ export function ProgressDashboard({
         </dl>
       </div>
 
-      {/* Score bar chart — scrollable on mobile */}
+      {/* Score bar chart — responsive */}
       <div>
-        <h3 className="mb-2 font-semibold">Score by Phrase</h3>
-        <div className="overflow-x-auto">
+        <h3 className="mb-2 text-sm font-semibold">Score by Phrase</h3>
+        <ResponsiveContainer width="100%" height={160}>
           <BarChart
-            width={720}
-            height={220}
             data={chartData}
-            margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+            margin={{ top: 4, right: 8, left: -24, bottom: 4 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis
               dataKey="phraseId"
-              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
             />
             <YAxis
               domain={[0, 100]}
-              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
             />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="bestScore">
@@ -197,17 +177,17 @@ export function ProgressDashboard({
               ))}
             </Bar>
           </BarChart>
-        </div>
+        </ResponsiveContainer>
       </div>
 
       {/* Top 5 / Worst 5 phrase lists */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <h3 className="mb-3 font-semibold">Top 5 Phrases</h3>
+          <h3 className="mb-2 text-sm font-semibold">Top 5 Phrases</h3>
           {top5.length === 0 ? (
             <p className="text-sm text-muted-foreground">No data yet</p>
           ) : (
-            <ol className="space-y-2">
+            <ol className="space-y-1.5">
               {top5.map((stat) => (
                 <li
                   key={stat.phraseId}
@@ -223,11 +203,11 @@ export function ProgressDashboard({
           )}
         </div>
         <div>
-          <h3 className="mb-3 font-semibold">Worst 5 Phrases</h3>
+          <h3 className="mb-2 text-sm font-semibold">Worst 5 Phrases</h3>
           {worst5.length === 0 ? (
             <p className="text-sm text-muted-foreground">No data yet</p>
           ) : (
-            <ol className="space-y-2">
+            <ol className="space-y-1.5">
               {worst5.map((stat) => (
                 <li
                   key={stat.phraseId}
