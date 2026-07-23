@@ -1,10 +1,14 @@
 import {
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   orderBy,
   query,
+  serverTimestamp,
+  setDoc,
 } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import {
@@ -65,4 +69,40 @@ export async function fetchPhrases(lessonId: string): Promise<Phrase[]> {
     id: d.id,
     ...(d.data() as Omit<Phrase, "id">),
   }))
+}
+
+export async function createLesson(data: {
+  title: string
+  youtubeId: string
+  thumbnailUrl: string
+  createdBy: string
+}): Promise<string> {
+  if (USE_MOCK) return `mock-lesson-${Date.now()}`
+  const ref = await addDoc(collection(db, "lessons"), {
+    ...data,
+    createdAt: serverTimestamp(),
+  })
+  return ref.id
+}
+
+export async function upsertPhrase(
+  lessonId: string,
+  phraseId: string | null,
+  data: Omit<Phrase, "id">
+): Promise<string> {
+  if (USE_MOCK) return phraseId ?? `mock-phrase-${Date.now()}`
+  if (phraseId) {
+    await setDoc(doc(db, "lessons", lessonId, "phrases", phraseId), data)
+    return phraseId
+  }
+  const ref = await addDoc(collection(db, "lessons", lessonId, "phrases"), data)
+  return ref.id
+}
+
+export async function deletePhrase(
+  lessonId: string,
+  phraseId: string
+): Promise<void> {
+  if (USE_MOCK) return
+  await deleteDoc(doc(db, "lessons", lessonId, "phrases", phraseId))
 }

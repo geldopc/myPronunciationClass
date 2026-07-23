@@ -30,7 +30,10 @@ function generateInitialStats(): PhraseStat[] {
   return stats
 }
 
-export function mockRecordAttempt(_uid: string, attempt: Attempt): Promise<void> {
+export function mockRecordAttempt(
+  _uid: string,
+  attempt: Attempt
+): Promise<void> {
   const stats = loadStats()
   const existing = stats.find(
     (s) => s.lessonId === attempt.lessonId && s.phraseId === attempt.phraseId
@@ -64,10 +67,13 @@ export function mockReadPhraseStats(
 }
 
 export function mockReadPracticeDays(_uid: string): Promise<string[]> {
-  const days = Array.from({ length: faker.number.int({ min: 3, max: 12 }) }, (_, i) => {
-    const d = new Date()
-    d.setDate(d.getDate() - i)
-    return d.toISOString().slice(0, 10)
-  })
+  const days = Array.from(
+    { length: faker.number.int({ min: 3, max: 12 }) },
+    (_, i) => {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      return d.toISOString().slice(0, 10)
+    }
+  )
   return Promise.resolve(days)
 }

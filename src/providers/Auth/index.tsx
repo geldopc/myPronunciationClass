@@ -11,12 +11,14 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true"
 
 export type AuthUser = {
   uid: string
+  email: string
   displayName: string
   avatarUrl: string
 }
 
 const MOCK_USER: AuthUser = {
   uid: "mock-user-001",
+  email: "geldopc@gmail.com",
   displayName: "Dev User",
   avatarUrl: "",
 }
@@ -45,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         firebaseUser
           ? {
               uid: firebaseUser.uid,
+              email: firebaseUser.email ?? "",
               displayName: firebaseUser.displayName ?? "Aluno",
               avatarUrl: firebaseUser.photoURL ?? "",
             }

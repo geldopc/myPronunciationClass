@@ -119,5 +119,13 @@ export function useYouTubePlayer(
     }
   }, [])
 
-  return { playSegment, pause, setRate, ready }
+  const getCurrentTime = useCallback((): number => {
+    return playerRef.current?.getCurrentTime() ?? 0
+  }, [])
+
+  const getDuration = useCallback((): number => {
+    return playerRef.current?.getDuration() ?? 0
+  }, [])
+
+  return { playSegment, pause, setRate, getCurrentTime, getDuration, ready }
 }
