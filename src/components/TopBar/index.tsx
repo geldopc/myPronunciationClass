@@ -81,13 +81,6 @@ export function TopBar({
     >
       <div className="container mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
-          <Link
-            to="/lessons"
-            aria-label="myPronunciationClass — go to lessons"
-            className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            <Logo className="h-9 w-auto" />
-          </Link>
           {backTo && (
             <Button
               variant="ghost"
@@ -100,6 +93,13 @@ export function TopBar({
               </Link>
             </Button>
           )}
+          <Link
+            to="/lessons"
+            aria-label="myPronunciationClass — go to lessons"
+            className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          >
+            <Logo className="h-9 w-auto" />
+          </Link>
           {lessonId && <LessonSwitcher activeLessonId={lessonId} />}
         </div>
         <div className="flex items-center gap-2">
