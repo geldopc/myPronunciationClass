@@ -1,9 +1,15 @@
-import { ArrowLeftIcon } from "lucide-react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 
 import { ClipEditor } from "@/components/ClipEditor"
 import { TopBar } from "@/components/TopBar"
-import { Button } from "@/components/ui/button"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { useLesson } from "@/hooks/useLesson"
 
 export const Route = createFileRoute("/admin/lessons/$lessonId")({
@@ -49,13 +55,20 @@ function ClipEditorPage() {
         id="clip-editor-page"
         className="container mx-auto max-w-5xl space-y-6 px-4 py-8"
       >
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
-            <Link to="/admin">
-              <ArrowLeftIcon className="h-4 w-4" />
-              Admin
-            </Link>
-          </Button>
+        <div className="space-y-1">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/admin">Admin</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Clip Editor</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <h1 className="text-xl font-semibold">{lesson.title}</h1>
         </div>
         <ClipEditor lessonId={lessonId} videoId={lesson.youtubeId} />

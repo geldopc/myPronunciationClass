@@ -1,8 +1,15 @@
 import { useState } from "react"
-import { ArrowLeftIcon } from "lucide-react"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 
 import { TopBar } from "@/components/TopBar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -81,13 +88,20 @@ function NewLessonPage() {
         id="new-lesson-page"
         className="container mx-auto max-w-lg space-y-6 px-4 py-8"
       >
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
-            <Link to="/admin">
-              <ArrowLeftIcon className="h-4 w-4" />
-              Admin
-            </Link>
-          </Button>
+        <div className="space-y-1">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/admin">Admin</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>New lesson</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <h1 className="text-2xl font-semibold">New lesson</h1>
         </div>
 
