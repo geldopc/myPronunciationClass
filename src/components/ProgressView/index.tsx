@@ -48,13 +48,13 @@ function computeByLesson(
     .filter((r) => r.completion > 0 || grouped.has(r.lessonId))
 }
 
-const ACTIVE_LESSON_ID = "friends-s5e14"
-
 export function ProgressView() {
   const { user } = useAuth()
   const { lessons } = useLessons()
-  const { phrases } = useLesson(ACTIVE_LESSON_ID)
-  const { rollups, phraseStats } = useProgress(ACTIVE_LESSON_ID, phrases.length)
+  const activeLessonId =
+    localStorage.getItem("lessonId") ?? lessons[0]?.id ?? ""
+  const { phrases } = useLesson(activeLessonId)
+  const { rollups, phraseStats } = useProgress(activeLessonId, phrases.length)
 
   const byLesson = useMemo(
     () => computeByLesson(lessons, phraseStats),
