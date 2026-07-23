@@ -82,33 +82,33 @@ function NewLessonPage() {
       >
         <h1 className="text-2xl font-semibold">New lesson</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-          <Label htmlFor="lesson-title">Title</Label>
-          <Input
-            id="lesson-title"
-            value={title}
-            placeholder="e.g. Friends S5E14"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <Label htmlFor="lesson-title">Title</Label>
+            <Input
+              id="lesson-title"
+              value={title}
+              placeholder="e.g. Friends S5E14"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="lesson-yt">YouTube URL or ID</Label>
-          <Input
-            id="lesson-yt"
-            value={youtubeInput}
-            placeholder="https://youtube.com/watch?v=… or dQw4w9WgXcQ"
-            onChange={(e) => setYoutubeInput(e.target.value)}
-          />
-        </div>
+          <div className="space-y-1">
+            <Label htmlFor="lesson-yt">YouTube URL or ID</Label>
+            <Input
+              id="lesson-yt"
+              value={youtubeInput}
+              placeholder="https://youtube.com/watch?v=… or dQw4w9WgXcQ"
+              onChange={(e) => setYoutubeInput(e.target.value)}
+            />
+          </div>
 
-        {error && <p className="text-xs text-destructive">{error}</p>}
+          {error && <p className="text-xs text-destructive">{error}</p>}
 
-        <Button type="submit" disabled={submitting}>
-          {submitting ? "Creating…" : "Add lesson"}
-        </Button>
-      </form>
+          <Button type="submit" disabled={submitting}>
+            {submitting ? "Creating…" : "Add lesson"}
+          </Button>
+        </form>
       </main>
     </>
   )
