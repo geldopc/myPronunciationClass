@@ -30,6 +30,8 @@ function parseChangelog(raw: string): ChangelogSection[] {
     })
 }
 
+const sections = parseChangelog(changelogRaw)
+
 export function AboutDialog({
   open,
   onOpenChange,
@@ -37,7 +39,6 @@ export function AboutDialog({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const sections = parseChangelog(changelogRaw)
   const currentVersion = sections[0]?.heading ?? ""
 
   return (
@@ -66,12 +67,10 @@ export function AboutDialog({
                 {section.heading}
               </p>
               <ul className="space-y-1">
-                {section.bullets.map((bullet) => (
-                  <li
-                    key={bullet}
-                    className="text-sm text-muted-foreground before:mr-2 before:content-['·']"
-                  >
-                    {bullet}
+                {section.bullets.map((bullet, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-muted-foreground">
+                    <span aria-hidden="true">·</span>
+                    <span>{bullet}</span>
                   </li>
                 ))}
               </ul>
