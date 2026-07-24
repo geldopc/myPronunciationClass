@@ -1,12 +1,20 @@
+import { useState } from "react"
 import { Link } from "@tanstack/react-router"
-import { LogOutIcon, Settings2Icon, TrendingUpIcon } from "lucide-react"
+import {
+  BookOpenIcon,
+  LogOutIcon,
+  PlusIcon,
+  TrendingUpIcon,
+} from "lucide-react"
 
+import { AboutDialog } from "@/components/AboutDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -14,6 +22,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { useAdmin } from "@/hooks/useAdmin"
 import { useAuth } from "@/providers/Auth"
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -46,6 +55,8 @@ function GoogleIcon({ className }: { className?: string }) {
 
 export function AuthControl() {
   const { user, signInWithGoogle, signOut } = useAuth()
+  const { isAdmin } = useAdmin()
+  const [aboutOpen, setAboutOpen] = useState(false)
 
   if (!user) {
     return (
@@ -93,39 +104,55 @@ export function AuthControl() {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          id="auth-menu-trigger"
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label={user.displayName}
-        >
-          <Avatar className="size-7">
-            <AvatarImage src={user.avatarUrl} alt="" />
-            <AvatarFallback>{user.displayName.slice(0, 1)}</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link to="/progress">
-            <TrendingUpIcon />
-            My progress
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/admin">
-            <Settings2Icon />
-            Admin
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => void signOut()}>
-          <LogOutIcon />
-          Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            id="auth-menu-trigger"
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={user.displayName}
+          >
+            <Avatar className="size-7">
+              <AvatarImage src={user.avatarUrl} alt="" />
+              <AvatarFallback>{user.displayName.slice(0, 1)}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link to="/lessons">
+              <BookOpenIcon />
+              Lessons
+            </Link>
+          </DropdownMenuItem>
+          {isAdmin && (
+            <DropdownMenuItem asChild>
+              <Link to="/admin/lessons/new">
+                <PlusIcon />
+                New lesson
+              </Link>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem asChild>
+            <Link to="/progress">
+              <TrendingUpIcon />
+              My progress
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => void signOut()}>
+            <LogOutIcon />
+            Sign out
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setAboutOpen(true)}>
+            About
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+    </>
   )
 }
