@@ -1,20 +1,20 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { afterEach, describe, expect, it, vi } from "vitest"
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle"
+import { DifficultyToggle } from "@/components/TopBar/DifficultyToggle";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 describe("DifficultyToggle", () => {
-  it("marks the active option and emits changes", () => {
-    const onChange = vi.fn()
-    render(<DifficultyToggle value="easy" onChange={onChange} />)
+	it("marks the active option and emits changes", () => {
+		const onChange = vi.fn();
+		render(<DifficultyToggle value="easy" onChange={onChange} />);
 
-    const easy = screen.getByRole("radio", { name: /Easy/ })
-    expect(easy.getAttribute("aria-checked")).toBe("true")
+		const easy = screen.getByRole("radio", { name: /Easy/ });
+		expect(easy.getAttribute("aria-checked")).toBe("true");
 
-    fireEvent.click(screen.getByRole("radio", { name: /Hard/ }))
-    expect(onChange).toHaveBeenCalledWith("hard")
-  })
-})
+		fireEvent.click(screen.getByRole("radio", { name: /Hard/ }));
+		expect(onChange).toHaveBeenCalledWith("hard");
+	});
+});

@@ -1,29 +1,29 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from "@testing-library/react"
-import { afterEach, describe, expect, it } from "vitest"
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
-import { ProgressStats } from "@/components/ProgressStats"
+import { ProgressStats } from "@/components/ProgressStats";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 describe("ProgressStats", () => {
-  it("renders completion, average and streak from rollups", () => {
-    render(
-      <ProgressStats
-        displayName="Ada"
-        avatarUrl=""
-        phrases={[]}
-        rollups={{
-          completion: 50,
-          average: 80,
-          streak: 3,
-          bestScoreByPhrase: { 1: 90 },
-          byLesson: [],
-        }}
-      />
-    )
-    expect(screen.getByText(/80/)).toBeTruthy()
-    expect(screen.getByText(/^3$/)).toBeTruthy()
-    expect(screen.getByText("Ada")).toBeTruthy()
-  })
-})
+	it("renders completion, average and streak from rollups", () => {
+		render(
+			<ProgressStats
+				displayName="Ada"
+				avatarUrl=""
+				phrases={[]}
+				rollups={{
+					completion: 50,
+					average: 80,
+					streak: 3,
+					bestScoreByPhrase: { 1: 90 },
+					byLesson: [],
+				}}
+			/>
+		);
+		expect(screen.getByText(/80/)).toBeTruthy();
+		expect(screen.getByText(/^3$/)).toBeTruthy();
+		expect(screen.getByText("Ada")).toBeTruthy();
+	});
+});

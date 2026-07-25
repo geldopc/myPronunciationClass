@@ -1,19 +1,19 @@
-import { defineConfig } from "vite"
+import tailwindcss from "@tailwindcss/vite"
 import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
-import tailwindcss from "@tailwindcss/vite"
+import { defineConfig } from "vite"
 
 const config = defineConfig(({ command }) => ({
-  base: command === "build" ? "/myPronunciationClass/" : "/",
-  server: { port: 3000 },
-  resolve: { tsconfigPaths: true },
-  plugins: [
-    devtools(),
-    tailwindcss(),
-    tanstackStart({ spa: { enabled: true } }),
-    viteReact(),
-  ],
+	base: command === "build" ? "/myPronunciationClass/" : "/",
+	server: { port: 3000 },
+	resolve: { tsconfigPaths: true },
+	plugins: [
+		devtools(),
+		tailwindcss(),
+		tanstackStart({ spa: { enabled: true } }),
+		viteReact(),
+	],
 }))
 
 export default config

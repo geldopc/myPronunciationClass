@@ -1,13 +1,13 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router"
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { AdminGuard } from "@/components/AdminGuard"
+import { AdminGuard } from "@/components/AdminGuard";
 
-export const Route = createFileRoute("/admin")({ component: AdminLayout })
+export const Route = createFileRoute("/admin")({ component: AdminLayout });
 
 function AdminLayout() {
-  return (
-    <AdminGuard>
-      <Outlet />
-    </AdminGuard>
-  )
+	return (
+		<AdminGuard>
+			<Outlet />
+		</AdminGuard>
+	);
 }
