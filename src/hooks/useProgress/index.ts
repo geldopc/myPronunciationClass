@@ -17,6 +17,7 @@ const EMPTY: Rollups = {
 	bestScoreByPhrase: {},
 	byLesson: [],
 };
+const EMPTY_STATS: PhraseStat[] = [];
 
 export function useProgress(lessonId?: string, phraseTotal?: number) {
 	const { user } = useAuth();
@@ -27,7 +28,7 @@ export function useProgress(lessonId?: string, phraseTotal?: number) {
 	const refresh = useCallback(async () => {
 		if (!user) {
 			setRollups(EMPTY);
-			setPhraseStats([]);
+			setPhraseStats(EMPTY_STATS);
 			return;
 		}
 		setLoading(true);

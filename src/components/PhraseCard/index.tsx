@@ -9,7 +9,7 @@ import {
 	PlayIcon,
 	SquareIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScoreReveal } from "@/components/PhraseCard/ScoreReveal";
 import { Button } from "@/components/ui/button";
 import {
@@ -103,10 +103,13 @@ export function PhraseCard({
 		start(phrase.text);
 	}
 
+	const toggleRecordingRef = useRef(toggleRecording);
+	toggleRecordingRef.current = toggleRecording;
+
 	useEffect(() => {
-		registerToggle(phrase.id, toggleRecording);
+		registerToggle(phrase.id, () => toggleRecordingRef.current());
 		return () => registerToggle(phrase.id, null);
-	});
+	}, [phrase.id, registerToggle]);
 
 	useEffect(() => {
 		if (!showHint || !flat) return;

@@ -41,10 +41,10 @@ export function ListeningSpeakingApp({ lessonId }: { lessonId: string }) {
 
 	// Set first phrase once lesson phrases load
 	useEffect(() => {
-		if (phrases.length > 0 && currentPhraseId === "") {
-			setCurrentPhraseId(phrases[0].id);
+		if (phrases.length > 0) {
+			setCurrentPhraseId((prev) => (prev === "" ? phrases[0].id : prev));
 		}
-	}, [phrases, currentPhraseId]);
+	}, [phrases]);
 
 	const [videoPlayingId, setVideoPlayingId] = useState<string | null>(null);
 	const toggleRegistry = useRef(new Map<string, () => void>());
