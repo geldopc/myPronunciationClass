@@ -13,20 +13,8 @@ const config = defineConfig(({ command }) => ({
 				"./src/routes/__root.tsx",
 				"./src/routes/lessons/$lessonId.tsx",
 				"./src/components/ListeningSpeakingApp/index.tsx",
-				"./src/lib/firebase.ts",
 			],
 		},
-	},
-	optimizeDeps: {
-		include: [
-			"firebase/app",
-			"firebase/auth",
-			"firebase/firestore",
-			"recharts",
-			"react",
-			"react-dom",
-			"@tanstack/react-router",
-		],
 	},
 	resolve: { tsconfigPaths: true },
 	plugins: [
