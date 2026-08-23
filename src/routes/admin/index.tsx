@@ -50,10 +50,10 @@ function AdminDashboard() {
 		}
 	}
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: load once on mount
 	useEffect(() => {
-		load();
-		// biome-ignore lint/correctness/useExhaustiveDependencies: load is a stable useCallback
-	}, [load]);
+		void load();
+	}, []);
 
 	async function handleInvite(e: React.FormEvent) {
 		e.preventDefault();
