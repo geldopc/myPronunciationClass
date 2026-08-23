@@ -10,6 +10,7 @@ import {
 	Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Timeline } from "@/components/ClipEditor/Timeline";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -110,7 +111,6 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	const [selectedPhraseId, setSelectedPhraseId] = useState<string | null>(null);
 	const [form, setForm] = useState<FormData>(EMPTY_FORM);
 	const [saving, setSaving] = useState(false);
-	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [captions, setCaptions] = useState<CaptionCue[]>([]);
@@ -177,15 +177,18 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	function handleMarkEnd() {
 		const end = parseFloat(getCurrentTime().toFixed(3));
 		setForm((prev) => {
-			const autoText =
-				!prev.text.trim() && captions.length > 0
-					? captions
-							.filter((c) => c.start < end && c.end > prev.startTime)
-							.map((c) => c.text)
-							.join(" ")
-							.trim()
-					: prev.text;
-			return { ...prev, endTime: end, text: autoText };
+			if (!prev.text.trim() && captions.length > 0) {
+				const autoText = captions
+					.filter((c) => c.start < end && c.end > prev.startTime)
+					.map((c) => c.text)
+					.join(" ")
+					.trim();
+				if (autoText) {
+					toast.info("Texto capturado da legenda");
+					return { ...prev, endTime: end, text: autoText };
+				}
+			}
+			return { ...prev, endTime: end };
 		});
 	}
 
@@ -210,12 +213,13 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 			setError("End time must be after start time.");
 			return;
 		}
-		setSaving(true);
 		setError(null);
+		const savedEndTime = form.endTime;
+		const savedOrder = form.order;
+		const wasNew = !selectedPhraseId;
+		setSaving(true);
+		const toastId = toast.loading("Salvando corte…");
 		try {
-			const savedEndTime = form.endTime;
-			const savedOrder = form.order;
-			const wasNew = !selectedPhraseId;
 			await upsertPhrase(lessonId, selectedPhraseId, {
 				text: form.text,
 				speaker: form.speaker,
@@ -225,8 +229,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 				order: form.order,
 			});
 			await loadPhrases();
-			setSaveSuccess(true);
-			setTimeout(() => setSaveSuccess(false), 1500);
+			toast.success("Corte salvo", { id: toastId });
 			if (wasNew) {
 				setSelectedPhraseId(null);
 				setForm({
@@ -239,6 +242,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 				});
 			}
 		} catch {
+			toast.error("Erro ao salvar. Tente novamente.", { id: toastId });
 			setError("Failed to save. Try again.");
 		} finally {
 			setSaving(false);
@@ -575,7 +579,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 							onClick={handleSave}
 						>
 							<Save />
-							{saving ? "Saving…" : saveSuccess ? "Saved ✓" : "Save"}
+							{saving ? "Salvando…" : "Salvar"}
 						</Button>
 						{selectedPhraseId && (
 							<Button
