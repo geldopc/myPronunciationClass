@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
 	BookOpenIcon,
+	LayoutDashboardIcon,
 	LogOutIcon,
 	PlusIcon,
 	TrendingUpIcon,
@@ -128,12 +129,20 @@ export function AuthControl() {
 						</Link>
 					</DropdownMenuItem>
 					{isAdmin && (
-						<DropdownMenuItem asChild>
-							<Link to="/admin/lessons/new">
-								<PlusIcon />
-								New lesson
-							</Link>
-						</DropdownMenuItem>
+						<>
+							<DropdownMenuItem asChild>
+								<Link to="/admin">
+									<LayoutDashboardIcon />
+									Admin
+								</Link>
+							</DropdownMenuItem>
+							<DropdownMenuItem asChild>
+								<Link to="/admin/lessons/new">
+									<PlusIcon />
+									New lesson
+								</Link>
+							</DropdownMenuItem>
+						</>
 					)}
 					<DropdownMenuItem asChild>
 						<Link to="/progress">
