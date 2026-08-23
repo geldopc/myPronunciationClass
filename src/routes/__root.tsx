@@ -55,8 +55,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body suppressHydrationWarning>
 				<ThemeProvider>
 					<AuthProvider>{children}</AuthProvider>
+					<Toaster richColors position="bottom-right" />
 				</ThemeProvider>
-				<Toaster richColors position="bottom-right" />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
