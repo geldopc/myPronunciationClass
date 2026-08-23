@@ -17,6 +17,37 @@ import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
 import type { Phrase } from "@/lib/lessons";
 import { deletePhrase, fetchPhrases, upsertPhrase } from "@/lib/lessons";
 
+type CaptionCue = { start: number; end: number; text: string };
+
+async function fetchCaptions(videoId: string): Promise<CaptionCue[]> {
+	try {
+		const url = `https://www.youtube.com/api/timedtext?v=${videoId}&lang=en&fmt=json3`;
+		const res = await fetch(url);
+		if (!res.ok) return [];
+		const data: {
+			events?: Array<{
+				tStartMs?: number;
+				dDurationMs?: number;
+				segs?: Array<{ utf8?: string }>;
+			}>;
+		} = await res.json();
+		return (data.events ?? [])
+			.filter((e) => e.segs)
+			.map((e) => ({
+				start: (e.tStartMs ?? 0) / 1000,
+				end: ((e.tStartMs ?? 0) + (e.dDurationMs ?? 0)) / 1000,
+				text: (e.segs ?? [])
+					.map((s) => s.utf8 ?? "")
+					.join("")
+					.replace(/\n/g, " ")
+					.trim(),
+			}))
+			.filter((c) => c.text);
+	} catch {
+		return [];
+	}
+}
+
 type FormData = {
 	text: string;
 	speaker: string;
@@ -79,6 +110,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	const [saving, setSaving] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [captions, setCaptions] = useState<CaptionCue[]>([]);
 
 	const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -95,6 +127,10 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	useEffect(() => {
 		loadPhrases();
 	}, [loadPhrases]);
+
+	useEffect(() => {
+		fetchCaptions(videoId).then(setCaptions);
+	}, [videoId]);
 
 	useEffect(() => {
 		if (ready) setDuration(getDuration());
@@ -136,10 +172,18 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	}
 
 	function handleMarkEnd() {
-		setForm((prev) => ({
-			...prev,
-			endTime: parseFloat(getCurrentTime().toFixed(3)),
-		}));
+		const end = parseFloat(getCurrentTime().toFixed(3));
+		setForm((prev) => {
+			const autoText =
+				!prev.text.trim() && captions.length > 0
+					? captions
+							.filter((c) => c.start < end && c.end > prev.startTime)
+							.map((c) => c.text)
+							.join(" ")
+							.trim()
+					: prev.text;
+			return { ...prev, endTime: end, text: autoText };
+		});
 	}
 
 	function handlePreview() {
@@ -166,6 +210,9 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 		setSaving(true);
 		setError(null);
 		try {
+			const savedEndTime = form.endTime;
+			const savedOrder = form.order;
+			const wasNew = !selectedPhraseId;
 			await upsertPhrase(lessonId, selectedPhraseId, {
 				text: form.text,
 				speaker: form.speaker,
@@ -175,6 +222,17 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 				order: form.order,
 			});
 			await loadPhrases();
+			if (wasNew) {
+				setSelectedPhraseId(null);
+				setForm({
+					text: "",
+					speaker: "",
+					pronunciationHint: "",
+					startTime: savedEndTime,
+					endTime: 0,
+					order: savedOrder + 1,
+				});
+			}
 		} catch {
 			setError("Failed to save. Try again.");
 		} finally {
