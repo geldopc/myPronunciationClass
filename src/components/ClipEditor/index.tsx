@@ -1,6 +1,7 @@
 import {
 	ArrowLeftToLine,
 	ArrowRightToLine,
+	Download,
 	ListVideo,
 	Pause,
 	Play,
@@ -16,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
 import type { Phrase } from "@/lib/lessons";
 import { deletePhrase, fetchPhrases, upsertPhrase } from "@/lib/lessons";
+import { exportPhrases } from "@/lib/mock/store";
 
 type CaptionCue = { start: number; end: number; text: string };
 
@@ -108,6 +110,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	const [selectedPhraseId, setSelectedPhraseId] = useState<string | null>(null);
 	const [form, setForm] = useState<FormData>(EMPTY_FORM);
 	const [saving, setSaving] = useState(false);
+	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [captions, setCaptions] = useState<CaptionCue[]>([]);
@@ -222,6 +225,8 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 				order: form.order,
 			});
 			await loadPhrases();
+			setSaveSuccess(true);
+			setTimeout(() => setSaveSuccess(false), 1500);
 			if (wasNew) {
 				setSelectedPhraseId(null);
 				setForm({
@@ -238,6 +243,18 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 		} finally {
 			setSaving(false);
 		}
+	}
+
+	function handleExportJSON() {
+		const data = exportPhrases();
+		const json = JSON.stringify(data, null, 2);
+		const blob = new Blob([json], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `${lessonId}-phrases.json`;
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 
 	async function handleDelete() {
@@ -357,16 +374,29 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 							<ListVideo className="h-3.5 w-3.5" />
 							{phrases.length} phrase{phrases.length !== 1 ? "s" : ""}
 						</p>
-						<Button
-							id="clip-editor-new"
-							size="sm"
-							variant="outline"
-							className="h-7 gap-1 px-2 text-xs"
-							onClick={newPhrase}
-						>
-							<Plus className="h-3.5 w-3.5" />
-							New phrase
-						</Button>
+						<div className="flex items-center gap-1">
+							<Button
+								id="clip-editor-export"
+								size="sm"
+								variant="ghost"
+								className="h-7 gap-1 px-2 text-xs"
+								onClick={handleExportJSON}
+								title="Download phrases as JSON"
+							>
+								<Download className="h-3.5 w-3.5" />
+								JSON
+							</Button>
+							<Button
+								id="clip-editor-new"
+								size="sm"
+								variant="outline"
+								className="h-7 gap-1 px-2 text-xs"
+								onClick={newPhrase}
+							>
+								<Plus className="h-3.5 w-3.5" />
+								New phrase
+							</Button>
+						</div>
 					</div>
 
 					<div className="max-h-56 overflow-y-auto rounded-md border border-border">
@@ -545,7 +575,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 							onClick={handleSave}
 						>
 							<Save />
-							{saving ? "Saving…" : "Save"}
+							{saving ? "Saving…" : saveSuccess ? "Saved ✓" : "Save"}
 						</Button>
 						{selectedPhraseId && (
 							<Button

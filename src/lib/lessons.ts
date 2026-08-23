@@ -18,6 +18,7 @@ import {
 	mockFetchLessons,
 	mockFetchPhrases,
 } from "@/lib/mock/lessons";
+import { mockDeletePhrase, mockUpsertPhrase } from "@/lib/mock/store";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -94,7 +95,7 @@ export async function upsertPhrase(
 	phraseId: string | null,
 	data: Omit<Phrase, "id">
 ): Promise<string> {
-	if (USE_MOCK) return phraseId ?? `mock-phrase-${Date.now()}`;
+	if (USE_MOCK) return mockUpsertPhrase(phraseId, data);
 	if (phraseId) {
 		await setDoc(doc(db, "lessons", lessonId, "phrases", phraseId), data);
 		return phraseId;
@@ -111,7 +112,10 @@ export async function deletePhrase(
 	lessonId: string,
 	phraseId: string
 ): Promise<void> {
-	if (USE_MOCK) return;
+	if (USE_MOCK) {
+		mockDeletePhrase(phraseId);
+		return;
+	}
 	await deleteDoc(doc(db, "lessons", lessonId, "phrases", phraseId));
 	await updateDoc(doc(db, "lessons", lessonId), { phraseCount: increment(-1) });
 }
