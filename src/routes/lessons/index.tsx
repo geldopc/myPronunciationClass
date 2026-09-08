@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 import { LessonCard } from "@/components/LessonCard";
-import { TopBar } from "@/components/TopBar";
+import { SideNav } from "@/components/SideNav";
 import { useLessons } from "@/hooks/useLessons";
 import { useProgress } from "@/hooks/useProgress";
 import type { Lesson } from "@/lib/lessons";
@@ -52,11 +52,11 @@ function LessonsPage() {
 	}
 
 	return (
-		<>
-			<TopBar />
+		<div className="flex min-h-screen flex-col lg:flex-row">
+			<SideNav />
 			<main
 				id="lessons-gallery"
-				className="w-full max-w-5xl px-4 py-8 pb-16 sm:px-6 lg:px-8"
+				className="w-full min-w-0 max-w-5xl flex-1 px-4 py-8 pb-16 sm:px-6 lg:px-8"
 			>
 				<h1 className="mb-6 text-2xl font-semibold">Lessons</h1>
 
@@ -91,6 +91,6 @@ function LessonsPage() {
 					</div>
 				)}
 			</main>
-		</>
+		</div>
 	);
 }

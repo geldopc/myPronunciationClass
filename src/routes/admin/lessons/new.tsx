@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { TopBar } from "@/components/TopBar";
+import { SideNav } from "@/components/SideNav";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -82,11 +82,11 @@ function NewLessonPage() {
 	}
 
 	return (
-		<>
-			<TopBar />
+		<div className="flex min-h-screen flex-col lg:flex-row">
+			<SideNav />
 			<main
 				id="new-lesson-page"
-				className="w-full max-w-lg space-y-6 px-4 py-8 sm:px-6 lg:px-8"
+				className="w-full min-w-0 max-w-lg flex-1 space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="space-y-1">
 					<Breadcrumb>
@@ -133,6 +133,6 @@ function NewLessonPage() {
 					</Button>
 				</form>
 			</main>
-		</>
+		</div>
 	);
 }

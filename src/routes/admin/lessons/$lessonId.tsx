@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { ClipEditor } from "@/components/ClipEditor";
-import { TopBar } from "@/components/TopBar";
+import { SideNav } from "@/components/SideNav";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -22,38 +22,38 @@ function ClipEditorPage() {
 
 	if (loading) {
 		return (
-			<>
-				<TopBar />
+			<div className="flex min-h-screen flex-col lg:flex-row">
+				<SideNav />
 				<div
 					id="clip-editor-loading"
-					className="flex min-h-screen items-center justify-center"
+					className="flex min-w-0 flex-1 items-center justify-center"
 				>
 					<span className="text-sm text-muted-foreground">Loading…</span>
 				</div>
-			</>
+			</div>
 		);
 	}
 
 	if (!lesson) {
 		return (
-			<>
-				<TopBar />
+			<div className="flex min-h-screen flex-col lg:flex-row">
+				<SideNav />
 				<div
 					id="clip-editor-not-found"
-					className="flex min-h-screen flex-col items-center justify-center gap-4"
+					className="flex min-w-0 flex-1 flex-col items-center justify-center gap-4"
 				>
 					<p className="text-sm text-muted-foreground">Lesson not found.</p>
 				</div>
-			</>
+			</div>
 		);
 	}
 
 	return (
-		<>
-			<TopBar />
+		<div className="flex min-h-screen flex-col lg:flex-row">
+			<SideNav />
 			<main
 				id="clip-editor-page"
-				className="w-full max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8"
+				className="w-full min-w-0 max-w-7xl flex-1 space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="space-y-1">
 					<Breadcrumb>
@@ -73,6 +73,6 @@ function ClipEditorPage() {
 				</div>
 				<ClipEditor lessonId={lessonId} videoId={lesson.youtubeId} />
 			</main>
-		</>
+		</div>
 	);
 }

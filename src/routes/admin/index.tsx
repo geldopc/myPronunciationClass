@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { TopBar } from "@/components/TopBar";
+import { SideNav } from "@/components/SideNav";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,11 +66,11 @@ function AdminDashboard() {
 	}
 
 	return (
-		<>
-			<TopBar />
+		<div className="flex min-h-screen flex-col lg:flex-row">
+			<SideNav />
 			<main
 				id="admin-dashboard"
-				className="w-full max-w-4xl space-y-10 px-4 py-8 sm:px-6 lg:px-8"
+				className="w-full min-w-0 max-w-4xl flex-1 space-y-10 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="space-y-1">
 					<h1 className="text-2xl font-semibold">Admin</h1>
@@ -161,6 +161,6 @@ function AdminDashboard() {
 					</form>
 				</section>
 			</main>
-		</>
+		</div>
 	);
 }

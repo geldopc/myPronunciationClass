@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { TopBar } from "@/components/TopBar";
+import { SideNav } from "@/components/SideNav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,11 +50,11 @@ function ClipsDashboard() {
 	}
 
 	return (
-		<>
-			<TopBar />
+		<div className="flex min-h-screen flex-col lg:flex-row">
+			<SideNav />
 			<main
 				id="clips-dashboard"
-				className="w-full max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8"
+				className="w-full min-w-0 max-w-5xl flex-1 space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="flex items-center justify-between">
 					<h1 className="text-2xl font-semibold">Clips</h1>
@@ -135,6 +135,6 @@ function ClipsDashboard() {
 					</div>
 				)}
 			</main>
-		</>
+		</div>
 	);
 }
