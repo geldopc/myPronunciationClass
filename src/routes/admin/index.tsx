@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Trash2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { TopBar } from "@/components/TopBar";
@@ -14,16 +14,12 @@ import {
 	inviteAdmin,
 	revokeAdmin,
 } from "@/lib/admin";
-import { fetchLessons, fetchPhrases, type Lesson } from "@/lib/lessons";
 import { useAuth } from "@/providers/Auth";
 
 export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
 
-type LessonRow = Lesson & { phraseCount: number };
-
 function AdminDashboard() {
 	const { user } = useAuth();
-	const [lessons, setLessons] = useState<LessonRow[]>([]);
 	const [admins, setAdmins] = useState<AdminRecord[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [inviteEmail, setInviteEmail] = useState("");
@@ -33,18 +29,7 @@ function AdminDashboard() {
 	async function load() {
 		setLoading(true);
 		try {
-			const [rawLessons, rawAdmins] = await Promise.all([
-				fetchLessons(),
-				fetchAdmins(),
-			]);
-			const rows = await Promise.all(
-				rawLessons.map(async (l) => {
-					const phrases = await fetchPhrases(l.id);
-					return { ...l, phraseCount: phrases.length };
-				})
-			);
-			setLessons(rows);
-			setAdmins(rawAdmins);
+			setAdmins(await fetchAdmins());
 		} finally {
 			setLoading(false);
 		}
@@ -87,70 +72,12 @@ function AdminDashboard() {
 				id="admin-dashboard"
 				className="container mx-auto max-w-4xl space-y-10 px-4 py-8"
 			>
-				<h1 className="text-2xl font-semibold">Admin</h1>
-
-				{/* Lessons panel */}
-				<section className="space-y-4">
-					<div className="flex items-center justify-between">
-						<h2 className="text-lg font-medium">Lessons</h2>
-						<Button asChild size="sm">
-							<Link to="/admin/lessons/new">New lesson</Link>
-						</Button>
-					</div>
-
-					{loading ? (
-						<p className="text-sm text-muted-foreground">Loading…</p>
-					) : lessons.length === 0 ? (
-						<p className="text-sm text-muted-foreground">No lessons yet.</p>
-					) : (
-						<div className="overflow-x-auto rounded-lg border border-border">
-							<table className="w-full text-sm">
-								<thead>
-									<tr className="border-b border-border bg-muted/40">
-										<th className="px-4 py-2 text-left font-medium">Lesson</th>
-										<th className="px-4 py-2 text-center font-medium">
-											Phrases
-										</th>
-										<th className="px-4 py-2" />
-									</tr>
-								</thead>
-								<tbody>
-									{lessons.map((lesson) => (
-										<tr
-											key={lesson.id}
-											className="border-b border-border last:border-0 hover:bg-muted/20"
-										>
-											<td className="flex items-center gap-3 px-4 py-3">
-												{lesson.thumbnailUrl && (
-													<img
-														src={lesson.thumbnailUrl}
-														alt={lesson.title}
-														className="h-10 w-16 rounded object-cover"
-													/>
-												)}
-												<span className="font-medium">{lesson.title}</span>
-											</td>
-											<td className="px-4 py-3 text-center text-muted-foreground">
-												{lesson.phraseCount}
-											</td>
-											<td className="px-4 py-3 text-right">
-												<Button asChild size="sm" variant="ghost">
-													<Link
-														to="/admin/lessons/$lessonId"
-														params={{ lessonId: lesson.id }}
-													>
-														<Pencil />
-														Edit clips
-													</Link>
-												</Button>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-					)}
-				</section>
+				<div className="space-y-1">
+					<h1 className="text-2xl font-semibold">Admin</h1>
+					<p className="text-sm text-muted-foreground">
+						Control who can add and edit clips.
+					</p>
+				</div>
 
 				{/* Team panel */}
 				<section className="space-y-4">

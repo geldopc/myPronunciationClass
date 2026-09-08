@@ -8,6 +8,7 @@ export const MOCK_LESSON: Lesson = {
 	createdAt: 1700000000000,
 	createdBy: "system",
 	phraseCount: 36,
+	status: "published",
 };
 
 export const MOCK_PHRASES: Phrase[] = [

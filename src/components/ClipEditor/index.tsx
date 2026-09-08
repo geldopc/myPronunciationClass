@@ -250,7 +250,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	}
 
 	function handleExportJSON() {
-		const data = exportPhrases();
+		const data = exportPhrases(lessonId);
 		const json = JSON.stringify(data, null, 2);
 		const blob = new Blob([json], { type: "application/json" });
 		const url = URL.createObjectURL(blob);

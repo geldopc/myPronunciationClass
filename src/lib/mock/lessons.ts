@@ -1,15 +1,18 @@
 import type { Lesson, Phrase } from "@/lib/lessons";
-import { MOCK_LESSON } from "@/lib/mock/data";
-import { getMockPhrases } from "@/lib/mock/store";
+import {
+	getMockLesson,
+	getMockLessons,
+	getMockPhrases,
+} from "@/lib/mock/store";
 
 export function mockFetchLessons(): Promise<Lesson[]> {
-	return Promise.resolve([MOCK_LESSON]);
+	return Promise.resolve(getMockLessons());
 }
 
-export function mockFetchLesson(_lessonId: string): Promise<Lesson | null> {
-	return Promise.resolve(MOCK_LESSON);
+export function mockFetchLesson(lessonId: string): Promise<Lesson | null> {
+	return Promise.resolve(getMockLesson(lessonId));
 }
 
-export function mockFetchPhrases(_lessonId: string): Promise<Phrase[]> {
-	return Promise.resolve(getMockPhrases());
+export function mockFetchPhrases(lessonId: string): Promise<Phrase[]> {
+	return Promise.resolve(getMockPhrases(lessonId));
 }

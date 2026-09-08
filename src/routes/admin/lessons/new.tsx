@@ -93,7 +93,7 @@ function NewLessonPage() {
 						<BreadcrumbList>
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link to="/admin">Admin</Link>
+									<Link to="/admin/lessons">Clips</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />

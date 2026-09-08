@@ -18,7 +18,12 @@ import {
 	mockFetchLessons,
 	mockFetchPhrases,
 } from "@/lib/mock/lessons";
-import { mockDeletePhrase, mockUpsertPhrase } from "@/lib/mock/store";
+import {
+	mockCreateLesson,
+	mockDeletePhrase,
+	mockSetLessonStatus,
+	mockUpsertPhrase,
+} from "@/lib/mock/store";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -30,6 +35,7 @@ export type Lesson = {
 	createdAt: number;
 	createdBy: string;
 	phraseCount: number;
+	status: "draft" | "published";
 };
 
 export type Phrase = {
@@ -53,6 +59,11 @@ export async function fetchLessons(): Promise<Lesson[]> {
 		id: d.id,
 		...(d.data() as Omit<Lesson, "id">),
 	}));
+}
+
+export async function fetchPublishedLessons(): Promise<Lesson[]> {
+	const lessons = await fetchLessons();
+	return lessons.filter((l) => l.status === "published");
 }
 
 export async function fetchLesson(lessonId: string): Promise<Lesson | null> {
@@ -81,13 +92,25 @@ export async function createLesson(data: {
 	thumbnailUrl: string;
 	createdBy: string;
 }): Promise<string> {
-	if (USE_MOCK) return `mock-lesson-${Date.now()}`;
+	if (USE_MOCK) return mockCreateLesson(data);
 	const ref = await addDoc(collection(db, "lessons"), {
 		...data,
 		phraseCount: 0,
+		status: "draft",
 		createdAt: serverTimestamp(),
 	});
 	return ref.id;
+}
+
+export async function setLessonStatus(
+	lessonId: string,
+	status: Lesson["status"]
+): Promise<void> {
+	if (USE_MOCK) {
+		mockSetLessonStatus(lessonId, status);
+		return;
+	}
+	await updateDoc(doc(db, "lessons", lessonId), { status });
 }
 
 export async function upsertPhrase(
@@ -95,7 +118,7 @@ export async function upsertPhrase(
 	phraseId: string | null,
 	data: Omit<Phrase, "id">
 ): Promise<string> {
-	if (USE_MOCK) return mockUpsertPhrase(phraseId, data);
+	if (USE_MOCK) return mockUpsertPhrase(lessonId, phraseId, data);
 	if (phraseId) {
 		await setDoc(doc(db, "lessons", lessonId, "phrases", phraseId), data);
 		return phraseId;
@@ -113,7 +136,7 @@ export async function deletePhrase(
 	phraseId: string
 ): Promise<void> {
 	if (USE_MOCK) {
-		mockDeletePhrase(phraseId);
+		mockDeletePhrase(lessonId, phraseId);
 		return;
 	}
 	await deleteDoc(doc(db, "lessons", lessonId, "phrases", phraseId));
