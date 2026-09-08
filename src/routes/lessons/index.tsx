@@ -56,7 +56,7 @@ function LessonsPage() {
 			<TopBar />
 			<main
 				id="lessons-gallery"
-				className="container mx-auto max-w-5xl px-4 py-8 pb-16"
+				className="w-full max-w-5xl px-4 py-8 pb-16 sm:px-6 lg:px-8"
 			>
 				<h1 className="mb-6 text-2xl font-semibold">Lessons</h1>
 

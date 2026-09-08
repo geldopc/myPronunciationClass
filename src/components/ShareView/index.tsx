@@ -31,7 +31,7 @@ export function ShareView({ slug }: { slug: string }) {
 		return (
 			<main
 				id="share-view"
-				className="container mx-auto max-w-3xl px-4 py-16"
+				className="w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
 			/>
 		);
 	}
@@ -40,7 +40,7 @@ export function ShareView({ slug }: { slug: string }) {
 		return (
 			<main
 				id="share-view"
-				className="container mx-auto max-w-3xl px-4 py-16 text-center"
+				className="w-full max-w-3xl px-4 py-16 text-center sm:px-6 lg:px-8"
 			>
 				<p className="text-muted-foreground">
 					Link não encontrado ou revogado.
@@ -50,7 +50,10 @@ export function ShareView({ slug }: { slug: string }) {
 	}
 
 	return (
-		<main id="share-view" className="container mx-auto max-w-3xl px-4 py-8">
+		<main
+			id="share-view"
+			className="w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8"
+		>
 			<ProgressStats
 				rollups={state.share.snapshot}
 				displayName={state.share.displayName}

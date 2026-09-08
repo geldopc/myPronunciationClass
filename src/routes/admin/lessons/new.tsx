@@ -86,7 +86,7 @@ function NewLessonPage() {
 			<TopBar />
 			<main
 				id="new-lesson-page"
-				className="container mx-auto max-w-lg space-y-6 px-4 py-8"
+				className="w-full max-w-lg space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="space-y-1">
 					<Breadcrumb>

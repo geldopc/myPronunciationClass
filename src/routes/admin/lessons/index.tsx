@@ -54,7 +54,7 @@ function ClipsDashboard() {
 			<TopBar />
 			<main
 				id="clips-dashboard"
-				className="container mx-auto max-w-4xl space-y-6 px-4 py-8"
+				className="w-full max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="flex items-center justify-between">
 					<h1 className="text-2xl font-semibold">Clips</h1>
