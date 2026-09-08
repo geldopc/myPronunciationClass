@@ -85,15 +85,15 @@ export function TopBar({
 	return (
 		<header
 			id="top-bar"
-			className="sticky top-0 z-20 border-b border-border/30 bg-background/50 backdrop-blur-xl"
+			className="sticky top-0 z-20 w-full border-b border-border/30 bg-background/50 backdrop-blur-xl"
 		>
-			<div className="container mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-				<div className="flex items-center gap-2">
+			<div className="flex w-full items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+				<div className="flex min-w-0 items-center gap-3">
 					{backTo && (
 						<Button
 							variant="ghost"
 							size="icon"
-							className="h-7 w-7 text-muted-foreground"
+							className="h-7 w-7 shrink-0 text-muted-foreground"
 							asChild
 						>
 							<Link to={backTo} aria-label="Go back">
@@ -104,13 +104,16 @@ export function TopBar({
 					<Link
 						to="/lessons"
 						aria-label="myPronunciationClass — go to lessons"
-						className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+						className="flex shrink-0 items-center gap-2 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 					>
-						<Logo className="h-9 w-auto" />
+						<Logo className="h-9 w-auto shrink-0" />
+						<span className="hidden text-sm font-semibold tracking-tight sm:inline">
+							My Pronunciation Class
+						</span>
 					</Link>
 					{lessonId && <LessonSwitcher activeLessonId={lessonId} />}
 				</div>
-				<div className="flex items-center gap-2">
+				<div className="flex shrink-0 items-center gap-2">
 					<ThemeToggle />
 					<AuthControl />
 				</div>

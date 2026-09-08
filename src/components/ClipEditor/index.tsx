@@ -371,7 +371,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 			</div>
 
 			{/* Right column: phrase list + form */}
-			<div id="clip-editor-panel" className="w-full space-y-3 lg:w-80">
+			<div id="clip-editor-panel" className="w-full space-y-3 lg:w-96">
 				<div id="clip-editor-phrases" className="space-y-2">
 					<div className="flex items-center justify-between">
 						<p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
