@@ -47,8 +47,8 @@ export function AboutDialog({
 					<div className="mb-2 flex items-center gap-3">
 						<Logo className="h-8 w-auto" />
 						<div>
-							<DialogTitle className="text-base font-semibold">
-								myPronunciationClass
+							<DialogTitle className="font-brand text-lg tracking-tight">
+								My Pronunciation Class
 							</DialogTitle>
 							<p className="text-xs text-muted-foreground">{currentVersion}</p>
 						</div>
