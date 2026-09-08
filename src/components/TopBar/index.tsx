@@ -107,7 +107,7 @@ export function TopBar({
 						className="flex shrink-0 items-center gap-2 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 					>
 						<Logo className="h-9 w-auto shrink-0" />
-						<span className="hidden text-sm font-semibold tracking-tight sm:inline">
+						<span className="hidden font-brand text-base tracking-tight sm:inline">
 							My Pronunciation Class
 						</span>
 					</Link>

@@ -350,7 +350,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 
 				<div className="space-y-1">
 					{loadingPhrases ? (
-						<div className="h-20 animate-pulse rounded-md bg-muted" />
+						<div className="h-24 animate-pulse rounded-md bg-muted" />
 					) : (
 						<Timeline
 							phrases={phrases}

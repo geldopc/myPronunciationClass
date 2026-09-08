@@ -65,12 +65,12 @@ export function Timeline({
 	return (
 		<div id="clip-editor-timeline" className="space-y-1">
 			<svg
-				viewBox="0 0 1000 58"
+				viewBox="0 0 1000 96"
 				preserveAspectRatio="none"
 				role="img"
 				aria-label="Phrase timeline. Click a segment to select it."
 				className="w-full cursor-pointer rounded-md border border-border"
-				style={{ height: 58 }}
+				style={{ height: 96 }}
 				onClick={handleClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") e.currentTarget.click();
@@ -79,11 +79,11 @@ export function Timeline({
 				{/* Track background */}
 				<rect
 					x={0}
-					y={4}
+					y={6}
 					width={1000}
-					height={50}
-					rx={4}
-					fill="hsl(var(--muted))"
+					height={84}
+					rx={6}
+					className="fill-muted"
 				/>
 
 				{/* Phrase segments */}
@@ -97,10 +97,10 @@ export function Timeline({
 						<g key={phrase.id}>
 							<rect
 								x={x}
-								y={4}
+								y={6}
 								width={w}
-								height={50}
-								rx={3}
+								height={84}
+								rx={5}
 								fill={color}
 								fillOpacity={isSelected ? 1 : 0.7}
 								stroke={isSelected ? "white" : "none"}
@@ -109,10 +109,10 @@ export function Timeline({
 							{w > 18 && (
 								<text
 									x={x + w / 2}
-									y={32}
+									y={48}
 									textAnchor="middle"
 									dominantBaseline="middle"
-									fontSize={11}
+									fontSize={12}
 									fill="white"
 									fontWeight="600"
 									style={{ pointerEvents: "none", userSelect: "none" }}
@@ -128,14 +128,14 @@ export function Timeline({
 				{hasPending && (
 					<rect
 						x={timeToX(pendingStart ?? 0, duration)}
-						y={4}
+						y={6}
 						width={Math.max(
 							timeToX(pendingEnd ?? 0, duration) -
 								timeToX(pendingStart ?? 0, duration),
 							4
 						)}
-						height={50}
-						rx={3}
+						height={84}
+						rx={5}
 						fill="white"
 						fillOpacity={0.35}
 						stroke="white"
@@ -149,9 +149,9 @@ export function Timeline({
 				{duration > 0 && (
 					<line
 						x1={playheadX}
-						y1={4}
+						y1={6}
 						x2={playheadX}
-						y2={54}
+						y2={90}
 						stroke="white"
 						strokeWidth={1.5}
 						strokeOpacity={0.85}
