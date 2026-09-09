@@ -1,11 +1,18 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import { LessonCard } from "@/components/LessonCard";
-import { SideNav } from "@/components/SideNav";
-import { useLessons } from "@/hooks/useLessons";
+import { TopBar } from "@/components/TopBar";
+import { Button } from "@/components/ui/button";
+import { useAdmin } from "@/hooks/useAdmin";
 import { useProgress } from "@/hooks/useProgress";
-import type { Lesson } from "@/lib/lessons";
+import {
+	fetchLessons,
+	fetchPublishedLessons,
+	type Lesson,
+	setLessonStatus,
+} from "@/lib/lessons";
 import type { PhraseStat } from "@/lib/progress-model";
 
 export const Route = createFileRoute("/lessons/")({ component: LessonsPage });
@@ -38,8 +45,26 @@ function computeLessonStats(
 
 function LessonsPage() {
 	const navigate = useNavigate();
-	const { lessons, loading: lessonsLoading } = useLessons();
+	const { isAdmin } = useAdmin();
 	const { phraseStats } = useProgress();
+	const [lessons, setLessons] = useState<Lesson[]>([]);
+	const [lessonsLoading, setLessonsLoading] = useState(true);
+
+	async function load() {
+		setLessonsLoading(true);
+		try {
+			setLessons(
+				isAdmin ? await fetchLessons() : await fetchPublishedLessons()
+			);
+		} finally {
+			setLessonsLoading(false);
+		}
+	}
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: reload when admin status resolves
+	useEffect(() => {
+		void load();
+	}, [isAdmin]);
 
 	const lessonStats = useMemo(
 		() => computeLessonStats(lessons, phraseStats),
@@ -51,14 +76,30 @@ function LessonsPage() {
 		void navigate({ to: "/lessons/$lessonId", params: { lessonId } });
 	}
 
+	async function handleTogglePublish(lesson: Lesson) {
+		const next = lesson.status === "published" ? "draft" : "published";
+		await setLessonStatus(lesson.id, next);
+		await load();
+	}
+
 	return (
-		<div className="flex min-h-screen flex-col lg:flex-row">
-			<SideNav />
+		<>
+			<TopBar />
 			<main
 				id="lessons-gallery"
-				className="w-full min-w-0 max-w-5xl flex-1 px-4 py-8 pb-16 sm:px-6 lg:px-8"
+				className="w-full max-w-5xl px-4 py-8 pb-16 sm:px-6 lg:px-8"
 			>
-				<h1 className="mb-6 text-2xl font-semibold">Lessons</h1>
+				<div className="mb-6 flex items-center justify-between">
+					<h1 className="text-2xl font-semibold">Lessons</h1>
+					{isAdmin && (
+						<Button asChild size="sm">
+							<Link to="/lessons/new">
+								<PlusIcon />
+								New lesson
+							</Link>
+						</Button>
+					)}
+				</div>
 
 				{lessonsLoading ? (
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -85,12 +126,14 @@ function LessonsPage() {
 									completion={stats.completion}
 									lastPracticedAt={stats.lastPracticedAt}
 									onClick={() => handleSelect(lesson.id)}
+									isAdmin={isAdmin}
+									onTogglePublish={() => handleTogglePublish(lesson)}
 								/>
 							);
 						})}
 					</div>
 				)}
 			</main>
-		</div>
+		</>
 	);
 }

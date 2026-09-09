@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { SideNav } from "@/components/SideNav";
+import { AdminGuard } from "@/components/AdminGuard";
+import { TopBar } from "@/components/TopBar";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -16,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { createLesson } from "@/lib/lessons";
 import { useAuth } from "@/providers/Auth";
 
-export const Route = createFileRoute("/admin/lessons/new")({
+export const Route = createFileRoute("/lessons/new")({
 	component: NewLessonPage,
 });
 
@@ -74,7 +75,7 @@ function NewLessonPage() {
 				thumbnailUrl,
 				createdBy: user.uid,
 			});
-			navigate({ to: "/admin/lessons/$lessonId", params: { lessonId } });
+			navigate({ to: "/lessons/edit/$lessonId", params: { lessonId } });
 		} catch {
 			setError("Failed to create lesson. Try again.");
 			setSubmitting(false);
@@ -82,18 +83,18 @@ function NewLessonPage() {
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col lg:flex-row">
-			<SideNav />
+		<AdminGuard>
+			<TopBar />
 			<main
 				id="new-lesson-page"
-				className="w-full min-w-0 max-w-lg flex-1 space-y-6 px-4 py-8 sm:px-6 lg:px-8"
+				className="w-full max-w-lg space-y-6 px-4 py-8 sm:px-6 lg:px-8"
 			>
 				<div className="space-y-1">
 					<Breadcrumb>
 						<BreadcrumbList>
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link to="/admin/lessons">Clips</Link>
+									<Link to="/lessons">Lessons</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
@@ -133,6 +134,6 @@ function NewLessonPage() {
 					</Button>
 				</form>
 			</main>
-		</div>
+		</AdminGuard>
 	);
 }

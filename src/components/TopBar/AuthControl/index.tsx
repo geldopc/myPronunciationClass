@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import {
 	BookOpenIcon,
 	LayoutDashboardIcon,
-	ListVideoIcon,
 	LogOutIcon,
 	TrendingUpIcon,
 } from "lucide-react";
@@ -129,20 +128,12 @@ export function AuthControl() {
 						</Link>
 					</DropdownMenuItem>
 					{isAdmin && (
-						<>
-							<DropdownMenuItem asChild>
-								<Link to="/admin/lessons">
-									<ListVideoIcon />
-									Clips
-								</Link>
-							</DropdownMenuItem>
-							<DropdownMenuItem asChild>
-								<Link to="/admin">
-									<LayoutDashboardIcon />
-									Admin
-								</Link>
-							</DropdownMenuItem>
-						</>
+						<DropdownMenuItem asChild>
+							<Link to="/admin">
+								<LayoutDashboardIcon />
+								Admin
+							</Link>
+						</DropdownMenuItem>
 					)}
 					<DropdownMenuItem asChild>
 						<Link to="/progress">
