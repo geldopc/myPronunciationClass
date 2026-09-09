@@ -1,12 +1,15 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ProgressDashboard } from "@/components/ProgressDashboard";
 import { ShareControl } from "@/components/ShareControl";
-import { useLesson } from "@/hooks/useLesson";
 import { useLessons } from "@/hooks/useLessons";
 import { useProgress } from "@/hooks/useProgress";
-import type { Lesson } from "@/lib/lessons";
-import type { LessonRollup, PhraseStat } from "@/lib/progress-model";
+import { fetchPhrases, type Lesson } from "@/lib/lessons";
+import type {
+	LessonRollup,
+	PhraseInfo,
+	PhraseStat,
+} from "@/lib/progress-model";
 import { useAuth } from "@/providers/Auth";
 
 function computeByLesson(
@@ -50,10 +53,37 @@ function computeByLesson(
 export function ProgressView() {
 	const { user } = useAuth();
 	const { lessons } = useLessons();
-	const activeLessonId =
-		localStorage.getItem("lessonId") ?? lessons[0]?.id ?? "";
-	const { phrases } = useLesson(activeLessonId);
-	const { rollups, phraseStats } = useProgress(activeLessonId, phrases.length);
+
+	const totalPhraseCount = useMemo(
+		() => lessons.reduce((sum, l) => sum + (l.phraseCount ?? 0), 0),
+		[lessons]
+	);
+
+	// No lessonId => stats across every lesson the user has practiced, not
+	// just whichever one they last opened.
+	const { rollups, phraseStats } = useProgress(undefined, totalPhraseCount);
+
+	const [phraseInfoById, setPhraseInfoById] = useState<Map<string, PhraseInfo>>(
+		new Map()
+	);
+
+	useEffect(() => {
+		if (lessons.length === 0) return;
+		let active = true;
+		Promise.all(
+			lessons.map(async (lesson) => {
+				const phrases = await fetchPhrases(lesson.id);
+				return phrases.map(
+					(p) => [p.id, { text: p.text, lessonId: lesson.id }] as const
+				);
+			})
+		).then((entries) => {
+			if (active) setPhraseInfoById(new Map(entries.flat()));
+		});
+		return () => {
+			active = false;
+		};
+	}, [lessons]);
 
 	const byLesson = useMemo(
 		() => computeByLesson(lessons, phraseStats),
@@ -67,16 +97,17 @@ export function ProgressView() {
 			id="progress-view"
 			className="w-full max-w-5xl px-4 py-6 pb-16 sm:px-6 lg:px-8"
 		>
-			<div className="mb-6 flex items-center justify-end">
+			<div className="mb-6 flex items-center justify-between gap-4">
+				<h1 className="text-2xl font-semibold">My progress</h1>
 				<ShareControl rollups={rollups} />
 			</div>
 
 			<ProgressDashboard
 				rollups={rollups}
 				phraseStats={phraseStats}
-				phrases={phrases}
 				byLesson={byLesson}
 				lessons={lessons}
+				phraseInfoById={phraseInfoById}
 			/>
 		</main>
 	);

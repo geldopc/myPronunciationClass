@@ -23,6 +23,11 @@ export type LessonRollup = {
 	lastPracticedAt: number | null;
 };
 
+export type PhraseInfo = {
+	text: string;
+	lessonId: string;
+};
+
 export type Rollups = {
 	completion: number;
 	average: number;
