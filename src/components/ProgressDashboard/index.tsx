@@ -171,7 +171,7 @@ export function ProgressDashboard({
 						Practice a lesson to see your progress here.
 					</p>
 				) : (
-					<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+					<div className="auto-grid-wide">
 						{sortedByLesson.map((row) => {
 							const lesson = lessons.find((l) => l.id === row.lessonId);
 							if (!lesson) return null;
@@ -213,7 +213,7 @@ export function ProgressDashboard({
 			</section>
 
 			{/* Top 5 / Worst 5 phrase lists — across every lesson */}
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+			<div className="split-grid">
 				<div>
 					<h2 className="mb-2 text-sm font-semibold">Top 5 phrases</h2>
 					{top5.length === 0 ? (

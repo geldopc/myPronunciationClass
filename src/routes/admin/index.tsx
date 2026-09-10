@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { PageShell } from "@/components/PageShell";
 import { TopBar } from "@/components/TopBar";
 
 import { Badge } from "@/components/ui/badge";
@@ -68,12 +69,9 @@ function AdminDashboard() {
 	return (
 		<>
 			<TopBar />
-			<main
-				id="admin-dashboard"
-				className="w-full max-w-4xl space-y-10 px-4 py-8 sm:px-6 lg:px-8"
-			>
+			<PageShell id="admin-dashboard" className="space-y-10">
 				<div className="space-y-1">
-					<h1 className="text-2xl font-semibold">Admin</h1>
+					<h1 className="text-page-title font-semibold">Admin</h1>
 					<p className="text-sm text-muted-foreground">
 						Control who can add and edit clips.
 					</p>
@@ -160,7 +158,7 @@ function AdminDashboard() {
 						)}
 					</form>
 				</section>
-			</main>
+			</PageShell>
 		</>
 	);
 }

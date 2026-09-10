@@ -33,8 +33,8 @@ export const Route = createRootRoute({
 		],
 	}),
 	notFoundComponent: () => (
-		<main className="w-full max-w-2xl p-4 pt-16">
-			<h1>404</h1>
+		<main className="page-shell shell-form">
+			<h1 className="text-page-title font-semibold">404</h1>
 			<p>The requested page could not be found.</p>
 		</main>
 	),

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { PageShell } from "@/components/PageShell";
 import { ProgressDashboard } from "@/components/ProgressDashboard";
 import { ShareControl } from "@/components/ShareControl";
 import { useLessons } from "@/hooks/useLessons";
@@ -93,12 +94,9 @@ export function ProgressView() {
 	if (!user) return null;
 
 	return (
-		<main
-			id="progress-view"
-			className="w-full max-w-5xl px-4 py-6 pb-16 sm:px-6 lg:px-8"
-		>
-			<div className="mb-6 flex items-center justify-between gap-4">
-				<h1 className="text-2xl font-semibold">My progress</h1>
+		<PageShell id="progress-view">
+			<div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+				<h1 className="text-page-title font-semibold">My progress</h1>
 				<ShareControl rollups={rollups} />
 			</div>
 
@@ -109,6 +107,6 @@ export function ProgressView() {
 				lessons={lessons}
 				phraseInfoById={phraseInfoById}
 			/>
-		</main>
+		</PageShell>
 	);
 }

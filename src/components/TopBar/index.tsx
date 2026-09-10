@@ -87,7 +87,7 @@ export function TopBar({
 			id="top-bar"
 			className="sticky top-0 z-20 w-full border-b border-border/30 bg-background/50 backdrop-blur-xl"
 		>
-			<div className="flex w-full items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+			<div className="bar-inline flex w-full items-center justify-between gap-4 py-3">
 				<div className="flex min-w-0 items-center gap-3">
 					{backTo && (
 						<Button

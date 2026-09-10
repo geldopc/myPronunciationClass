@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { AdminGuard } from "@/components/AdminGuard";
 import { ClipEditor } from "@/components/ClipEditor";
+import { PageShell } from "@/components/PageShell";
 import { TopBar } from "@/components/TopBar";
 import {
 	Breadcrumb,
@@ -46,10 +47,7 @@ function LessonEditPage() {
 			) : (
 				<>
 					<TopBar />
-					<main
-						id="clip-editor-page"
-						className="w-full max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8"
-					>
+					<PageShell id="clip-editor-page" width="wide" className="space-y-6">
 						<div className="space-y-1">
 							<Breadcrumb>
 								<BreadcrumbList>
@@ -67,7 +65,7 @@ function LessonEditPage() {
 							<h1 className="text-xl font-semibold">{lesson.title}</h1>
 						</div>
 						<ClipEditor lessonId={lessonId} videoId={lesson.youtubeId} />
-					</main>
+					</PageShell>
 				</>
 			)}
 		</AdminGuard>

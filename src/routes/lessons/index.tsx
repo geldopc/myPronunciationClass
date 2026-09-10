@@ -3,6 +3,7 @@ import { PlusIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { LessonCard } from "@/components/LessonCard";
+import { PageShell } from "@/components/PageShell";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -85,12 +86,9 @@ function LessonsPage() {
 	return (
 		<>
 			<TopBar />
-			<main
-				id="lessons-gallery"
-				className="w-full max-w-5xl px-4 py-8 pb-16 sm:px-6 lg:px-8"
-			>
-				<div className="mb-6 flex items-center justify-between">
-					<h1 className="text-2xl font-semibold">Lessons</h1>
+			<PageShell id="lessons-gallery">
+				<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+					<h1 className="text-page-title font-semibold">Lessons</h1>
 					{isAdmin && (
 						<Button asChild size="sm">
 							<Link to="/lessons/new">
@@ -102,8 +100,8 @@ function LessonsPage() {
 				</div>
 
 				{lessonsLoading ? (
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{[1, 2, 3].map((i) => (
+					<div className="auto-grid">
+						{[1, 2, 3, 4, 5, 6].map((i) => (
 							<div
 								key={i}
 								className="aspect-video w-full animate-pulse rounded-xl bg-muted"
@@ -113,7 +111,7 @@ function LessonsPage() {
 				) : lessons.length === 0 ? (
 					<p className="text-sm text-muted-foreground">No lessons yet.</p>
 				) : (
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<div className="auto-grid">
 						{lessons.map((lesson) => {
 							const stats = lessonStats.get(lesson.id) ?? {
 								completion: 0,
@@ -133,7 +131,7 @@ function LessonsPage() {
 						})}
 					</div>
 				)}
-			</main>
+			</PageShell>
 		</>
 	);
 }

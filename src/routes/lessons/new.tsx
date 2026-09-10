@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { AdminGuard } from "@/components/AdminGuard";
+import { PageShell } from "@/components/PageShell";
 import { TopBar } from "@/components/TopBar";
 import {
 	Breadcrumb,
@@ -85,10 +86,7 @@ function NewLessonPage() {
 	return (
 		<AdminGuard>
 			<TopBar />
-			<main
-				id="new-lesson-page"
-				className="w-full max-w-lg space-y-6 px-4 py-8 sm:px-6 lg:px-8"
-			>
+			<PageShell id="new-lesson-page" width="form" className="space-y-6">
 				<div className="space-y-1">
 					<Breadcrumb>
 						<BreadcrumbList>
@@ -103,7 +101,7 @@ function NewLessonPage() {
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
-					<h1 className="text-2xl font-semibold">New lesson</h1>
+					<h1 className="text-page-title font-semibold">New lesson</h1>
 				</div>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
@@ -133,7 +131,7 @@ function NewLessonPage() {
 						{submitting ? "Creating…" : "Add lesson"}
 					</Button>
 				</form>
-			</main>
+			</PageShell>
 		</AdminGuard>
 	);
 }

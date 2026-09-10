@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { PageShell } from "@/components/PageShell";
 import { ProgressStats } from "@/components/ProgressStats";
 import type { Share } from "@/lib/progress-model";
 import { readShare } from "@/lib/shares";
@@ -28,38 +29,27 @@ export function ShareView({ slug }: { slug: string }) {
 	}, [slug]);
 
 	if (state.status === "loading") {
-		return (
-			<main
-				id="share-view"
-				className="w-full max-w-3xl px-4 py-16 sm:px-6 lg:px-8"
-			/>
-		);
+		return <PageShell id="share-view" width="form" />;
 	}
 
 	if (state.status === "missing") {
 		return (
-			<main
-				id="share-view"
-				className="w-full max-w-3xl px-4 py-16 text-center sm:px-6 lg:px-8"
-			>
+			<PageShell id="share-view" width="form" className="text-center">
 				<p className="text-muted-foreground">
 					Link não encontrado ou revogado.
 				</p>
-			</main>
+			</PageShell>
 		);
 	}
 
 	return (
-		<main
-			id="share-view"
-			className="w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8"
-		>
+		<PageShell id="share-view" width="form">
 			<ProgressStats
 				rollups={state.share.snapshot}
 				displayName={state.share.displayName}
 				avatarUrl={state.share.avatarUrl}
 				phrases={[]}
 			/>
-		</main>
+		</PageShell>
 	);
 }

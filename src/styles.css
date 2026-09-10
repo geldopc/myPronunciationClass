@@ -6,6 +6,69 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Responsive foundation.
+   Fluid clamp() scales instead of fixed breakpoint steps, so the layout keeps
+   adapting past lg (1024px) — where the app used to stop reacting entirely. */
+
+@utility page-shell {
+	width: 100%;
+	padding-inline: clamp(1rem, 3.5vw, 4.5rem);
+	padding-block-start: clamp(1.5rem, 2.5vw, 3.5rem);
+	padding-block-end: clamp(3rem, 5vw, 6rem);
+}
+
+/* Width ceilings per content type: forms stay readable, dashboards breathe,
+   the editor uses nearly the whole viewport. */
+@utility shell-form {
+	max-width: 34rem;
+}
+
+@utility shell-content {
+	max-width: 90rem;
+}
+
+@utility shell-wide {
+	max-width: 120rem;
+}
+
+/* Matches page-shell's inline padding so the logo aligns with page content. */
+@utility bar-inline {
+	padding-inline: clamp(1rem, 3.5vw, 4.5rem);
+}
+
+/* Column count follows available width instead of being capped at 3. */
+@utility auto-grid {
+	display: grid;
+	gap: clamp(0.75rem, 1.4vw, 1.5rem);
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+@utility auto-grid-wide {
+	display: grid;
+	gap: clamp(0.75rem, 1.4vw, 1.5rem);
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+}
+
+/* auto-fit (not auto-fill): empty tracks collapse, so a pair of panels splits
+   the row evenly instead of leaving dead columns on wide screens. */
+@utility split-grid {
+	display: grid;
+	gap: clamp(0.75rem, 1.4vw, 1.5rem);
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+@utility text-page-title {
+	font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.25rem);
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+}
+
+/* Side panel grows with the viewport instead of sitting at a fixed 384px
+   while the video stretches without limit. */
+@utility editor-panel {
+	flex: 0 0 clamp(20rem, 24vw, 30rem);
+}
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;
