@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import { Timestamp } from "firebase-admin/firestore";
 import { initAdminApp } from "./admin-app.js";
 
 const db = initAdminApp();
@@ -337,7 +337,7 @@ async function seed() {
 			title: "Friends S5E14 — Joey Finds Out",
 			youtubeId: "XZVHmRvfDHM",
 			thumbnailUrl: "https://img.youtube.com/vi/XZVHmRvfDHM/hqdefault.jpg",
-			createdAt: admin.firestore.Timestamp.now(),
+			createdAt: Timestamp.now(),
 			createdBy: "system",
 		},
 		{ merge: true }
@@ -361,8 +361,8 @@ async function seed() {
 		{
 			status: "active",
 			invitedBy: "system",
-			invitedAt: admin.firestore.Timestamp.now(),
-			activatedAt: admin.firestore.Timestamp.now(),
+			invitedAt: Timestamp.now(),
+			activatedAt: Timestamp.now(),
 		},
 		{ merge: true }
 	);

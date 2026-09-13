@@ -2,7 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import * as admin from "firebase-admin";
+import { applicationDefault, cert, initializeApp } from "firebase-admin/app";
+import { type Firestore, getFirestore } from "firebase-admin/firestore";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const KEY_PATH = join(HERE, "serviceAccount.json");
@@ -18,14 +19,12 @@ const DEFAULT_PROJECT_ID = "mypronunciationclass-99f2d";
    constraints/iam.disableServiceAccountKeyCreation blocks generating a
    service account key at all, and Application Default Credentials from
    `gcloud auth application-default login` authenticate as the user instead. */
-export function initAdminApp(): admin.firestore.Firestore {
+export function initAdminApp(): Firestore {
 	if (existsSync(KEY_PATH)) {
-		admin.initializeApp({
-			credential: admin.credential.cert(
-				JSON.parse(readFileSync(KEY_PATH, "utf-8"))
-			),
+		initializeApp({
+			credential: cert(JSON.parse(readFileSync(KEY_PATH, "utf-8"))),
 		});
-		return admin.firestore();
+		return getFirestore();
 	}
 
 	const hasAdc =
@@ -43,12 +42,12 @@ export function initAdminApp(): admin.firestore.Firestore {
 		);
 	}
 
-	admin.initializeApp({
-		credential: admin.credential.applicationDefault(),
+	initializeApp({
+		credential: applicationDefault(),
 		projectId:
 			process.env.FIREBASE_PROJECT_ID ??
 			process.env.GOOGLE_CLOUD_PROJECT ??
 			DEFAULT_PROJECT_ID,
 	});
-	return admin.firestore();
+	return getFirestore();
 }
