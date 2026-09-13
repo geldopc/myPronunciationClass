@@ -44,6 +44,7 @@ describe("computeRollups", () => {
 			average: 0,
 			streak: 0,
 			bestScoreByPhrase: {},
+			byLesson: [],
 		});
 	});
 });

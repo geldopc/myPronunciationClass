@@ -57,15 +57,18 @@ export async function readPhraseStats(
 		})
 		.map((entry) => {
 			const data = entry.data() as {
-				lessonId: string;
-				phraseId: string;
+				lessonId: unknown;
+				phraseId: unknown;
 				bestScore: number;
 				attemptsCount: number;
 				lastPracticedAt?: { toMillis: () => number };
 			};
+			/* Coerce at the boundary: stored documents predate the current
+			   writer and carry non-string ids, which crashed the dashboard's
+			   sort and silently missed every Map lookup keyed by phrase id. */
 			return {
-				lessonId: data.lessonId,
-				phraseId: data.phraseId,
+				lessonId: String(data.lessonId),
+				phraseId: String(data.phraseId),
 				bestScore: data.bestScore,
 				attemptsCount: data.attemptsCount,
 				lastPracticedAt: data.lastPracticedAt?.toMillis() ?? 0,
