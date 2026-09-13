@@ -1,0 +1,221 @@
+<!--
+  EmailJS — teacher invite template.
+
+  Paste the markup below into the template's Content tab (Edit Content → Code).
+  In the template settings, set:
+
+    To Email  {{to_email}}
+    Subject   {{invited_by}} just handed you the scissors
+    Reply To  your own address
+
+  Variables sent by src/lib/invite-email.ts:
+    {{to_email}}    recipient — also the Google account the invite is tied to
+    {{invited_by}}  display name of the teacher who created the invite
+    {{app_url}}     deployed app root, e.g. https://geldopc.github.io/myPronunciationClass/
+
+  Written for email clients, not browsers: table layout, inline styles, no SVG
+  (Gmail strips it) and no remote images (most clients block them by default),
+  so the whole thing reads correctly with images off. Palette is the app's own
+  stone scale, in hex because email cannot do oklch().
+-->
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light" />
+		<meta name="supported-color-schemes" content="light" />
+		<title>You're a teacher now</title>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Moirai+One&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* Apple Mail and iOS honour this; Gmail ignores it and falls back to
+			   the serif stack below, which still reads as display type. */
+			.brand {
+				font-family: "Moirai One", Georgia, "Times New Roman", serif;
+			}
+			@media (max-width: 600px) {
+				.sp-outer { padding: 24px 16px !important; }
+				.sp-card { padding: 24px !important; }
+				.line { font-size: 24px !important; }
+				.brand { font-size: 24px !important; }
+			}
+		</style>
+	</head>
+	<body
+		style="margin: 0; padding: 0; background-color: #f5f5f4; -webkit-text-size-adjust: 100%;"
+	>
+		<!-- preheader: the preview line, hidden in the body -->
+		<div
+			style="display: none; max-height: 0; overflow: hidden; opacity: 0; mso-hide: all;"
+		>
+			Cut the scenes. Set the phrases. Let them repeat after you.
+			&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;
+		</div>
+
+		<table
+			role="presentation"
+			width="100%"
+			cellpadding="0"
+			cellspacing="0"
+			border="0"
+			style="background-color: #f5f5f4;"
+		>
+			<tr>
+				<td align="center" class="sp-outer" style="padding: 40px 24px;">
+					<table
+						role="presentation"
+						width="600"
+						cellpadding="0"
+						cellspacing="0"
+						border="0"
+						style="width: 100%; max-width: 600px; background-color: #ffffff; border: 1px solid #e7e5e4; border-radius: 14px;"
+					>
+						<tr>
+							<td class="sp-card" style="padding: 40px;">
+								<!-- wordmark -->
+								<p
+									class="brand"
+									style="margin: 0 0 32px 0; font-size: 30px; line-height: 1.15; color: #1c1917; letter-spacing: -0.01em;"
+								>
+									My Pronunciation Class
+								</p>
+
+								<!-- the invite, shaped like one of the app's own phrase cuts -->
+								<table
+									role="presentation"
+									width="100%"
+									cellpadding="0"
+									cellspacing="0"
+									border="0"
+									style="border: 1px solid #e7e5e4; border-radius: 10px;"
+								>
+									<tr>
+										<td style="padding: 16px 24px 8px 24px;">
+											<p
+												style="margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; line-height: 1.4; color: #78716c;"
+											>
+												0:00 &rarr; 0:08 &nbsp;&middot;&nbsp; {{invited_by}}
+											</p>
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 0 24px 8px 24px;">
+											<p
+												class="line"
+												style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 28px; line-height: 1.25; font-weight: 600; color: #1c1917; letter-spacing: -0.02em;"
+											>
+												&ldquo;You&rsquo;re a teacher now.&rdquo;
+											</p>
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 0 24px 24px 24px;">
+											<p
+												style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #78716c;"
+											>
+												Hint: &ldquo;you&rsquo;re&rdquo; reduces to /j&#601;/. Say
+												it fast, like you&rsquo;ve done this before.
+											</p>
+										</td>
+									</tr>
+								</table>
+
+								<!-- body -->
+								<p
+									style="margin: 32px 0 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #1c1917;"
+								>
+									{{invited_by}} added you as a teacher.
+								</p>
+								<p
+									style="margin: 16px 0 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #1c1917;"
+								>
+									Which means you can take any YouTube scene, cut it into
+									phrases, and hand it to your students as a lesson. They
+									listen, they repeat, they get scored. You decide which scenes
+									are worth their time &mdash; and which ones they&rsquo;ll be
+									quoting for weeks.
+								</p>
+
+								<!-- call to action -->
+								<table
+									role="presentation"
+									cellpadding="0"
+									cellspacing="0"
+									border="0"
+									style="margin: 32px 0 0 0;"
+								>
+									<tr>
+										<td
+											style="background-color: #1c1917; border-radius: 8px;"
+											align="center"
+										>
+											<a
+												href="{{app_url}}"
+												style="display: inline-block; padding: 14px 28px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; line-height: 1; color: #ffffff; text-decoration: none;"
+											>
+												Open the editing booth
+											</a>
+										</td>
+									</tr>
+								</table>
+
+								<!-- the one practical thing they must get right -->
+								<table
+									role="presentation"
+									width="100%"
+									cellpadding="0"
+									cellspacing="0"
+									border="0"
+									style="margin: 32px 0 0 0; background-color: #f5f5f4; border-radius: 8px;"
+								>
+									<tr>
+										<td style="padding: 16px 24px;">
+											<p
+												style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #78716c;"
+											>
+												Sign in with
+												<span style="color: #1c1917; font-weight: 600;"
+													>{{to_email}}</span
+												>. The invite is tied to that address &mdash; any other
+												account signs in as a regular student, and wonders where
+												the scissors went.
+											</p>
+										</td>
+									</tr>
+								</table>
+
+								<!-- footer -->
+								<table
+									role="presentation"
+									width="100%"
+									cellpadding="0"
+									cellspacing="0"
+									border="0"
+									style="margin: 32px 0 0 0;"
+								>
+									<tr>
+										<td
+											style="border-top: 1px solid #e7e5e4; padding: 24px 0 0 0;"
+										>
+											<p
+												style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #78716c;"
+											>
+												You got this because {{invited_by}} added you as a
+												teacher on My Pronunciation Class. If that sounds like a
+												mistake, ignore it &mdash; nothing happens until you
+												sign in.
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
