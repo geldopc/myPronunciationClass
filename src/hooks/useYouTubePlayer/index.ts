@@ -110,8 +110,12 @@ export function useYouTubePlayer(
 		rafRef.current = requestAnimationFrame(poll);
 	}, []);
 
+	/* Guards check readyRef, not just a null ref: YT.Player returns an object
+	   immediately but only attaches its API methods once onReady fires, so
+	   optional chaining alone still calls an undefined method. */
 	const pause = useCallback(() => {
 		cancelAnimationFrame(rafRef.current);
+		if (!readyRef.current) return;
 		playerRef.current?.pauseVideo();
 	}, []);
 
@@ -124,14 +128,17 @@ export function useYouTubePlayer(
 
 	const seekTo = useCallback((time: number) => {
 		cancelAnimationFrame(rafRef.current);
+		if (!readyRef.current) return;
 		playerRef.current?.seekTo(time, true);
 	}, []);
 
 	const getCurrentTime = useCallback((): number => {
+		if (!readyRef.current) return 0;
 		return playerRef.current?.getCurrentTime() ?? 0;
 	}, []);
 
 	const getDuration = useCallback((): number => {
+		if (!readyRef.current) return 0;
 		return playerRef.current?.getDuration() ?? 0;
 	}, []);
 

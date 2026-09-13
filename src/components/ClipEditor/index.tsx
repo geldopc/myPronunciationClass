@@ -140,11 +140,12 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 	}, [ready, getDuration]);
 
 	useEffect(() => {
+		if (!ready) return;
 		pollRef.current = setInterval(() => setCurrentTime(getCurrentTime()), 250);
 		return () => {
 			if (pollRef.current) clearInterval(pollRef.current);
 		};
-	}, [getCurrentTime]);
+	}, [ready, getCurrentTime]);
 
 	function selectPhrase(id: string) {
 		const phrase = phrases.find((p) => p.id === id);
