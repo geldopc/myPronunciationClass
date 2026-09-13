@@ -27,8 +27,16 @@ service cloud.firestore {
       }
     }
 
+    // Reading your own record must not require already being active: an
+    // invited teacher has to read the pending invite before it can be
+    // accepted, and gating that behind isActiveTeacher() makes the invite
+    // impossible to accept at all.
+    function isOwnRecord(email) {
+      return request.auth != null && request.auth.token.email == email;
+    }
+
     match /teachers/{email} {
-      allow read: if isActiveTeacher();
+      allow read: if isActiveTeacher() || isOwnRecord(email);
       allow create: if isActiveTeacher();
 
       allow update: if request.auth != null
@@ -45,7 +53,7 @@ service cloud.firestore {
     // Removed together with the admins branch of isActiveTeacher() once the
     // migration is verified.
     match /admins/{email} {
-      allow read: if isActiveTeacher();
+      allow read: if isActiveTeacher() || isOwnRecord(email);
       allow create: if isActiveTeacher();
 
       allow update: if request.auth != null

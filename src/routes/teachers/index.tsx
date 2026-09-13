@@ -51,12 +51,12 @@ function TeachersDashboard() {
 		try {
 			await inviteTeacher(inviteEmail.trim(), user.uid);
 			setInviteMsg(
-				"Invite saved. They'll be promoted when they log in with that Google account."
+				"Invite created. No email is sent — tell them yourself. They become a teacher when they sign in with that Google account, and this list will show them as active."
 			);
 			setInviteEmail("");
 			await load();
 		} catch {
-			setInviteMsg("Failed to send invite.");
+			setInviteMsg("Failed to create invite.");
 		} finally {
 			setInviting(false);
 		}
@@ -153,7 +153,7 @@ function TeachersDashboard() {
 							size="sm"
 							disabled={inviting || !inviteEmail.trim()}
 						>
-							{inviting ? "Sending…" : "Send invite"}
+							{inviting ? "Creating…" : "Create invite"}
 						</Button>
 						{inviteMsg && (
 							<p className="text-xs text-muted-foreground">{inviteMsg}</p>

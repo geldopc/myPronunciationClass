@@ -5,7 +5,7 @@ import {
 	initializeTestEnvironment,
 	type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { afterAll, beforeAll, describe, it } from "vitest";
 
 let env: RulesTestEnvironment;
@@ -46,6 +46,76 @@ describeRules("firestore rules", () => {
 		await assertFails(
 			setDoc(doc(ada, "shares/s2"), { uid: "bob", snapshot: {} }),
 		);
+	});
+
+	it("lets an invited teacher read their own pending invite", async () => {
+		await env.withSecurityRulesDisabled(async (ctx) => {
+			await setDoc(doc(ctx.firestore(), "admins/invited@example.com"), {
+				status: "invited",
+				invitedBy: "system",
+				invitedAt: 1,
+				activatedAt: null,
+			});
+		});
+		const invitee = env
+			.authenticatedContext("invitee-uid", { email: "invited@example.com" })
+			.firestore();
+		await assertSucceeds(getDoc(doc(invitee, "admins/invited@example.com")));
+	});
+
+	it("lets an invited teacher accept the invite by activating it", async () => {
+		await env.withSecurityRulesDisabled(async (ctx) => {
+			await setDoc(doc(ctx.firestore(), "admins/accept@example.com"), {
+				status: "invited",
+				invitedBy: "system",
+				invitedAt: 1,
+				activatedAt: null,
+			});
+		});
+		const invitee = env
+			.authenticatedContext("accept-uid", { email: "accept@example.com" })
+			.firestore();
+		await assertSucceeds(
+			updateDoc(doc(invitee, "admins/accept@example.com"), {
+				status: "active",
+				activatedAt: 2,
+			})
+		);
+	});
+
+	it("forbids a stranger from activating someone else's invite", async () => {
+		await env.withSecurityRulesDisabled(async (ctx) => {
+			await setDoc(doc(ctx.firestore(), "admins/victim@example.com"), {
+				status: "invited",
+				invitedBy: "system",
+				invitedAt: 1,
+				activatedAt: null,
+			});
+		});
+		const attacker = env
+			.authenticatedContext("attacker-uid", { email: "attacker@example.com" })
+			.firestore();
+		await assertFails(
+			updateDoc(doc(attacker, "admins/victim@example.com"), {
+				status: "active",
+				activatedAt: 2,
+			})
+		);
+	});
+
+	it("forbids reading someone else's teacher record", async () => {
+		await env.withSecurityRulesDisabled(async (ctx) => {
+			await setDoc(doc(ctx.firestore(), "admins/other@example.com"), {
+				status: "active",
+				invitedBy: "system",
+				invitedAt: 1,
+				activatedAt: 2,
+			});
+		});
+		const stranger = env
+			.authenticatedContext("stranger-uid", { email: "stranger@example.com" })
+			.firestore();
+		await assertFails(getDoc(doc(stranger, "admins/other@example.com")));
 	});
 
 	it("lets the owner delete their own share but forbids a non-owner", async () => {
