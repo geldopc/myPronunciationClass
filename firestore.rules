@@ -2,12 +2,19 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Teacher records still live under the legacy "admins" collection;
-    // renaming it requires migrating the documents first.
+    // Migration step 1 of 2: teacher records are moving from the legacy
+    // "admins" collection to "teachers". Both are honoured so there is no
+    // window where a teacher is locked out while the data copy and the app
+    // deploy catch up. Once the app reads "teachers" and that is verified,
+    // drop the admins branch here and the /admins match block below.
     function isActiveTeacher() {
-      return request.auth != null &&
-             exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) &&
-             get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.status == "active";
+      return request.auth != null && (
+        (exists(/databases/$(database)/documents/teachers/$(request.auth.token.email)) &&
+         get(/databases/$(database)/documents/teachers/$(request.auth.token.email)).data.status == "active")
+        ||
+        (exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) &&
+         get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.status == "active")
+      );
     }
 
     match /lessons/{lessonId} {
@@ -20,6 +27,23 @@ service cloud.firestore {
       }
     }
 
+    match /teachers/{email} {
+      allow read: if isActiveTeacher();
+      allow create: if isActiveTeacher();
+
+      allow update: if request.auth != null
+                    && request.auth.token.email == email
+                    && resource.data.status == "invited"
+                    && request.resource.data.status == "active"
+                    && request.resource.data.keys().hasAll(
+                         ['status', 'invitedBy', 'invitedAt', 'activatedAt'])
+                    && request.resource.data.keys().size() == 4;
+
+      allow delete: if isActiveTeacher();
+    }
+
+    // Removed together with the admins branch of isActiveTeacher() once the
+    // migration is verified.
     match /admins/{email} {
       allow read: if isActiveTeacher();
       allow create: if isActiveTeacher();

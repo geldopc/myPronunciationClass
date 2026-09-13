@@ -8,5 +8,5 @@
 		"skipLibCheck": true,
 		"types": ["node"]
 	},
-	"include": ["seed.ts", "firebase-admin-augment.d.ts"]
+	"include": ["seed.ts", "migrate-teachers.ts", "firebase-admin-augment.d.ts"]
 }

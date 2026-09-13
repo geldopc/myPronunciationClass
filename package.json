@@ -13,7 +13,8 @@
     "check": "biome check --write src/",
     "typecheck": "tsc --noEmit",
     "test:rules": "firebase emulators:exec --only firestore --project demo-mpc \"vitest run tests/firestore-rules.test.ts\"",
-    "seed": "npx tsx --tsconfig scripts/tsconfig.seed.json scripts/seed.ts"
+    "seed": "npx tsx --tsconfig scripts/tsconfig.seed.json scripts/seed.ts",
+    "migrate:teachers": "npx tsx --tsconfig scripts/tsconfig.seed.json scripts/migrate-teachers.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
