@@ -1,3 +1,13 @@
+## v1.4 — Responsive Layout & Teachers
+
+- Fluid layout: every page adapts continuously from 390px to 2560px, with spacing snapped to the 8pt grid
+- Content runs edge to edge — galleries, dashboards and the editor fill the viewport instead of stopping at a fixed column
+- Teachers replace Admins: the role that creates and edits lessons is now named for what it does
+- One Lessons concept — Clips folded in, with draft/published status and per-lesson Publish and Edit for teachers
+- Progress dashboard rebuilt around every lesson you have practiced, not just the last one
+- Clip editor: taller timeline, toast feedback, caption auto-text, auto-advance after save, Export JSON
+- Full-width TopBar showing the app name in the brand typeface
+
 ## v1.3 — Navigation & Layout
 
 - Breadcrumb navigation in admin pages (Admin › Clip Editor)
