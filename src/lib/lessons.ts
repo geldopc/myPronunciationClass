@@ -61,9 +61,12 @@ export async function fetchLessons(): Promise<Lesson[]> {
 	}));
 }
 
+/* Hides drafts rather than requiring "published": lessons created before the
+   status field existed carry no status at all, and they were visible to
+   everyone by definition — matching on "published" would hide every one. */
 export async function fetchPublishedLessons(): Promise<Lesson[]> {
 	const lessons = await fetchLessons();
-	return lessons.filter((l) => l.status === "published");
+	return lessons.filter((l) => l.status !== "draft");
 }
 
 export async function fetchLesson(lessonId: string): Promise<Lesson | null> {
