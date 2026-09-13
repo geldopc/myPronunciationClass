@@ -50,30 +50,40 @@ export async function readPhraseStats(
 ): Promise<PhraseStat[]> {
 	if (USE_MOCK) return mockReadPhraseStats(uid, lessonId);
 	const snapshot = await getDocs(collection(db, "users", uid, "phraseStats"));
-	return snapshot.docs
-		.filter((entry) => {
-			if (!lessonId) return true;
-			return entry.id.startsWith(`${lessonId}_`);
-		})
-		.map((entry) => {
-			const data = entry.data() as {
-				lessonId: unknown;
-				phraseId: unknown;
-				bestScore: number;
-				attemptsCount: number;
-				lastPracticedAt?: { toMillis: () => number };
-			};
-			/* Coerce at the boundary: stored documents predate the current
-			   writer and carry non-string ids, which crashed the dashboard's
-			   sort and silently missed every Map lookup keyed by phrase id. */
-			return {
-				lessonId: String(data.lessonId),
-				phraseId: String(data.phraseId),
-				bestScore: data.bestScore,
-				attemptsCount: data.attemptsCount,
-				lastPracticedAt: data.lastPracticedAt?.toMillis() ?? 0,
-			};
-		});
+	return (
+		snapshot.docs
+			.filter((entry) => {
+				if (!lessonId) return true;
+				return entry.id.startsWith(`${lessonId}_`);
+			})
+			.map((entry) => {
+				const data = entry.data() as {
+					lessonId: unknown;
+					phraseId: unknown;
+					bestScore: number;
+					attemptsCount: number;
+					lastPracticedAt?: { toMillis: () => number };
+				};
+				/* Coerce ids that are present but not strings — stored documents
+			   predate the current writer and carry numbers, which crashed the
+			   dashboard's sort. Absent ids stay absent: String(undefined) would
+			   fabricate the key "undefined" and group unrelated records under it. */
+				return {
+					lessonId: data.lessonId == null ? null : String(data.lessonId),
+					phraseId: data.phraseId == null ? null : String(data.phraseId),
+					bestScore: data.bestScore,
+					attemptsCount: data.attemptsCount,
+					lastPracticedAt: data.lastPracticedAt?.toMillis() ?? 0,
+				};
+			})
+			/* A record with no lesson belongs to no lesson: it cannot be grouped,
+		   named, or attributed, and counting it would report progress against
+		   phrases the dashboard is unable to show. */
+			.filter(
+				(stat): stat is PhraseStat =>
+					stat.lessonId !== null && stat.phraseId !== null
+			)
+	);
 }
 
 export async function readPracticeDays(uid: string): Promise<string[]> {
