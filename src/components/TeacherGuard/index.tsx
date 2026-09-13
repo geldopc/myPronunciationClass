@@ -1,22 +1,22 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { useAdmin } from "@/hooks/useAdmin";
+import { useTeacher } from "@/hooks/useTeacher";
 
-export function AdminGuard({ children }: { children: React.ReactNode }) {
-	const { isAdmin, loading } = useAdmin();
+export function TeacherGuard({ children }: { children: React.ReactNode }) {
+	const { isTeacher, loading } = useTeacher();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!loading && !isAdmin) {
+		if (!loading && !isTeacher) {
 			navigate({ to: "/" });
 		}
-	}, [isAdmin, loading, navigate]);
+	}, [isTeacher, loading, navigate]);
 
 	if (loading) {
 		return (
 			<div
-				id="admin-guard-loading"
+				id="teacher-guard-loading"
 				className="flex min-h-screen items-center justify-center"
 			>
 				<span className="text-sm text-muted-foreground">Loading…</span>
@@ -24,7 +24,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	if (!isAdmin) return null;
+	if (!isTeacher) return null;
 
 	return <>{children}</>;
 }

@@ -6,8 +6,8 @@ import { LessonCard } from "@/components/LessonCard";
 import { PageShell } from "@/components/PageShell";
 import { TopBar } from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
-import { useAdmin } from "@/hooks/useAdmin";
 import { useProgress } from "@/hooks/useProgress";
+import { useTeacher } from "@/hooks/useTeacher";
 import {
 	fetchLessons,
 	fetchPublishedLessons,
@@ -46,7 +46,7 @@ function computeLessonStats(
 
 function LessonsPage() {
 	const navigate = useNavigate();
-	const { isAdmin } = useAdmin();
+	const { isTeacher } = useTeacher();
 	const { phraseStats } = useProgress();
 	const [lessons, setLessons] = useState<Lesson[]>([]);
 	const [lessonsLoading, setLessonsLoading] = useState(true);
@@ -55,17 +55,17 @@ function LessonsPage() {
 		setLessonsLoading(true);
 		try {
 			setLessons(
-				isAdmin ? await fetchLessons() : await fetchPublishedLessons()
+				isTeacher ? await fetchLessons() : await fetchPublishedLessons()
 			);
 		} finally {
 			setLessonsLoading(false);
 		}
 	}
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: reload when admin status resolves
+	// biome-ignore lint/correctness/useExhaustiveDependencies: reload when teacher status resolves
 	useEffect(() => {
 		void load();
-	}, [isAdmin]);
+	}, [isTeacher]);
 
 	const lessonStats = useMemo(
 		() => computeLessonStats(lessons, phraseStats),
@@ -89,7 +89,7 @@ function LessonsPage() {
 			<PageShell id="lessons-gallery">
 				<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
 					<h1 className="text-page-title font-semibold">Lessons</h1>
-					{isAdmin && (
+					{isTeacher && (
 						<Button asChild size="sm">
 							<Link to="/lessons/new">
 								<PlusIcon />
@@ -124,7 +124,7 @@ function LessonsPage() {
 									completion={stats.completion}
 									lastPracticedAt={stats.lastPracticedAt}
 									onClick={() => handleSelect(lesson.id)}
-									isAdmin={isAdmin}
+									isTeacher={isTeacher}
 									onTogglePublish={() => handleTogglePublish(lesson)}
 								/>
 							);

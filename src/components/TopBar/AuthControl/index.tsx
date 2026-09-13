@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import {
 	BookOpenIcon,
-	LayoutDashboardIcon,
 	LogOutIcon,
 	TrendingUpIcon,
+	UsersIcon,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ import {
 	HoverCardContent,
 	HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { useAdmin } from "@/hooks/useAdmin";
+import { useTeacher } from "@/hooks/useTeacher";
 import { useAuth } from "@/providers/Auth";
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -55,7 +55,7 @@ function GoogleIcon({ className }: { className?: string }) {
 
 export function AuthControl() {
 	const { user, signInWithGoogle, signOut } = useAuth();
-	const { isAdmin } = useAdmin();
+	const { isTeacher } = useTeacher();
 	const [aboutOpen, setAboutOpen] = useState(false);
 
 	if (!user) {
@@ -127,11 +127,11 @@ export function AuthControl() {
 							Lessons
 						</Link>
 					</DropdownMenuItem>
-					{isAdmin && (
+					{isTeacher && (
 						<DropdownMenuItem asChild>
-							<Link to="/admin">
-								<LayoutDashboardIcon />
-								Admin
+							<Link to="/teachers">
+								<UsersIcon />
+								Teachers
 							</Link>
 						</DropdownMenuItem>
 					)}

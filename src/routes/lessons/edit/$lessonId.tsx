@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-
-import { AdminGuard } from "@/components/AdminGuard";
 import { ClipEditor } from "@/components/ClipEditor";
 import { PageShell } from "@/components/PageShell";
+import { TeacherGuard } from "@/components/TeacherGuard";
 import { TopBar } from "@/components/TopBar";
 import {
 	Breadcrumb,
@@ -23,7 +22,7 @@ function LessonEditPage() {
 	const { lesson, loading } = useLesson(lessonId);
 
 	return (
-		<AdminGuard>
+		<TeacherGuard>
 			{loading ? (
 				<>
 					<TopBar />
@@ -68,6 +67,6 @@ function LessonEditPage() {
 					</PageShell>
 				</>
 			)}
-		</AdminGuard>
+		</TeacherGuard>
 	);
 }

@@ -2,7 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isActiveAdmin() {
+    // Teacher records still live under the legacy "admins" collection;
+    // renaming it requires migrating the documents first.
+    function isActiveTeacher() {
       return request.auth != null &&
              exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) &&
              get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.status == "active";
@@ -10,17 +12,17 @@ service cloud.firestore {
 
     match /lessons/{lessonId} {
       allow read: if true;
-      allow write: if isActiveAdmin();
+      allow write: if isActiveTeacher();
 
       match /phrases/{phraseId} {
         allow read: if true;
-        allow write: if isActiveAdmin();
+        allow write: if isActiveTeacher();
       }
     }
 
     match /admins/{email} {
-      allow read: if isActiveAdmin();
-      allow create: if isActiveAdmin();
+      allow read: if isActiveTeacher();
+      allow create: if isActiveTeacher();
 
       allow update: if request.auth != null
                     && request.auth.token.email == email
@@ -30,7 +32,7 @@ service cloud.firestore {
                          ['status', 'invitedBy', 'invitedAt', 'activatedAt'])
                     && request.resource.data.keys().size() == 4;
 
-      allow delete: if isActiveAdmin();
+      allow delete: if isActiveTeacher();
     }
 
     match /users/{uid}/{document=**} {

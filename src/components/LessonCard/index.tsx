@@ -10,7 +10,7 @@ type Props = {
 	completion: number;
 	lastPracticedAt: number | null;
 	onClick: () => void;
-	isAdmin?: boolean;
+	isTeacher?: boolean;
 	onTogglePublish?: () => void;
 };
 
@@ -19,7 +19,7 @@ export function LessonCard({
 	completion,
 	lastPracticedAt,
 	onClick,
-	isAdmin = false,
+	isTeacher = false,
 	onTogglePublish,
 }: Props) {
 	const lastDate = lastPracticedAt
@@ -54,7 +54,7 @@ export function LessonCard({
 						<p className="line-clamp-2 flex-1 text-sm leading-snug font-semibold">
 							{lesson.title}
 						</p>
-						{isAdmin && (
+						{isTeacher && (
 							<Badge
 								variant={lesson.status === "published" ? "default" : "outline"}
 							>
@@ -78,7 +78,7 @@ export function LessonCard({
 				</div>
 			</button>
 
-			{isAdmin && (
+			{isTeacher && (
 				<div className="flex items-center justify-end gap-1 border-t border-border px-2 py-1.5">
 					<Button
 						size="sm"

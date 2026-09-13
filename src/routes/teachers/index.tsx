@@ -10,18 +10,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-	type AdminRecord,
-	fetchAdmins,
-	inviteAdmin,
-	revokeAdmin,
-} from "@/lib/admin";
+	fetchTeachers,
+	inviteTeacher,
+	revokeTeacher,
+	type TeacherRecord,
+} from "@/lib/teacher";
 import { useAuth } from "@/providers/Auth";
 
-export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
+export const Route = createFileRoute("/teachers/")({
+	component: TeachersDashboard,
+});
 
-function AdminDashboard() {
+function TeachersDashboard() {
 	const { user } = useAuth();
-	const [admins, setAdmins] = useState<AdminRecord[]>([]);
+	const [teachers, setTeachers] = useState<TeacherRecord[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [inviteEmail, setInviteEmail] = useState("");
 	const [inviting, setInviting] = useState(false);
@@ -30,7 +32,7 @@ function AdminDashboard() {
 	async function load() {
 		setLoading(true);
 		try {
-			setAdmins(await fetchAdmins());
+			setTeachers(await fetchTeachers());
 		} finally {
 			setLoading(false);
 		}
@@ -47,7 +49,7 @@ function AdminDashboard() {
 		setInviting(true);
 		setInviteMsg(null);
 		try {
-			await inviteAdmin(inviteEmail.trim(), user.uid);
+			await inviteTeacher(inviteEmail.trim(), user.uid);
 			setInviteMsg(
 				"Invite saved. They'll be promoted when they log in with that Google account."
 			);
@@ -61,19 +63,19 @@ function AdminDashboard() {
 	}
 
 	async function handleRevoke(email: string) {
-		if (!window.confirm(`Revoke admin access for ${email}?`)) return;
-		await revokeAdmin(email);
+		if (!window.confirm(`Revoke teacher access for ${email}?`)) return;
+		await revokeTeacher(email);
 		await load();
 	}
 
 	return (
 		<>
 			<TopBar />
-			<PageShell id="admin-dashboard" className="space-y-10">
+			<PageShell id="teachers-dashboard" className="space-y-10">
 				<div className="space-y-1">
-					<h1 className="text-page-title font-semibold">Admin</h1>
+					<h1 className="text-page-title font-semibold">Teachers</h1>
 					<p className="text-sm text-muted-foreground">
-						Control who can add and edit clips.
+						Control who can create and edit lessons.
 					</p>
 				</div>
 
@@ -81,7 +83,7 @@ function AdminDashboard() {
 				<section className="space-y-4">
 					<h2 className="text-lg font-medium">Team</h2>
 
-					{!loading && admins.length > 0 && (
+					{!loading && teachers.length > 0 && (
 						<div className="overflow-x-auto rounded-lg border border-border">
 							<table className="w-full text-sm">
 								<thead>
@@ -95,30 +97,30 @@ function AdminDashboard() {
 									</tr>
 								</thead>
 								<tbody>
-									{admins.map((admin) => (
+									{teachers.map((teacher) => (
 										<tr
-											key={admin.email}
+											key={teacher.email}
 											className="border-b border-border last:border-0 hover:bg-muted/20"
 										>
-											<td className="px-4 py-3">{admin.email}</td>
+											<td className="px-4 py-3">{teacher.email}</td>
 											<td className="px-4 py-3">
 												<Badge
 													variant={
-														admin.status === "active" ? "default" : "outline"
+														teacher.status === "active" ? "default" : "outline"
 													}
 												>
-													{admin.status}
+													{teacher.status}
 												</Badge>
 											</td>
 											<td className="px-4 py-3 text-muted-foreground">
-												{admin.invitedBy}
+												{teacher.invitedBy}
 											</td>
 											<td className="px-4 py-3 text-right">
 												<Button
 													size="sm"
 													variant="ghost"
-													disabled={admin.email === user?.email}
-													onClick={() => handleRevoke(admin.email)}
+													disabled={teacher.email === user?.email}
+													onClick={() => handleRevoke(teacher.email)}
 												>
 													<Trash2 />
 													Revoke
@@ -137,7 +139,7 @@ function AdminDashboard() {
 						className="flex max-w-sm flex-col gap-3"
 					>
 						<div className="space-y-1">
-							<Label htmlFor="invite-email">Invite admin</Label>
+							<Label htmlFor="invite-email">Invite teacher</Label>
 							<Input
 								id="invite-email"
 								type="email"

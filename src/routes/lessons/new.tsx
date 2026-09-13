@@ -1,8 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-
-import { AdminGuard } from "@/components/AdminGuard";
 import { PageShell } from "@/components/PageShell";
+import { TeacherGuard } from "@/components/TeacherGuard";
 import { TopBar } from "@/components/TopBar";
 import {
 	Breadcrumb,
@@ -84,7 +83,7 @@ function NewLessonPage() {
 	}
 
 	return (
-		<AdminGuard>
+		<TeacherGuard>
 			<TopBar />
 			<PageShell id="new-lesson-page" width="form" className="space-y-6">
 				<div className="space-y-1">
@@ -132,6 +131,6 @@ function NewLessonPage() {
 					</Button>
 				</form>
 			</PageShell>
-		</AdminGuard>
+		</TeacherGuard>
 	);
 }

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { activateAdmin, getAdminStatus } from "@/lib/admin";
+import { activateTeacher, getTeacherStatus } from "@/lib/teacher";
 import { useAuth } from "@/providers/Auth";
 
-export function useAdmin(): { isAdmin: boolean; loading: boolean } {
+export function useTeacher(): { isTeacher: boolean; loading: boolean } {
 	const { user } = useAuth();
-	const [isAdmin, setIsAdmin] = useState(false);
+	const [isTeacher, setIsTeacher] = useState(false);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (!user) {
-			setIsAdmin(false);
+			setIsTeacher(false);
 			setLoading(false);
 			return;
 		}
@@ -18,16 +18,16 @@ export function useAdmin(): { isAdmin: boolean; loading: boolean } {
 		let cancelled = false;
 
 		async function check() {
-			const status = await getAdminStatus(user?.email);
+			const status = await getTeacherStatus(user?.email);
 			if (cancelled) return;
 
 			if (status === "invited") {
-				await activateAdmin(user?.email);
-				if (!cancelled) setIsAdmin(true);
+				await activateTeacher(user?.email);
+				if (!cancelled) setIsTeacher(true);
 			} else if (status === "active") {
-				setIsAdmin(true);
+				setIsTeacher(true);
 			} else {
-				setIsAdmin(false);
+				setIsTeacher(false);
 			}
 			if (!cancelled) setLoading(false);
 		}
@@ -38,5 +38,5 @@ export function useAdmin(): { isAdmin: boolean; loading: boolean } {
 		};
 	}, [user]);
 
-	return { isAdmin, loading };
+	return { isTeacher, loading };
 }
