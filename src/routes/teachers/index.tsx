@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+	inviteAppUrl,
+	isInviteEmailConfigured,
+	sendInviteEmail,
+} from "@/lib/invite-email";
+import {
 	fetchTeachers,
 	inviteTeacher,
 	revokeTeacher,
@@ -20,6 +25,33 @@ import { useAuth } from "@/providers/Auth";
 export const Route = createFileRoute("/teachers/")({
 	component: TeachersDashboard,
 });
+
+/* The button must not promise delivery the build cannot perform. */
+const INVITE_LABEL = isInviteEmailConfigured()
+	? { idle: "Send invite", busy: "Sending…" }
+	: { idle: "Create invite", busy: "Creating…" };
+
+const SIGN_IN_NOTE =
+	"They become a teacher when they sign in with that Google account, and this list will show them as active.";
+
+async function announceInvite(
+	email: string,
+	invitedByName: string
+): Promise<string> {
+	if (!isInviteEmailConfigured()) {
+		return `Invite created for ${email}. Email is not configured, so tell them yourself. ${SIGN_IN_NOTE}`;
+	}
+	try {
+		await sendInviteEmail({
+			toEmail: email,
+			invitedByName,
+			appUrl: inviteAppUrl(),
+		});
+		return `Invite created and emailed to ${email}. ${SIGN_IN_NOTE}`;
+	} catch {
+		return `Invite created for ${email}, but the email could not be sent — tell them yourself. ${SIGN_IN_NOTE}`;
+	}
+}
 
 function TeachersDashboard() {
 	const { user } = useAuth();
@@ -43,23 +75,28 @@ function TeachersDashboard() {
 		void load();
 	}, []);
 
+	/* The Firestore record is the invite; the email only announces it. A
+	   delivery failure must not cost the teacher their access, so the two
+	   are reported separately and the record is written first. */
 	async function handleInvite(e: React.FormEvent) {
 		e.preventDefault();
-		if (!inviteEmail.trim() || !user) return;
+		const email = inviteEmail.trim();
+		if (!email || !user) return;
 		setInviting(true);
 		setInviteMsg(null);
+
 		try {
-			await inviteTeacher(inviteEmail.trim(), user.uid);
-			setInviteMsg(
-				"Invite created. No email is sent — tell them yourself. They become a teacher when they sign in with that Google account, and this list will show them as active."
-			);
-			setInviteEmail("");
-			await load();
+			await inviteTeacher(email, user.uid);
 		} catch {
 			setInviteMsg("Failed to create invite.");
-		} finally {
 			setInviting(false);
+			return;
 		}
+
+		setInviteEmail("");
+		await load();
+		setInviteMsg(await announceInvite(email, user.displayName));
+		setInviting(false);
 	}
 
 	async function handleRevoke(email: string) {
@@ -153,7 +190,7 @@ function TeachersDashboard() {
 							size="sm"
 							disabled={inviting || !inviteEmail.trim()}
 						>
-							{inviting ? "Creating…" : "Create invite"}
+							{inviting ? INVITE_LABEL.busy : INVITE_LABEL.idle}
 						</Button>
 						{inviteMsg && (
 							<p className="text-xs text-muted-foreground">{inviteMsg}</p>

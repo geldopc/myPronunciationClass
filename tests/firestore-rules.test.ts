@@ -40,11 +40,11 @@ describeRules("firestore rules", () => {
 		const ada = env.authenticatedContext("ada").firestore();
 		const anon = env.unauthenticatedContext().firestore();
 		await assertSucceeds(
-			setDoc(doc(ada, "shares/s1"), { uid: "ada", snapshot: {} }),
+			setDoc(doc(ada, "shares/s1"), { uid: "ada", snapshot: {} })
 		);
 		await assertSucceeds(getDoc(doc(anon, "shares/s1")));
 		await assertFails(
-			setDoc(doc(ada, "shares/s2"), { uid: "bob", snapshot: {} }),
+			setDoc(doc(ada, "shares/s2"), { uid: "bob", snapshot: {} })
 		);
 	});
 
@@ -123,7 +123,7 @@ describeRules("firestore rules", () => {
 		const bob = env.authenticatedContext("bob").firestore();
 
 		await assertSucceeds(
-			setDoc(doc(ada, "shares/s3"), { uid: "ada", snapshot: {} }),
+			setDoc(doc(ada, "shares/s3"), { uid: "ada", snapshot: {} })
 		);
 		await assertFails(deleteDoc(doc(bob, "shares/s3")));
 		await assertSucceeds(deleteDoc(doc(ada, "shares/s3")));
