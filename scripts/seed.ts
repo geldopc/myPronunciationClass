@@ -337,6 +337,8 @@ async function seed() {
 			title: "Friends S5E14 — Joey Finds Out",
 			youtubeId: "XZVHmRvfDHM",
 			thumbnailUrl: "https://img.youtube.com/vi/XZVHmRvfDHM/hqdefault.jpg",
+			phraseCount: phrasesData.length,
+			status: "published",
 			createdAt: Timestamp.now(),
 			createdBy: "system",
 		},
