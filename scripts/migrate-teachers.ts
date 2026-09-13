@@ -1,15 +1,6 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import * as admin from "firebase-admin";
+import { initAdminApp } from "./admin-app.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const serviceAccount = JSON.parse(
-	readFileSync(join(__dirname, "serviceAccount.json"), "utf-8")
-);
-
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-const db = admin.firestore();
+const db = initAdminApp();
 
 const FROM = "admins";
 const TO = "teachers";
