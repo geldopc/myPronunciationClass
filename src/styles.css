@@ -25,18 +25,15 @@
 	padding-block-end: round(clamp(3rem, 5vw, 6rem), 0.5rem);
 }
 
-/* Width ceilings per content type: forms stay readable, dashboards breathe,
-   the editor uses nearly the whole viewport. */
+/* Galleries, dashboards, tables and the editor fill the viewport: their
+   content ends at the screen edge minus the page padding, mirroring the
+   left inset. Only prose-width forms keep a readability ceiling. */
+@utility shell-full {
+	max-width: none;
+}
+
 @utility shell-form {
 	max-width: 34rem;
-}
-
-@utility shell-content {
-	max-width: 90rem;
-}
-
-@utility shell-wide {
-	max-width: 120rem;
 }
 
 /* Must stay identical to page-shell's padding-inline so the logo aligns with
@@ -83,6 +80,16 @@
 
 /* Side panel grows with the viewport instead of sitting at a fixed 384px
    while the video stretches without limit. */
+/* A video is bounded by height, not width: now that the editor fills the
+   viewport, cap the frame so a 16:9 preview always fits on screen instead
+   of pushing the timeline below the fold on tall/wide displays. */
+@utility video-frame {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	max-width: calc(60vh * 16 / 9);
+	max-width: round(calc(60vh * 16 / 9), 0.5rem);
+}
+
 @utility editor-panel {
 	flex: 0 0 clamp(20rem, 24vw, 30rem);
 	flex-basis: round(clamp(20rem, 24vw, 30rem), 0.5rem);

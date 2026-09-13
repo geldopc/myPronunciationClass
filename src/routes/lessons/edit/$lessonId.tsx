@@ -47,7 +47,7 @@ function LessonEditPage() {
 			) : (
 				<>
 					<TopBar />
-					<PageShell id="clip-editor-page" width="wide" className="space-y-6">
+					<PageShell id="clip-editor-page" className="space-y-6">
 						<div className="space-y-1">
 							<Breadcrumb>
 								<BreadcrumbList>

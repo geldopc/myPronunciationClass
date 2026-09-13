@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type Width = "form" | "content" | "wide";
+type Width = "form" | "full";
 
 type Props = {
 	id: string;
@@ -11,21 +11,17 @@ type Props = {
 
 const WIDTH_CLASS: Record<Width, string> = {
 	form: "shell-form",
-	content: "shell-content",
-	wide: "shell-wide",
+	full: "shell-full",
 };
 
 /**
- * Single source of truth for page layout: fluid padding and a width ceiling
- * matched to the content type. Pages declare intent (`width`) instead of
- * repeating breakpoint class strings.
+ * Single source of truth for page layout: fluid, 8pt-snapped padding.
+ *
+ * `full` (default) fills the viewport — content ends at the screen edge
+ * minus the page padding. `form` keeps a readability ceiling, since a
+ * single-column form should never stretch across a wide display.
  */
-export function PageShell({
-	id,
-	width = "content",
-	className,
-	children,
-}: Props) {
+export function PageShell({ id, width = "full", className, children }: Props) {
 	return (
 		<main id={id} className={cn("page-shell", WIDTH_CLASS[width], className)}>
 			{children}

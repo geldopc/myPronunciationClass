@@ -291,10 +291,7 @@ export function ClipEditor({ lessonId, videoId }: Props) {
 		>
 			{/* Left column: video + controls + timeline */}
 			<div className="min-w-0 flex-1 space-y-3">
-				<div
-					className="relative w-full overflow-hidden rounded-lg border border-border bg-black"
-					style={{ paddingBottom: "56.25%" }}
-				>
+				<div className="video-frame relative overflow-hidden rounded-lg border border-border bg-black">
 					<div id={containerId} className="absolute inset-0" />
 					{!ready && (
 						<div className="absolute inset-0 flex items-center justify-center">
