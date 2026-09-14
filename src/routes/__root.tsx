@@ -1,6 +1,7 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { ErrorScreen } from "@/components/ErrorScreen";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/providers/Auth";
 import { ThemeProvider } from "@/providers/Theme";
@@ -38,6 +39,7 @@ export const Route = createRootRoute({
 			<p>The requested page could not be found.</p>
 		</main>
 	),
+	errorComponent: ErrorScreen,
 	shellComponent: RootDocument,
 });
 
