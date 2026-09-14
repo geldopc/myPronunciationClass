@@ -17,6 +17,15 @@ export const Route = createRootRoute({
 				name: "viewport",
 				content: "width=device-width, initial-scale=1",
 			},
+			/* Browser translation merges React's text nodes into <font>
+			   wrappers and React then throws removeChild on nodes it no
+			   longer owns. Wrapping dynamic text in spans (059e4f8) was not
+			   enough — real Translate keeps rewriting through a
+			   MutationObserver. Off until the app ships its own locales. */
+			{
+				name: "google",
+				content: "notranslate",
+			},
 			{
 				title: "myPronunciationClass",
 			},
@@ -45,7 +54,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en" translate="no" suppressHydrationWarning>
 			<head>
 				<script
 					dangerouslySetInnerHTML={{
