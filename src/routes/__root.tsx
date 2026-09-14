@@ -17,6 +17,14 @@ export const Route = createRootRoute({
 				name: "viewport",
 				content: "width=device-width, initial-scale=1",
 			},
+			/* Chrome's auto-translate swaps React's text nodes for <font>
+			   wrappers, and React then throws removeChild on nodes it no
+			   longer owns — the crash a guest hit on Android, where the
+			   browser translated this English UI into Portuguese. */
+			{
+				name: "google",
+				content: "notranslate",
+			},
 			{
 				title: "myPronunciationClass",
 			},
@@ -45,7 +53,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en" translate="no" suppressHydrationWarning>
 			<head>
 				<script
 					dangerouslySetInnerHTML={{
