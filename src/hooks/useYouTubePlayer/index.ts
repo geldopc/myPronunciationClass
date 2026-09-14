@@ -36,14 +36,27 @@ export function useYouTubePlayer(
 	}, [onSegmentEnd]);
 
 	useEffect(() => {
+		/* No video yet means no player. The id arrives empty on the first render
+		   while the lesson loads, and building a player for it only to tear it
+		   down when the real id lands is what put React and the YouTube API in
+		   conflict over the same nodes. */
+		if (!videoId) return;
+
 		let active = true;
+		/* Everything YouTube touches lives inside a host this hook creates and
+		   removes itself. React's container then keeps exactly the children
+		   React gave it, so destroy() can never pull a node out from under it. */
+		let host: HTMLDivElement | null = null;
 
 		function initPlayer() {
 			if (!active) return;
 			const container = document.getElementById(containerId);
 			if (!container) return;
+			host = document.createElement("div");
+			host.style.cssText = "position:absolute;inset:0";
+			container.appendChild(host);
 			const inner = document.createElement("div");
-			container.appendChild(inner);
+			host.appendChild(inner);
 			playerRef.current = new window.YT.Player(inner, {
 				videoId: videoId,
 				playerVars: { rel: 0, modestbranding: 1, controls: 1 },
@@ -85,9 +98,17 @@ export function useYouTubePlayer(
 		return () => {
 			active = false;
 			readyRef.current = false;
+			setReady(false);
 			cancelAnimationFrame(rafRef.current);
-			playerRef.current?.destroy();
+			try {
+				playerRef.current?.destroy();
+			} catch {
+				/* The API detaches its own iframe on teardown and can throw doing
+				   it; that must not surface as an error inside React's unmount. */
+			}
 			playerRef.current = null;
+			host?.remove();
+			host = null;
 		};
 	}, [containerId, videoId, onError]);
 
