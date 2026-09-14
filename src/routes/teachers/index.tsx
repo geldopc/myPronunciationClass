@@ -16,6 +16,7 @@ import {
 } from "@/lib/invite-email";
 import {
 	fetchTeachers,
+	type InviteResult,
 	inviteTeacher,
 	revokeTeacher,
 	type TeacherRecord,
@@ -36,20 +37,35 @@ const SIGN_IN_NOTE =
 
 async function announceInvite(
 	email: string,
-	invitedByName: string
+	invitedByName: string,
+	outcome: InviteResult
 ): Promise<string> {
+	const standing =
+		outcome === "already-invited"
+			? `${email} was already invited`
+			: `Invite created for ${email}`;
+
 	if (!isInviteEmailConfigured()) {
-		return `Invite created for ${email}. Email is not configured, so tell them yourself. ${SIGN_IN_NOTE}`;
+		return `${standing}. Email is not configured, so tell them yourself. ${SIGN_IN_NOTE}`;
 	}
+
 	try {
 		await sendInviteEmail({
 			toEmail: email,
 			invitedByName,
 			appUrl: inviteAppUrl(),
 		});
-		return `Invite created and emailed to ${email}. ${SIGN_IN_NOTE}`;
-	} catch {
-		return `Invite created for ${email}, but the email could not be sent — tell them yourself. ${SIGN_IN_NOTE}`;
+		return outcome === "already-invited"
+			? `${email} was already invited — sent the email again. ${SIGN_IN_NOTE}`
+			: `Invite created and emailed to ${email}. ${SIGN_IN_NOTE}`;
+	} catch (err) {
+		/* EmailJS rejects with {status, text}; the text names the actual cause
+		   (wrong template id, origin not allowed, quota), which is the whole
+		   difference between a fixable report and a shrug. */
+		const detail = (err as { text?: string }).text;
+		return `${standing}, but the email could not be sent${
+			detail ? ` — ${detail}` : ""
+		}. Tell them yourself. ${SIGN_IN_NOTE}`;
 	}
 }
 
@@ -85,17 +101,27 @@ function TeachersDashboard() {
 		setInviting(true);
 		setInviteMsg(null);
 
+		let outcome: InviteResult;
 		try {
-			await inviteTeacher(email, user.uid);
-		} catch {
-			setInviteMsg("Failed to create invite.");
+			outcome = await inviteTeacher(email, user.uid);
+		} catch (err) {
+			const code = (err as { code?: string }).code;
+			setInviteMsg(
+				`Failed to create invite${code ? ` (${code})` : ""}. Nothing was sent.`
+			);
+			setInviting(false);
+			return;
+		}
+
+		if (outcome === "already-active") {
+			setInviteMsg(`${email} is already an active teacher. Nothing to do.`);
 			setInviting(false);
 			return;
 		}
 
 		setInviteEmail("");
 		await load();
-		setInviteMsg(await announceInvite(email, user.displayName));
+		setInviteMsg(await announceInvite(email, user.displayName, outcome));
 		setInviting(false);
 	}
 

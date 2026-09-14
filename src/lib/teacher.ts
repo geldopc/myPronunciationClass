@@ -62,17 +62,30 @@ export async function activateTeacher(email: string): Promise<void> {
 	});
 }
 
+export type InviteResult = "created" | "already-invited" | "already-active";
+
+/* Checks before writing, because re-inviting an existing address is not a
+   create but an update, and the update rule deliberately lets only the
+   invitee touch their own record — so a blind setDoc fails with a bare
+   permission error that says nothing about what actually happened. */
 export async function inviteTeacher(
 	email: string,
 	invitedByUid: string
-): Promise<void> {
-	if (USE_MOCK) return;
-	await setDoc(doc(db, TEACHERS_COLLECTION, email), {
+): Promise<InviteResult> {
+	if (USE_MOCK) return "created";
+	const ref = doc(db, TEACHERS_COLLECTION, email);
+	const existing = await getDoc(ref);
+	if (existing.exists()) {
+		const { status } = existing.data() as { status: "invited" | "active" };
+		return status === "active" ? "already-active" : "already-invited";
+	}
+	await setDoc(ref, {
 		status: "invited",
 		invitedBy: invitedByUid,
 		invitedAt: serverTimestamp(),
 		activatedAt: null,
 	});
+	return "created";
 }
 
 export async function revokeTeacher(email: string): Promise<void> {
