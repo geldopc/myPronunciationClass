@@ -338,7 +338,8 @@ export function PhraseCard({
 							<ChevronUpIcon className="h-3.5 w-3.5" />
 						</button>
 						<span className="w-6 text-center text-[10px] text-muted-foreground/60 tabular-nums">
-							{tipIndex + 1}/2
+							<span>{tipIndex + 1}</span>
+							<span>/2</span>
 						</span>
 						<button
 							type="button"

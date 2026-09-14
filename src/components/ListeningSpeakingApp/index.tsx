@@ -231,8 +231,12 @@ export function ListeningSpeakingApp({ lessonId }: { lessonId: string }) {
 								id="yt-player-top-right"
 								className="tabular-nums text-muted-foreground text-xs"
 							>
-								{String(currentPhraseIndex + 1).padStart(2, "0")} /{" "}
-								{phrases.length}
+								{/* Each moving part gets its own element. Left bare these are three
+								    sibling text nodes, and a translating browser merges them into
+								    one — React then updates a node that no longer exists. */}
+								<span>{String(currentPhraseIndex + 1).padStart(2, "0")}</span>
+								<span> / </span>
+								<span>{phrases.length}</span>
 							</span>
 						</div>
 					)}

@@ -63,7 +63,10 @@ export function LessonCard({
 						)}
 					</div>
 					<div className="flex items-center justify-between text-xs text-muted-foreground">
-						<span>{lesson.phraseCount} phrases</span>
+						<span>
+							<span>{lesson.phraseCount}</span>
+							<span> phrases</span>
+						</span>
 						{lastDate && <span>Last: {lastDate}</span>}
 					</div>
 
