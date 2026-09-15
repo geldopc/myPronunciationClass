@@ -61,6 +61,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						__html: `(function(){try{var t=localStorage.getItem('mpc-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
 					}}
 				/>
+				{/* Settings ride on the tag rather than a pre-assigned
+				    window.goatcounter, which collides with the script's own
+				    initialisation. no_onload because the router counts every
+				    navigation itself, including the first. */}
+				<script
+					async
+					data-goatcounter="https://geldopc.goatcounter.com/count"
+					data-goatcounter-settings='{"no_onload": true}'
+					src="https://gc.zgo.at/count.js"
+				/>
 				<HeadContent />
 			</head>
 			<body suppressHydrationWarning>
